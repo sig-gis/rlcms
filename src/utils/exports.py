@@ -1,7 +1,7 @@
 import ee
 import os
 from src.utils.check_exists import check_exists
-ee.Initialize(project='wwf-sig')
+ee.Initialize()
 
 def exportImgToAsset(img,desc,asset_id,region,scale):
     """Export Image to GEE Asset"""

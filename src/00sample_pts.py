@@ -46,7 +46,7 @@ def plot_id_global(n,feat):
     return f
 
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online",

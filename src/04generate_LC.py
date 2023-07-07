@@ -6,7 +6,7 @@ from src.utils.check_exists import check_exists
 from src.utils.exports import exportImgToAsset
     
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
     
     parser = argparse.ArgumentParser(
     description="Generate Single Land Cover Image From Land Cover Primitives Image Collection",

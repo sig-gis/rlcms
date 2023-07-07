@@ -6,10 +6,10 @@ from src.utils.check_exists import check_exists
 import argparse
 
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
     parser = argparse.ArgumentParser(
     description="Create Sentinel-2 Composite for an AOI or reference polygons",
-    usage = "01composite_s2 -a Zambezi -y 2021 -o projects/wwf-sig/assets/kaza-lc-test/input_stacks"
+    usage = "01composite_s2 -a aoi/fc/path -y 2021 -o output/path"
     )
     
     parser.add_argument(

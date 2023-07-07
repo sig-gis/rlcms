@@ -1,7 +1,6 @@
 import os
 import ee
-# from src.utils.exports import exportTableToAsset
-ee.Initialize(project='wwf-sig')
+ee.Initialize()
  
 def distanceFilter(pts,distance):
     """Filter Points within a FeatureCollection by a minimum distance threshold"""

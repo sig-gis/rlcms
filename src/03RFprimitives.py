@@ -6,7 +6,7 @@ from src.utils.check_exists import check_exists
 from src.utils.primitives import primitives_to_collection
 
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Create Land Cover Primitives For All Classes in Provided Training Data",

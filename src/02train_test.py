@@ -5,7 +5,7 @@ from src.utils.sampling import strat_sample_w_extraction, split_train_test
 from src.utils.exports import exportTableToAsset
 import ee
 import numpy as np
-ee.Initialize(project='wwf-sig')
+ee.Initialize()
 
 def main():
     parser = argparse.ArgumentParser(
