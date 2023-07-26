@@ -21,39 +21,28 @@ conda create -n gee
 ```
 conda activate gee
 ```
-* Leave this environment activated, we will install necessary packages from the `kaza-lcms` source code in the next section. 
+* Leave this environment activated, we will install necessary packages from the `rlcms` source code in the next section. 
 
 ## Git Setup
 1. Download the Git installer for your OS from the Git downloads [page](https://git-scm.com/downloads). Run the installer following all recommended settings
-2. Once installation is complete, open your command prompt/shell/terminal and type 
+2. Once installation is complete, check your version: open your command prompt/shell/terminal and type 
 ```
 git --version
 ```
-
-![kaza_readme_git_version](docs/imgs/git_version.PNG)
-
-3. Clone the repository to a local folder 
-
+3. Clone the repository to a local folder in your working directory 
 ```
-git clone https://github.com/sig-gis/kaza-lcms.git
+git clone https://github.com/sig-gis/rlcms.git
 ```
-
-![kaza_readme_git_clone](docs/imgs/git_clone.PNG)
-
-4. `cd` into your new kaza-lcms folder and `ls`(linux/MacOS) or `dir`(Windows) to see its contents
-
-![kaza_readme_cdToKazalc](docs/imgs/cd_to_kazalc.PNG)
+4. Finally, `cd` into your new rlcms folder and `ls`(linux/MacOS) or `dir`(Windows) to see its contents
 
 ## Install Source Code and Dependencies
-1. While still in your terminal, and in the `kaza-lcms` parent directory, install the `kaza-lcms` package from the source code with pip:
+1. While still in your terminal, and in the `rlcms` parent directory, install the `rlcms` package from the source code with pip:
 
 ```
 pip install -e .
 ```
 
-![kaza_readme_pip_install](docs/imgs/pip_install.PNG)
-
-pip will begin to install the `kaza-lcms` source code and its required dependencies. We install the package in developer mode (`-e` flag) so that changes made to files will be reflected in the code compiled at run-time. If the python package dependencies are already installed in your conda `gee` virtual environment, your output will show 'requirement already satisfied' next to each package already installed. 
+pip will begin to install the `rlcms` source code and its required dependencies. We install the package in developer mode (`-e` flag) so that changes made to files will be reflected in the code compiled at run-time. If the python package dependencies are already installed in your conda `gee` virtual environment, your output will show 'requirement already satisfied' next to each package already installed. 
 
 ## Earth Engine Setup
 Earth Engine requires you to authenticate your account credentials to access the Earth Engine API and your chosen Cloud Project. We do this with the `gcloud` python utility
@@ -62,7 +51,7 @@ Earth Engine requires you to authenticate your account credentials to access the
 3. Select Single User and use the default Destination Folder
 4. Leave the Selected Components to Install as-is and click Install
 5. Leave all four boxes checked, and click Finish. This will open a new command-prompt window and auto run gcloud initialization
-6. It asks whether yo'd like to log in, type y - this will open a new browser window to a Google Authentication page
+6. It asks whether you'd like to log in, type y - this will open a new browser window to a Google Authentication page
 
 ![kaza_readme_gcloudInstaller_initializing](https://user-images.githubusercontent.com/51868526/184163126-7505745b-f7c3-4745-bb36-3948d1b9ff76.JPG)
 
@@ -71,7 +60,7 @@ Earth Engine requires you to authenticate your account credentials to access the
 ![kaza_readme_gcloudInstaller_InitializingSignIn](https://user-images.githubusercontent.com/51868526/184163514-4604ac83-cdad-4dd8-bc67-c37224d6aafc.JPG)
 
 8. You will be redirected to a page that says "You are now authenticated with the gcloud CLI!"
-9. Go back to your shell that had been opened for you by gcloud. It asks you to choose a cloud project and lists all available cloud projects that your google account has access to. Look for `wwf-sig` and then type the number it is listed as to set your project. 
+9. Go back to your shell that had been opened for you by gcloud. It asks you to choose a cloud project and lists all available cloud projects that your google account has access to. Decide which project to authenticate with by typing its number in the list.
 
 ![kaza_readme_gcloudInstaller_chooseCloudProject_chooseWWF-SIG](https://user-images.githubusercontent.com/51868526/184165192-c602f058-b485-419c-b5ea-401c7087fb9f.JPG)
 
@@ -87,8 +76,8 @@ earthengine authenticate
 Test that earthengine is setup and authenticated by checking the folder contents within the `wwf-sig` cloud project. 
 * In your shell, run:
 ```
-earthengine set project wwf-sig
-earthengine ls projects/wwf-sig/assets/kaza-lc
+earthengine set_project <project-name>
+earthengine ls projects/project-name/assets
 ```
 
 ![kaza_earthenginels](docs/imgs/earthengine_ls.PNG)
@@ -97,11 +86,11 @@ If you do not get an error and it returns a list of folders and assets similar t
 
 # Tool Documentation
 
-Before you run any scripts, ensure you've activated your anaconda environment with your required dependencies and have changed into the `kaza-lcms` directory that contains the scripts.
+Before you run any scripts, ensure you've activated your anaconda environment with your required dependencies and have changed into the `rlcms` directory that contains the scripts.
 example:
 ```
 conda activate gee
-cd C:\kaza-lcms
+cd C:\rlcms
 ```
 
 Each Command Line Interface (CLI) script tool can be run in your command-line terminal of choice. The user must provide values for each required command-line argument to control the analysis.
@@ -126,7 +115,7 @@ The resulting band stack is needed for both extracting training data information
 
 example:
 ```
-01composite_s2 -a Zambezi -y 2021 -o projects/wwf-sig/assets/kaza-lc-test/input_stacks
+01composite_s2 -a path/to/aoi/asset -y 2021 -o output/path
 ```
 
 **NOTE: The user can control which spectral indices and time series features to generate in this tool by modifying this file in the repository : [`~/src/utils/model_inputs.py`](/src/utils/model_inputs.py). See [ProjectWorkflow.md](/ProjectWorkflow.md) for details.**
@@ -146,11 +135,11 @@ example:
 
 Create Land Cover Primitives For All Classes in Provided Training Data. 
 
-This script trains probability Random Forest models for each land cover class in your typology as provided by the numeric 'LANDCOVER' property in the provided reference data. It then exports these binary probability images one land cover at a time into a land cover 'Primitives' image collection. While doing so, it also reports out some model performance metrics saved to a new folder created in your *local* `kaza-lcms/metrics` folder on your computer.
+This script trains probability Random Forest models for each land cover class in your typology as provided by the numeric 'LANDCOVER' property in the provided reference data. It then exports these binary probability images one land cover at a time into a land cover 'Primitives' image collection. While doing so, it also reports out some model performance metrics saved to a new folder created in your *local* `rlcms/metrics` folder on your computer.
 
 example:
 ```
-03RFprimitives -i projects/wwf-sig/assets/kaza-lc/input_stacks/BingaTestPoly_stack_2020 -r projects/wwf-sig/assets/kaza-lc/sample_pts/BingaDummyReferenceData  -o projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_BingaTestPoly_2020
+03RFprimitives -i input/stack/path -t training/data/path -o output/primitives/imagecollection/path
 ```
 
 ## **04generate_LC**
@@ -161,8 +150,7 @@ This script takes the RF primitives collection generated from the previous scrip
 
 example:
 ```
-04generate_LC -i projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_BingaTestPoly_stack_2020 -o 
-projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020
+04generate_LC -i input/primitives/imagecollection/path -o output/path
 ```
 
 
