@@ -45,8 +45,8 @@ pip install -e .
 
 pip will begin to install the `rlcms` source code and its required dependencies. We install the package in developer mode (`-e` flag) so that changes made to files will be reflected in the code compiled at run-time. If the python package dependencies are already installed in your conda `gee` virtual environment, your output will show 'requirement already satisfied' next to each package already installed. 
 
-## Earth Engine Setup
-Earth Engine requires you to authenticate your account credentials to access the Earth Engine API and your chosen Cloud Project. We do this with the `gcloud` python utility
+## GEE Python API Setup
+Earth Engine requires you to authenticate your account credentials to access the Earth Engine python API and your chosen Cloud Project. We do this with the `gcloud` python utility
 1. Download the installer for the `glcoud` command-line python [utility](https://cloud.google.com/sdk/docs/install) from Google
 2. Run the installer
 3. Select Single User and use the default Destination Folder
