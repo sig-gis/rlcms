@@ -1,4 +1,4 @@
-# Running KAZA Regional Land Cover Monitoring System
+# Running Regional Land Cover Monitoring System Toolset
 # Setup Instructions
 ## Python Environment Setup
 1. Install Anaconda 
@@ -36,7 +36,8 @@ git clone https://github.com/sig-gis/rlcms.git
 4. Finally, `cd` into your new rlcms folder and `ls`(linux/MacOS) or `dir`(Windows) to see its contents
 
 ## Install Source Code and Dependencies
-1. While still in your terminal, and in the `rlcms` parent directory, install the `rlcms` package from the source code with pip:
+
+While still in your terminal, and in the `rlcms` parent directory, install the `rlcms` package from the source code with pip:
 
 ```
 pip install -e .
@@ -100,7 +101,7 @@ You can first run any script, only declaring the `-h` flag. This will bring up t
 
 Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online
 
-The points are pre-formatted for use in Collect Earth Online to generate photo-interpreted reference data. You can choose to export the points to Google Drive, to GEE Asset or both. 
+The points are pre-formatted for use in Collect Earth Online. You can choose to export the points to Google Drive, to GEE Asset or both. 
 
 example:
 ```
@@ -111,7 +112,7 @@ example:
 
 Creates a Sentinel-2 Composite for an AOI or reference polygons. 
 
-The resulting band stack is needed for both extracting training data information and as input to a trained model's inference. Set the `-p` flag if your AOI is a set of reference polygons and not one contiguous AOI polygon. 
+The resulting band stack is needed for both extracting training data information and as input to a trained model's inference. Set the `-p` flag if your AOI is a set of reference polygons and not one contiguous AOI polygon - this will export band information only within each polygon's footprint. 
 
 example:
 ```
