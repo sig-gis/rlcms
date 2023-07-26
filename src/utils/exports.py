@@ -3,7 +3,7 @@ import os
 from src.utils.check_exists import check_exists
 ee.Initialize()
 
-def exportImgToAsset(img,desc,asset_id,region,scale):
+def exportImgToAsset(img,desc,asset_id,region,scale,crs:None):
     """Export Image to GEE Asset"""
     export_region = region
     task = ee.batch.Export.image.toAsset(
@@ -12,7 +12,7 @@ def exportImgToAsset(img,desc,asset_id,region,scale):
         assetId=asset_id,
         region=export_region.getInfo()['coordinates'],
         scale=scale,
-        crs='EPSG:32734',
+        crs=crs,
         maxPixels=1e13)
     task.start()
     print(f"Export started (Asset): {asset_id}") 

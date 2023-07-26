@@ -17,7 +17,7 @@ def main():
     "--aoi",
     type=str,
     required=True,
-    help="The full asset path to an aoi or reference polygon dataset. If only file base name provided, file must exist in 'projects/wwf-sig/assets/kaza-lc/aoi/' (i.e. Zambezi)"
+    help="The asset path to an aoi or reference polygon dataset"
     )
     
     parser.add_argument(
@@ -32,8 +32,17 @@ def main():
     "-o",
     "--output",
     type=str,
+    required=True,
+    help="The full asset path for export"
+    )
+
+    # I think we want user to have control on output CRS but might make everything more complicated? 
+    parser.add_argument(
+    "-c",
+    "--crs",
+    type=str,
     required=False,
-    help="The full asset path for export. Default: 'projects/wwf-sig/assets/kaza-lc/input_stacks/S2_[year]_stack_[aoi]' "
+    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
     )
 
     parser.add_argument(
@@ -49,59 +58,45 @@ def main():
     "--dry_run",
     dest="dry_run",
     action="store_true",
-    help="goes through checks and prints output asset path but does not export.",
+    help="goes through checks and prints output asset path but does not export",
     )
     
     args = parser.parse_args()
     
     year = args.year
-    aoi = args.aoi
+    aoi_path = args.aoi
     output = args.output
+    crs = args.crs
     polygons = args.polygons
     dry_run = args.dry_run
 
-    if '/' in aoi:
-        aoi_path = aoi.strip().rstrip('/')
-        aoi_name = aoi_path.split('/')[-1]
-    else:
-        aoi_path = f"projects/wwf-sig/assets/kaza-lc/aoi/{aoi}"
-        aoi_name = aoi
-   
-    if output:
-        asset_id=output # user has provided full asset path to the asset (i.e. assetId for export function)
-        outputbase = os.path.dirname(asset_id)
-    else:
-        outputbase = 'projects/wwf-sig/assets/kaza-lc/input_stacks'
-        asset_id = f"{outputbase}/S2_{str(year)}_stack_{aoi_name}" 
+    output_folder = os.path.dirname(output)
     
-    # check inputs 
-    aoi = ee.FeatureCollection(aoi_path)
-    # # trying to get this to work for polygon geoms not one contiguous geometry
-    # aoi_buffered = aoi.geometry().buffer(1000) 
+    # check inputs
     assert check_exists(aoi_path) == 0, f"Check aoi exists: {aoi_path}"
-    assert check_exists(outputbase) == 0, f"Check output folder exists: {outputbase}"
+    assert check_exists(output_folder) == 0, f"Check output folder exists: {output_folder}"
     assert len(str(year)) == 4, "year should conform to YYYY format"
     
-    if check_exists(asset_id):
+    aoi = ee.FeatureCollection(aoi_path)
+
+    if check_exists(output):
         
         if dry_run:
-            print(f"would export: {asset_id}")
+            print(f"would export: {output}")
         else:
             if polygons:
                 # use s2process_refdata() to only process satellite data inside polygons, exporting to polygons' minimum bbox
                 region = aoi.geometry().bounds()
-                output = s2process_refdata(aoi,'LANDCOVER',year)
-                exportImgToAsset(img=output,desc=os.path.basename(asset_id),asset_id=asset_id,region=region,scale=10)
+                img = s2process_refdata(aoi,'LANDCOVER',year)
+                exportImgToAsset(img=img,desc=os.path.basename(output),asset_id=output,region=region,scale=10,crs=crs)
  
             else:
                 # use s2process() to process all satellite data inside the aoi, exporting to a 1km buffer of the aoi
                 region = aoi.geometry().buffer(1000)
-                output = s2process(aoi,year,year)
-                exportImgToAsset(img=output,desc=os.path.basename(asset_id),asset_id=asset_id,region=region,scale=10)
+                img = s2process(aoi,year,year)
+                exportImgToAsset(img=img,desc=os.path.basename(output),asset_id=output,region=region,scale=10,crs=crs)
     else:
-        print(f"Image already exsits: {asset_id}")
-        
-
+        print(f"Image already exsits: {output}")
 
 if __name__ == "__main__":
     main()

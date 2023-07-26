@@ -31,11 +31,19 @@ def main():
     )
 
     parser.add_argument(
+    "-c",
+    "--crs",
+    type=str,
+    required=False,
+    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
+    )
+    
+    parser.add_argument(
     "-o",
     "--output",
     type=str,
-    required=False,
-    help="The output asset path basename for export. Default: 'projects/wwf-sig/assets/kaza-lc/sample_pts/[input_fc_basename]_[train|test]' "
+    required=True,
+    help="The output asset path basename for export"
     )
     
     parser.add_argument(
@@ -83,18 +91,15 @@ def main():
     input_fc = args.reference_polygons
     input_img = args.input_img
     output = args.output
+    crs = args.crs
     class_values = args.class_values
     class_points = args.class_points
     dry_run = args.dry_run
     no_split = args.no_split
     reshuffle = args.reshuffle
 
-    if output: # user has provided full asset id basename
-        asset_id_basename=output 
-        output_folder = os.path.dirname(asset_id_basename)
-    else:
-        output_folder = 'projects/wwf-sig/assets/kaza-lc/sample_pts' #use default folder and asset_id basename for _train and _test exports
-        asset_id_basename = f"{output_folder}/{os.path.basename(input_fc)}_{os.path.basename(input_img)}"
+    # perform checks
+    output_folder = os.path.dirname(output)
     
     assert check_exists(input_fc) == 0, f"Check input FeatureCollection exists: {input_fc}"
     assert check_exists(output_folder) == 0, f"Check output folder exists: {output_folder}"
@@ -111,10 +116,10 @@ def main():
 
     if dry_run:
         if no_split:
-            print(f"would export (Asset): {asset_id_basename}_pts")
+            print(f"would export (Asset): {output}")
             exit()
         else:
-            print(f"would export (Asset): {asset_id_basename}_[train|test]_pts")
+            print(f"would export (Asset): {output}_[train|test]_pts")
             exit()
     else:
         # default seed is set, will re-randomize seed if reshuffle==True
@@ -130,32 +135,26 @@ def main():
                                          collection=fc,
                                          class_band='LANDCOVER', # should this be a CLI arg or set in model_inputs.py? hardcoded for now..
                                          scale=10, # should this be a CLI arg or set in model_inputs.py? hardcoded for now..
-                                         projection='EPSG:32734', # should this be a CLI arg or set in model_inputs.py? hardcoded for now
+                                         crs=crs, # this is now a CLI arg
                                          seed=seed,
                                          class_values=class_values,
                                          class_points=class_points)
         
         if no_split==False: # split into train and test pts
             train,test = split_train_test(pts,seed)
-            train_assetid = f"{asset_id_basename}_train_pts"
+            train_assetid = f"{output}_train_pts"
             train_description = os.path.basename(train_assetid).replace('/','_')
             exportTableToAsset(train,train_description,train_assetid)
 
-            test_assetid = f"{asset_id_basename}_test_pts"
+            test_assetid = f"{output}_test_pts"
             test_description = os.path.basename(test_assetid).replace('/','_')
             exportTableToAsset(test,test_description,test_assetid)
         
         else: # export all pts as is
-            assetid = f"{asset_id_basename}_pts"
+            assetid = f"{output}"
             description = os.path.basename(assetid).replace('/','_')
             exportTableToAsset(pts,description,assetid)
         
-    
-    
-      
-
-            
-
 if __name__ == "__main__":
     main()
 

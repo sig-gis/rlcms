@@ -111,7 +111,7 @@ def strat_sample_no_extraction(collection:ee.FeatureCollection,class_band:str,sc
         
 
 # working on optimized stratified sample function not using .stratifiedSample()
-def strat_sample_w_extraction(img:ee.Image,collection:ee.FeatureCollection,scale:int,projection:str,class_band:str,seed:int,
+def strat_sample_w_extraction(img:ee.Image,collection:ee.FeatureCollection,scale:int,crs:str,class_band:str,seed:int,
                               class_values:list,class_points:list):
   """
     Generates stratified random sample pts from reference polygons with all bands from input image extracted
@@ -147,7 +147,7 @@ def strat_sample_w_extraction(img:ee.Image,collection:ee.FeatureCollection,scale
     rawSample_fromPts = ee.Image(img).sampleRegions(
           collection=random_pts, 
           scale=scale,
-          projection=projection, 
+          projection=crs, 
           tileScale=16, 
           geometries=True).randomColumn().limit(n_points,'random')
     
@@ -156,8 +156,6 @@ def strat_sample_w_extraction(img:ee.Image,collection:ee.FeatureCollection,scale
   
   pts_by_class = ee.FeatureCollection(ee.List(zip_value_n).map(do_by_class)).flatten()
   return pts_by_class
-  # pts_by_class = zip_value_n.map(do_by_class)
-  # return ee.FeatureCollection(pts_by_class).flatten()
 
 def strat_sample(img,class_band,region,scale,seed,n_points,class_values,class_points):
     """
