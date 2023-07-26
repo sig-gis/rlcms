@@ -50,21 +50,6 @@ def main():
     output_path = args.output
     crs = args.crs
     dry_run = args.dry_run
-
-    ###
-    ## remove default file path completion
-   #  if output_path:
-   #    outputbase = os.path.dirname(output_path)
-   #    asset_id = output_path
-   #    if check_exists(outputbase) == 0:
-   #       os.popen(f"earthengine create folder {outputbase}").read()
-   #    else:
-   #       raise ValueError(f"Check output parent folder exists: {outputbase}")
-   #  else:
-   #     outputbase = "projects/wwf-sig/assets/kaza-lc/output_landcover"
-   #     # assumes 'Primitives' in input_path string)
-   #     asset_id = f"{outputbase}/{os.path.basename(input_path).replace('Primitives','LandCover')}"
-   #  ###
     
     # If output Image exists already, throw error
     assert check_exists(output_path), f"Output image already exists: {output_path}"
