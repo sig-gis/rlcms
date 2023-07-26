@@ -1,5 +1,5 @@
 import ee
-ee.Initialize(project='wwf-sig')
+ee.Initialize()
 
 def check_exists(ee_path:str):
     try:

@@ -6,7 +6,7 @@ from src.utils.check_exists import check_exists
 from src.utils.primitives import primitives_to_collection
 
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Create Land Cover Primitives For All Classes in Provided Training Data",
@@ -31,11 +31,19 @@ def main():
     )
     
     parser.add_argument(
+    "-c",
+    "--crs",
+    type=str,
+    required=False,
+    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
+    )
+    
+    parser.add_argument(
         "-o",
         "--output",
         type=str,
-        required=False,
-        help="The full asset path for export. Defaults to: 'projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_[input_img_basename]' "
+        required=True,
+        help="The output asset path of the primitives image collection."
     )
 
     parser.add_argument(
@@ -51,6 +59,7 @@ def main():
     input_stack_path = args.input_stack
     train_paths = args.training_data
     output = args.output
+    crs = args.crs
     dry_run = args.dry_run
 
     # Run Checks
@@ -60,23 +69,13 @@ def main():
     # Check training data exists
     for train_path in train_paths:
         assert check_exists(train_path) == 0, f"Check training_data asset exists: {train_path}"
-    
-    # Check -o output value will work if provided 
-    # you have to either provide full asset path to output asset or not provide -o value at all to use default output location 
-    if output:
-        if '/' not in output:
-            raise ValueError("Incorrect -o argument: Provide full asset path to -o or leave argument blank to use default output location")
              
-        img_coll_path = output
-        outputbase = os.path.dirname(output)
-        # if / in path but the parent folder for your provided Primitives IC path doesn't exist, catches it
-        assert check_exists(outputbase) == 0, f"Check parent folder exists: {outputbase}"
-        
-    else:
-        outputbase = "projects/wwf-sig/assets/kaza-lc/output_landcover"
-        img_coll_path = f"{outputbase}/Primitives_{os.path.basename(input_stack_path)}" #default path
+    img_coll_path = output
+    output_folder = os.path.dirname(output)
+    # check output folder exists
+    assert check_exists(output_folder) == 0, f"Check parent folder exists: {output_folder}"
     
-    # don't want to let user try to export new Images into pre-existing ImageCollection, would be messy to handle
+    # don't allow ee.Image exports to pre-existing ee.ImageCollections
     if check_exists(img_coll_path) == 0:
         raise AssertionError(f"Primitives ImageCollection already exists: {img_coll_path}")
 
@@ -111,7 +110,8 @@ def main():
         primitives_to_collection(input_stack=input_stack,
                                  training_pts=training_data,
                                  output_ic=img_coll_path,
-                                 metrics_path=metrics_path)
+                                 metrics_path=metrics_path,
+                                 crs=crs)
 
 if __name__=="__main__":
     main()

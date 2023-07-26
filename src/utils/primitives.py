@@ -1,6 +1,7 @@
 import ee
 import os
 import pandas as pd
+from src.utils import exports
 
 def format_pts(pts):
     """Turn a FC of training points containing full LC typology into a list of primitive point FCs, 
@@ -28,23 +29,6 @@ def export_metrics(imp,oob,img,metrics_path):
     with open(os.path.join(metrics_path,f'oobErrorClass{lc_class}.txt'),mode='w') as f:
         f.write(ee.String(ee.Number(oob).format()).getInfo())
         f.close()
-
-# TODO: should use export function defined in exports.py to reduce redundant code
-def export_img(img,imgcoll_p,aoi): 
-    """Export image to Primitives imageCollection"""
-    desc = f"Class{ee.Image(img).getString('Class').getInfo()}" # this would need to be defined in the Prims img for-loop
-    task = ee.batch.Export.image.toAsset(
-        image=ee.Image(img),
-        description=desc,
-        assetId=f'{imgcoll_p}/{desc}', 
-        region=aoi, #.geometry().bounds(), 
-        scale=10, 
-        crs='EPSG:32734', 
-        maxPixels=1e13)
-    
-    task.start()
-    print(f"Export Started: {imgcoll_p}/{desc}")
-
 
 def gettop20(dict):
    dict = ee.Dictionary(dict)
@@ -97,7 +81,7 @@ def RFprim(training_pts,input_stack):
     output = ee.Image(inputs).classify(model,'Probability').set('oobError',oob_top20, 'Class',class_value) # 'Class',class_value
     return importance_all,oob_all,importance_top20,oob_top20,output
 
-def primitives_to_collection(input_stack,training_pts,output_ic,metrics_path):
+def primitives_to_collection(input_stack,training_pts,output_ic,metrics_path,crs):
     """
     Create LC Primitive image for each LC class in training points
 
@@ -113,40 +97,36 @@ def primitives_to_collection(input_stack,training_pts,output_ic,metrics_path):
 
     input_stack = ee.Image(input_stack)
     training_pts = ee.FeatureCollection(training_pts)
-    # make the empty IC, assuming it'll never already exist because error handling at main() will have prohibited that
+    # make the empty IC, assuming it'll never already exist because error handling at 03RFprimitives:main() will have prohibited that
     print(f"Creating empty Primitives ImageCollection: {output_ic}.\n")
     os.popen(f"earthengine create collection {output_ic}").read()
     
     # list of distinct LANDCOVER values
     labels = training_pts.aggregate_array('LANDCOVER').distinct().getInfo()
-    # labels = ee.FeatureCollection(train_path).aggregate_array('LANDCOVER').distinct().getInfo()
-    # labels = ee.FeatureCollection(training_pts).aggregate_array('LANDCOVER').distinct().getInfo()
     
     # converting to index of the list of distinct LANDCOVER primtive FC's (prim_pts below)
     indices = list(range(len(labels))) # handles dynamic land cover strata
     
-    # print('LANDCOVER class values: ',labels)
-    # print('prim pt list indices: ',indices)
-    
-    # Sentinel2 SR composite to apply model inference on
+    # input composite to apply model inference on
     input_stack = ee.Image(input_stack)
-    
     aoi = input_stack.geometry()
-        
-    # user-provided FeatureCollection reference dataset, contains LANDCOVER property with integer values
-    # training_pts = ee.FeatureCollection(train_path)#.filterBounds(aoi) 
     
     for i in indices: # running one LC class at a time
         prim_pts = ee.FeatureCollection(ee.List(format_pts(training_pts)).get(i)) # format training pts to 1/0 prim format
         # print(f'Index {i}, PRIM is LANDCOVER:', prim_pts.filter(ee.Filter.eq('PRIM',1)).aggregate_histogram('LANDCOVER').getInfo())
-        importance_all,oob_all,importance_top20,oob_top20,output = RFprim(prim_pts,input_stack) # aoi was a kwarg, but it was only being used to filter training pts to aoi before training model, don't wanna do that anymore# run RF primitive model, get output image and metrics
-        export_img(ee.Image(output), output_ic, aoi)
         
-        # TODO: we would need greater file path control in export_metrics() so we don't overwrite the pre-top20 outputs
+        importance_all,oob_all,importance_top20,oob_top20,img = RFprim(prim_pts,input_stack) # run RF primitive model, get output image and metrics
+        
+        desc = f"Class{ee.Image(img).getString('Class').getInfo()}" # this would need to be defined in the Prims img for-loop
+        asset_id = f'{output_ic}/{desc}'
+        exports.exportImgToAsset(img=img,desc=desc,asset_id=asset_id,region=aoi,scale=10,crs=crs)
+        # export_img(ee.Image(img), output_ic, aoi)
+        
         # export metrics before top20 feature selection
-        # export_metrics(importance_all,oob_all,output,metrics_path) 
+        # TODO: we would need greater file path control in export_metrics() so we don't overwrite the pre-top20 outputs
+        # export_metrics(importance_all,oob_all,img,metrics_path) 
         
         # export metrics after top20 feature selection
-        export_metrics(importance_top20,oob_top20,output,metrics_path) 
+        export_metrics(importance_top20,oob_top20,img,metrics_path) 
 
     return

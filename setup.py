@@ -3,14 +3,14 @@ from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-# change all this
+
 setup(
-    name="klcms",
+    name="rlcms",
     version="0.0",
-    description="KAZA Land Cover Monitoring System",
+    description="Regional Land Cover Monitoring System",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/kyle-woodward/kaza-lc",
+    url="https://github.com/sig-gis/rlcms",
     packages=setuptools.find_packages(),
     author="Kyle Woodward",
     author_email="kw.geospatial@gmail.com",

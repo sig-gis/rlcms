@@ -7,25 +7,8 @@ import src.utils.sampling as sampling
 from src.utils.check_exists import check_exists
 import src.utils.exports as exports
 
-# ######################### #
-# Random Stratified Sample for Collect Earth Online  #
-# ######################### #
-# This script will preform a random stratified sample
-# on a categorical input image for the intent of
-# using the sampling schema in Collect Earth Online.
-
-# Stratified random sampling can be preformed equally
-# across classes, or by defining a list of labels and
-# values.
-
-# The output is a csv sample design where each plot
-# has 1 sample in the proper format for use in CEO
-# ######################### #
-
 ## GLOBAL VARS
 scale = 10 # for Sentinel2
-# landCover is the named field which will hold each
-# it is the class band in the image that is being sampled
 
 def ceoClean(f):
         # LON,LAT,PLOTID,SAMPLEID.,
@@ -46,7 +29,7 @@ def plot_id_global(n,feat):
     return f
 
 def main():
-    ee.Initialize(project='wwf-sig')
+    ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online",
@@ -75,8 +58,8 @@ def main():
     "-o",
     "--output",
     type=str,
-    required=False,
-    help="The output asset path basename for export. Default: 'projects/wwf-sig/assets/kaza-lc/sample_pts/[input_img_basename]_sample_pts' "
+    required=True,
+    help="The output asset path basename for export."
     )
     
     parser.add_argument(
@@ -147,13 +130,8 @@ def main():
     reshuffle = args.reshuffle
     dry_run = args.dry_run
 
-    if output:
-        asset_id_basename=output # user has provided full asset id basename
-        output_folder = os.path.dirname(asset_id_basename)
-    else:
-        output_folder = 'projects/wwf-sig/assets/kaza-lc/sample_pts' #use default folder and asset_id basename for _train and _test exports
-        asset_id_basename = f"{output_folder}/{os.path.basename(input_path)}_sample_pts"
-    
+    # perform checks
+    output_folder = os.path.dirname(output)
     assert check_exists(input_path) == 0, f"Check input FeatureCollection exists: {input_path}"
     assert check_exists(output_folder) == 0, f"Check output folder exists: {output_folder}"
     
@@ -194,14 +172,14 @@ def main():
     samples = sampling.strat_sample(img=img,
                                     class_band=class_band,
                                     region=bbox,
-                                    scale=scale,
-                                    seed=seed, # 10, hard coded set at top of script
+                                    scale=scale, # 10, hard coded set at top of script, can make this a user arg for greater flexibility
+                                    seed=seed, 
                                     n_points=n_points,
                                     class_values=class_values,
                                     class_points=class_points).map(ceoClean)
 
     # set up export info
-    description = os.path.basename(asset_id_basename).replace('/','_')
+    description = os.path.basename(output)
     drive_folder = 'kaza-lc'
     drive_desc = description+'-Drive'
     asset_desc = description+'-Asset'
@@ -209,10 +187,10 @@ def main():
     # will export to drive or asset if you specify one or the other
     if to_asset==True and to_drive==False:
         if dry_run:
-            print(f"would export (Asset): {asset_id_basename}")
+            print(f"would export (Asset): {output}")
             exit()
         else:
-            exports.exportTableToAsset(samples,asset_desc,asset_id_basename)
+            exports.exportTableToAsset(samples,asset_desc,output)
     
     elif to_drive==True and to_asset==False:
         if dry_run:
@@ -223,11 +201,11 @@ def main():
     
     else: # export both ways if neither or both of the --to_drive and --to_asset flags are given
         if dry_run:
-            print(f"would export (Asset): {asset_id_basename}")
+            print(f"would export (Asset): {output}")
             print(f"would export (Drive): {drive_folder}/{drive_desc}")
             exit()
         else:
-            exports.exportTableToAsset(samples,asset_desc,asset_id_basename)
+            exports.exportTableToAsset(samples,asset_desc,output)
             exports.exportTableToDrive(samples,drive_desc,drive_folder,selectors)
         
 if __name__ == "__main__":

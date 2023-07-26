@@ -2,7 +2,7 @@ import ee
 import math
 from src.utils.model_inputs import model_inputs
 
-ee.Initialize(project='wwf-sig')
+ee.Initialize()
 
 def addHarmonicTerms(image):
     """add Time bands to image"""
