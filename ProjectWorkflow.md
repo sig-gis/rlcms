@@ -12,7 +12,6 @@ We execute these steps in order create a yearly land cover product for a given y
 For tool documentation, see the [REAMDE](README.md)
 
 For code demo videos see this [Drive Folder](https://drive.google.com/drive/folders/1gUYxjBzq7FpZcZ7VGoORb8E-Uqf79CSO?usp=sharing). 
-*You can ask for access from Victoria Stanley (victoria.stanley@wwf.de) or Helga Kuechly (helga.kuechly@wwf.de)*
 
 ## Detailed Example
 
@@ -28,12 +27,12 @@ Below is a Land Cover image for our area already existing in our GEE Assets at t
 
 ![intial_lc](docs/imgs/initial_landcover.PNG)
 
-* Run the 00sample_pts script, providing a reference land cover image, its land cover band name, and your desired sample stratification options. By default the tool will export the point dataset to Google Drive as a CSV and to GEE as a FeatureCollection Asset, but you can specify either the -td/--to_drive or -ta/--to_asset flag to specify only one of the export formats. 
+* Run the sample_ptsscript, providing a reference land cover image, its land cover band name, and your desired sample stratification options. By default the tool will export the point dataset to Google Drive as a CSV and to GEE as a FeatureCollection Asset, but you can specify either the -td/--to_drive or -ta/--to_asset flag to specify only one of the export formats. 
 
 CLI Input:
 
 ```
-00sample_pts -im projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020 -band classification -o projects/wwf-sig/assets/kaza-lc/sample_pts/demo_LandCover_BingaTestPoly_2020 --class_values 1 2 3 4 5 6 7 8 --class_points 100 200 200 100 100 100 100 100
+sample_pts-im projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020 -band classification -o projects/wwf-sig/assets/kaza-lc/sample_pts/demo_LandCover_BingaTestPoly_2020 --class_values 1 2 3 4 5 6 7 8 --class_points 100 200 200 100 100 100 100 100
 ```
 
 CLI Output:
@@ -77,20 +76,20 @@ GEE Asset Display:
 
 We need to composite information from Sentinel-2 and other geospatial data sources that the land cover model will be using to train and predict on land cover. To be most memory-efficient, we must export a given Sentinel-2 Input Stack to a GEE asset before using it in either the training data generation or model prediction steps. You can create S2 input stack for any year of interest to any AOI polygon or set of polygons. 
 
-I interpreted my Land Cover Reference Polygons for the year 2022 in Collect Earth Online, and I want to predict a 2022 land cover map, so I will create a 2022 Sentinel-2 input stack composite using the `01sentinel2_sr` tool. Since my reference polygons in this demo all fall within my desired project AOI and my training data and prediction year is the same, I can run this tool once for my project AOI, and use the result of that for both the training data creation and model prediction steps*. If I wanted to create training data from 2021 to train the model and predict 2022 land cover, I would need to run `01sentinel2_sr` tool twice - once for 2021 training data and once for 2022 prediction. 
+I interpreted my Land Cover Reference Polygons for the year 2022 in Collect Earth Online, and I want to predict a 2022 land cover map, so I will create a 2022 Sentinel-2 input stack composite using the `composite_s2` tool. Since my reference polygons in this demo all fall within my desired project AOI and my training data and prediction year is the same, I can run this tool once for my project AOI, and use the result of that for both the training data creation and model prediction steps*. If I wanted to create training data from 2021 to train the model and predict 2022 land cover, I would need to run `composite_s2` tool twice - once for 2021 training data and once for 2022 prediction. 
 
-* Run the `01composite_s2` tool, specifying an AOI GEE asset path, the year to composite data for, and an output GEE asset path
+* Run the `composite_s2` tool, specifying an AOI GEE asset path, the year to composite data for, and an output GEE asset path
 
 CLI Input:
 ```
-01composite_s2 -a projects/wwf-sig/assets/kaza-lc/aoi/testBingaPoly -y 2022 -o projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly
+composite_s2 -a projects/wwf-sig/assets/kaza-lc/aoi/testBingaPoly -y 2022 -o projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly
 ```
 
 CLI Output:
 
 ![01composite_s2_CLI](docs/imgs/01composite_s2_CLI.PNG)
 
-**If my reference polygons overlap multiple project AOIs or fall outside of them (i.e. WWF's Zambia Field Data), then compositing S2 data with wall-to-wall coverage of the the reference polygons' bounding box (the default behavior) wastes compute resources - we won't use any of the composited data that is outside the reference polygon footprints and outside any of the AOIs. It is more efficient to composite S2 data just within the polygon footprints and use that data to extract training information within those footprints. In that instance, you would provide the reference polygons Asset path to the -a/--aoi flag and provide the -p/--polygons flag in this tool to composite data only within polygon footprints instead. Therefore, you would need to run the `01composite_s2` tool twice - once to provide an input stack for the training data creation and again to provide an input stack within your project AOI for the land cover prediction.* 
+**If my reference polygons overlap multiple project AOIs or fall outside of them (i.e. WWF's Zambia Field Data), then compositing S2 data with wall-to-wall coverage of the the reference polygons' bounding box (the default behavior) wastes compute resources - we won't use any of the composited data that is outside the reference polygon footprints and outside any of the AOIs. It is more efficient to composite S2 data just within the polygon footprints and use that data to extract training information within those footprints. In that instance, you would provide the reference polygons Asset path to the -a/--aoi flag and provide the -p/--polygons flag in this tool to composite data only within polygon footprints instead. Therefore, you would need to run the `composite_s2` tool twice - once to provide an input stack for the training data creation and again to provide an input stack within your project AOI for the land cover prediction.* 
 
 GEE Task Pane:
 
@@ -120,11 +119,11 @@ Currently `addJRCWater` and `addTasselCap` are set to `False`. These covariates 
 
 Now that I have a Sentinel-2 Input Stack composited and exported to a GEE Asset, I can use it in conjunction with my reference polygon dataset to extract a stratified random sample of training and test points that contain all the necessary model predictors and the Land Cover label.   
 
-* Run the `02train_test` tool, providing the reference polygon asset path, the input stack image path, your output asset path basename (the tool adds '_train_pts' and '_test_pts' suffixes to the output file path provided), and specifying your stratified sampling configuration. Here I'm saying want to sample all Land Cover labels 1-8 and I want to sample a specific number of points per class. For example, I am sampling 500 points for class 1, 500 for class 2, 1000 for class 3, etc.
+* Run the `train_test` tool, providing the reference polygon asset path, the input stack image path, your output asset path basename (the tool adds '_train_pts' and '_test_pts' suffixes to the output file path provided), and specifying your stratified sampling configuration. Here I'm saying want to sample all Land Cover labels 1-8 and I want to sample a specific number of points per class. For example, I am sampling 500 points for class 1, 500 for class 2, 1000 for class 3, etc.
 
 CLI Input:
 ```
-02train_test -rp projects/wwf-sig/assets/kaza-lc/reference_data/BingaDummyReferencePolys -im projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly -o projects/wwf-sig/assets/kaza-lc/sample_pts/BingaDummyReferencePolys_S2_2022_testBingaPoly --class_values 1 2 3 4 5 6 7 8 --class_points 500 500 1000 750 750 750 500 500
+train_test -rp projects/wwf-sig/assets/kaza-lc/reference_data/BingaDummyReferencePolys -im projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly -o projects/wwf-sig/assets/kaza-lc/sample_pts/BingaDummyReferencePolys_S2_2022_testBingaPoly --class_values 1 2 3 4 5 6 7 8 --class_points 500 500 1000 750 750 750 500 500
 ```
 
 CLI Output:
@@ -145,13 +144,13 @@ I have training data for a model and I have the input stack that I want to have 
 
 Note this tool also exports one out of bag (OOB) error .txt file and one varImportance .csv file per primitive. The oobError .txt files contain the Out-of-Bag Error estimate for that primitive's Random Forest model. The varImportance .csv files report out the relative importance of **each of the top 20 most important input features (covariates)**. Those files are saved locally to a metrics folder in your current working directory. 
 
-* Run the `03RFprimitives` tool, providing the input S2 stack path, the training points asset path, and an output path.
+* Run the `RFprimitives` tool, providing the input S2 stack path, the training points asset path, and an output path.
 
 **Note: the -t --training_data flag can accept multiple training dataset paths separated by a space. Therefore you can use multiple training datasets, generated from different years and/or locations to train the model. This addresses WWF's desire to apply reference data from other years and locations to a given project AOI's yearly land cover maps. See the explanation within Step 2 regarding this scenario.**
 
 CLI Input:
 ```
-03RFprimitives -i projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly -t projects/wwf-sig/assets/kaza-lc/sample_pts/BingaDummyReferencePolys_S2_2022_testBingaPoly_train_pts -o projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_S2_2022_testBingaPoly
+RFprimitives -i projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly -t projects/wwf-sig/assets/kaza-lc/sample_pts/BingaDummyReferencePolys_S2_2022_testBingaPoly_train_pts -o projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_S2_2022_testBingaPoly
 ```
 
 CLI Output:
@@ -178,11 +177,11 @@ The OOB and varImportance metrics exported by this tool can aid in assessing mod
 
 Now that we have generated our Primitives for our Land Cover typology, we want to assemble the primitives into a categorical Land Cover image. In the current methodology, the assemblage rule(s) are simple: for each pixel, the final Land Cover category is that primitive with the highest probability value. 
 
-* Run the `04generate_LC` tool, providing the input primitives ImageCollection path and an output asset path.
+* Run the `generate_LC` tool, providing the input primitives ImageCollection path and an output asset path.
 
 CLI Input:
 ```
-04generate_LC -i projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_S2_2022_testBingaPoly -o projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_S2_2022_testBingaPoly
+generate_LC -i projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_S2_2022_testBingaPoly -o projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_S2_2022_testBingaPoly
 ```
 CLI Output:
 
@@ -241,7 +240,7 @@ We will be using the `Stratified Estimation` script tool.
 * In the first dialog box, we will provide the full GEE asset path to our Land Cover `ee.Image`.
 * We leave the second dialog box, 'Specify Band' as default 1
 * In the third dialog box, we must specify the no data value. It must be a number that is not being used in the 'LANDCOVER' typology. For example, if your LANDCOVER values are 1-8, a no data value 0 is appropriate.
-* In the fourth dialog box, we provide the full GEE asset path to our testing samples `ee.FeatureCollection`. In our workflow, this is generated in the 03RFprimitives.py by separating the input reference data into '_trainingPts' and '_testingPts'. You want to select the '_testingPts' `ee.FeatureCollection`
+* In the fourth dialog box, we provide the full GEE asset path to our testing samples `ee.FeatureCollection`. In our workflow, this is generated in the RFprimitives.py by separating the input reference data into '_trainingPts' and '_testingPts'. You want to select the '_testingPts' `ee.FeatureCollection`
 * Click 'Load data', then another button 'Apply stratified estimator' will appear. Click that as well. 
 * Testing points that were misclassified in our land cover image are added to the map, and Accuracy and Area metrics are printed to the Console. 
 
