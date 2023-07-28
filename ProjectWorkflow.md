@@ -27,12 +27,12 @@ Below is a Land Cover image for our area already existing in our GEE Assets at t
 
 ![intial_lc](docs/imgs/initial_landcover.PNG)
 
-* Run the sample_ptsscript, providing a reference land cover image, its land cover band name, and your desired sample stratification options. By default the tool will export the point dataset to Google Drive as a CSV and to GEE as a FeatureCollection Asset, but you can specify either the -td/--to_drive or -ta/--to_asset flag to specify only one of the export formats. 
+* Run the sample_pts script, providing a reference land cover image, its land cover band name, and your desired sample stratification options. By default the tool will export the point dataset to Google Drive as a CSV and to GEE as a FeatureCollection Asset, but you can specify either the -td/--to_drive or -ta/--to_asset flag to specify only one of the export formats. 
 
 CLI Input:
 
 ```
-sample_pts-im projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020 -band classification -o projects/wwf-sig/assets/kaza-lc/sample_pts/demo_LandCover_BingaTestPoly_2020 --class_values 1 2 3 4 5 6 7 8 --class_points 100 200 200 100 100 100 100 100
+sample_pts -im projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020 -band classification -o projects/wwf-sig/assets/kaza-lc/sample_pts/demo_LandCover_BingaTestPoly_2020 --class_values 1 2 3 4 5 6 7 8 --class_points 100 200 200 100 100 100 100 100
 ```
 
 CLI Output:
@@ -54,14 +54,12 @@ We will now use the sample point CSV data exported from Step 1a in the creation 
 Create New Data Collection Project:
 1. Download the sample points CSV from Google Drive
 2. Go to https://collect.earth and sign in
-3. Click the WWF Institution
+3. Click your Institution
 4. Create a new project
 5. Make your data collection configuration settings to your liking (i.e. set up GeoDash widgets, add certain imagery sources for interpretation)
 6. On the Sample Plot page of the survey editor wizard, upload your CSV file as the plots.
 
 Collect Land Cover Reference Polygons in CEO:
-
-*Refer to the WWF CEO Data Collection document for further instructions and best practices*
 
 #### Step 1c. Upload CEO-derived Reference Polygons to GEE:
 1. Export the completed survey data out of Collect Earth Online as a CSV. 
@@ -101,11 +99,11 @@ GEE Asset Display (visualization: red, green, and blue 50th percentile bands):
 
 __A Note for Continued Research & Development__
 
-All spectral bands and time series features are controlled by the user in the [`src/utils/model_inputs.py`](src/utils/model_inputs.py) file. 
+All spectral bands and time series features are controlled by the user in the [`rlcms/model_inputs.py`](rlcms/model_inputs.py) file. 
 
 ![model_inputs](docs/imgs/model_inputs.PNG)
 
-The settings in this file currently reflect those model covariates detailed in the methodology report, but we fully expect for WWF to begin experimenting with feature engineering for model performance improvements. Computing harmonic trend coefficients on user-controlled spectral bands and indices is also now supported. Set `addHarmonics` to True to use them. In `harmonicsOptions`, the user specifies which band/spectral index and Day of Year range to compute the harmonic trend coefficients from.
+The settings in this file currently reflect those model covariates detailed in the WWF KAZA Land Cover Monitoring System methodology report, but we fully expect users to begin experimenting with feature engineering for model performance improvements. Computing harmonic trend coefficients on user-controlled spectral bands and indices is also now supported. Set `addHarmonics` to True to use them. In `harmonicsOptions`, the user specifies which band/spectral index and Day of Year range to compute the harmonic trend coefficients from.
 
 Currently `addJRCWater` and `addTasselCap` are set to `False`. These covariates were previously not coded into the toolset. It is highly likely that they will be informative model covariates for a variety of land cover classes. For more information on the science behind these covariates, see:
 
@@ -146,7 +144,7 @@ Note this tool also exports one out of bag (OOB) error .txt file and one varImpo
 
 * Run the `RFprimitives` tool, providing the input S2 stack path, the training points asset path, and an output path.
 
-**Note: the -t --training_data flag can accept multiple training dataset paths separated by a space. Therefore you can use multiple training datasets, generated from different years and/or locations to train the model. This addresses WWF's desire to apply reference data from other years and locations to a given project AOI's yearly land cover maps. See the explanation within Step 2 regarding this scenario.**
+**Note: the -t --training_data flag can accept multiple training dataset paths separated by a space. Therefore you can use multiple training datasets, generated from different years and/or locations to train the model. This addresses the desire to apply reference data from other years and locations to a given project AOI's yearly land cover maps. See the explanation within Step 2 regarding this scenario.**
 
 CLI Input:
 ```
