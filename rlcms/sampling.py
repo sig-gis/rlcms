@@ -1,4 +1,3 @@
-import os
 import ee
 ee.Initialize()
  

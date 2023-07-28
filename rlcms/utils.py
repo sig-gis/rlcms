@@ -1,7 +1,12 @@
 import ee
-import os
-from src.utils.check_exists import check_exists
 ee.Initialize()
+
+def check_exists(ee_path:str):
+    try:
+        ee.data.getAsset(ee_path)
+        return 0
+    except ee.ee_exception.EEException:
+        return 1
 
 def exportImgToAsset(img,desc,asset_id,region,scale,crs:None):
     """Export Image to GEE Asset"""

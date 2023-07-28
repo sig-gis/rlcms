@@ -1,7 +1,7 @@
 import ee
 import os
 import pandas as pd
-from src.utils import exports
+from rlcms.utils import check_exists, exportImgToAsset
 
 def format_pts(pts):
     """Turn a FC of training points containing full LC typology into a list of primitive point FCs, 
@@ -119,7 +119,7 @@ def primitives_to_collection(input_stack,training_pts,output_ic,metrics_path,crs
         
         desc = f"Class{ee.Image(img).getString('Class').getInfo()}" # this would need to be defined in the Prims img for-loop
         asset_id = f'{output_ic}/{desc}'
-        exports.exportImgToAsset(img=img,desc=desc,asset_id=asset_id,region=aoi,scale=10,crs=crs)
+        exportImgToAsset(img=img,desc=desc,asset_id=asset_id,region=aoi,scale=10,crs=crs)
         # export_img(ee.Image(img), output_ic, aoi)
         
         # export metrics before top20 feature selection

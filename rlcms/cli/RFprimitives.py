@@ -2,15 +2,15 @@ import ee
 import os
 from pathlib import Path
 import argparse
-from src.utils.check_exists import check_exists
-from src.utils.primitives import primitives_to_collection
+from rlcms.utils import check_exists
+from rlcms.primitives import primitives_to_collection
 
 def main():
     ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Create Land Cover Primitives For All Classes in Provided Training Data",
-    usage = "03RFprimitives -i path/to/input_stack -t path/to/training_data -o path/to/output"
+    usage = "RFprimitives -i path/to/input_stack -t path/to/training_data -o path/to/output"
     )
     
     parser.add_argument(

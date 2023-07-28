@@ -1,6 +1,6 @@
 import ee
 import math
-from src.utils.model_inputs import model_inputs
+from rlcms.model_inputs import model_inputs
 
 ee.Initialize()
 

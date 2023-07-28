@@ -1,5 +1,5 @@
 import ee, math
-from src.utils.model_inputs import model_inputs
+from rlcms.model_inputs import model_inputs
 class indices():
 
 	def __init__(self):

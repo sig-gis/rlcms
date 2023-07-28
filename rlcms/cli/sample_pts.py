@@ -3,9 +3,8 @@ import os
 import ee
 import argparse
 import numpy as np
-import src.utils.sampling as sampling
-from src.utils.check_exists import check_exists
-import src.utils.exports as exports
+import rlcms.sampling as sampling
+from rlcms.utils import check_exists, exportTableToAsset, exportTableToDrive
 
 ## GLOBAL VARS
 scale = 10 # for Sentinel2
@@ -33,7 +32,7 @@ def main():
 
     parser = argparse.ArgumentParser(
     description="Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online",
-    usage = "00sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive"
+    usage = "sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive"
     )
     
     parser.add_argument(
@@ -190,14 +189,14 @@ def main():
             print(f"would export (Asset): {output}")
             exit()
         else:
-            exports.exportTableToAsset(samples,asset_desc,output)
+            exportTableToAsset(samples,asset_desc,output)
     
     elif to_drive==True and to_asset==False:
         if dry_run:
             print(f"would export (Drive): {drive_folder}/{drive_desc}")
             exit()
         else:
-            exports.exportTableToDrive(samples,drive_desc,drive_folder,selectors)
+            exportTableToDrive(samples,drive_desc,drive_folder,selectors)
     
     else: # export both ways if neither or both of the --to_drive and --to_asset flags are given
         if dry_run:
@@ -205,8 +204,8 @@ def main():
             print(f"would export (Drive): {drive_folder}/{drive_desc}")
             exit()
         else:
-            exports.exportTableToAsset(samples,asset_desc,output)
-            exports.exportTableToDrive(samples,drive_desc,drive_folder,selectors)
+            exportTableToAsset(samples,asset_desc,output)
+            exportTableToDrive(samples,drive_desc,drive_folder,selectors)
         
 if __name__ == "__main__":
     main()

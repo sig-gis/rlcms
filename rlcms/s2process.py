@@ -1,7 +1,7 @@
 import ee
-from src.utils import covariates
-from src.utils import harmonics
-from src.utils.model_inputs import model_inputs
+from rlcms import covariates
+from rlcms import harmonics
+from rlcms.model_inputs import model_inputs
 idx = covariates.indices()
 
 # Global S2 Processing Parameters

@@ -19,11 +19,11 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "00sample_pts = src.00sample_pts:main",
-            "01composite_s2 = src.01composite_s2:main",
-            "02train_test = src.02train_test:main",
-            "03RFprimitives = src.03RFprimitives:main",
-            "04generate_LC = src.04generate_LC:main",
+            "sample_pts = rlcms.cli.sample_pts:main",
+            "composite_s2 = rlcms.cli.composite_s2:main",
+            "train_test = rlcms.cli.train_test:main",
+            "RFprimitives = rlcms.cli.RFprimitives:main",
+            "generate_LC = rlcms.cli.generate_LC:main",
         ]
     },
     install_requires=["earthengine-api", "pandas"],
