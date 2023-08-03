@@ -1,7 +1,7 @@
 import ee
 import os
 import pandas as pd
-from rlcms.utils import check_exists, exportImgToAsset
+from rlcms.utils import exportImgToAsset
 
 def format_pts(pts):
     """Turn a FC of training points containing full LC typology into a list of primitive point FCs, 

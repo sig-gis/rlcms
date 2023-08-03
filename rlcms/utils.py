@@ -4,9 +4,9 @@ ee.Initialize()
 def check_exists(ee_path:str):
     try:
         ee.data.getAsset(ee_path)
-        return 0
+        return 0 # does exist returns 0/False
     except ee.ee_exception.EEException:
-        return 1
+        return 1 # doesn't exist returns 1/True
 
 def exportImgToAsset(img,desc,asset_id,region,scale,crs:None):
     """Export Image to GEE Asset"""
