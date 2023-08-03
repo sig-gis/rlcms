@@ -2,8 +2,10 @@ import ee
 from rlcms import covariates
 from rlcms import harmonics
 from rlcms.model_inputs import model_inputs
+import hydrafloods as hf
+import datetime
 idx = covariates.indices()
-
+"""Deprecated, use rlcms.composites for all compositing"""
 # Global S2 Processing Parameters
 CLOUD_FILTER = 70
 CLD_PRB_THRESH = 40

@@ -1,5 +1,26 @@
 import ee
+import json
 ee.Initialize()
+
+def parse_settings(settings):
+    if isinstance(settings,str): # file path string
+        # print('is a file on their computer')
+        # print(settings)
+        try:
+            with open(settings,mode='r') as f:
+                data = f.read()
+            # reconstructing the data as a dictionary
+            settings = json.loads(data)
+        except:
+            raise RuntimeError(f'Could not parse file path: {settings}')  
+    elif isinstance(settings,dict):
+        # print('is a dict provided to func')
+        # print(settings)
+        pass
+    else: 
+        raise TypeError(f'expects a str or dict, got: {type(settings)}')
+    
+    return settings
 
 def check_exists(ee_path:str):
     try:

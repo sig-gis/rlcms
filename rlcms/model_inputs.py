@@ -28,6 +28,8 @@ model_inputs = {
 ############################
 
 ### TIME SERIES FEATURES ###
+# Which statistic to use 
+'statistic': 'mean', # str reducer names or ee.Reducer object
 # Which Statisitcal Percentile Composites to Generate from Time Series?
 'percentileOptions': [10,25,50,75,90],
 
@@ -46,3 +48,20 @@ model_inputs = {
                       'end':365}, 
                     }
 }
+
+# condensed to copy from later 
+# options_dict = {'indices': ["EVI","SAVI","IBI"],
+    #                 'addTasselCap':False,
+    #                 'addJRCWater': False,
+    #                 'addTopography':True,
+    #                 'percentileOptions': [10,25,50,75,90],
+    #                 'addHarmonics':True,
+    #                 'harmonicsOptions': 
+    #                 {'red':
+    #                  {'start':1, # in Julian Days (Day of Year)
+    #                   'end':365}, 
+                      
+    #                   'blue':
+    #                   {'start':1, # in Julian Days (Day of Year)
+    #                   'end':365}, 
+    #                 }}

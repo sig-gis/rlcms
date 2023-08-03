@@ -1,6 +1,5 @@
 import ee
 import math
-from rlcms.model_inputs import model_inputs
 
 ee.Initialize()
 
@@ -76,7 +75,7 @@ def addTimeConstant(imageCollection: ee.ImageCollection, timeField: str):
 
     return imageCollection.map(lambda i: _(i, timeField))
 
-def doHarmonicsFromOptions(imgColl:ee.ImageCollection):
+def doHarmonicsFromOptions(imgColl:ee.ImageCollection,settings_dict=None):
     """
     calculateHarmonic function but using user inputs defined in src.utils.model_inputs 
         to compute harmonics for each band specified
@@ -84,12 +83,10 @@ def doHarmonicsFromOptions(imgColl:ee.ImageCollection):
     model_inputs is a user settings dictionary that is imported at top of this file. 
     """
     imgColl = ee.ImageCollection(imgColl)
-
-    # construct EE dict from model_inputs python dict
-    eedict = ee.Dictionary(model_inputs)
     
     # get harmonicsOptions dictionary
-    harmonicsOptions = eedict.get('harmonicsOptions')
+    if 'harmonicsOptions' in settings_dict.keys():
+        harmonicsOptions = settings_dict['harmonicsOptions']
     
     # get band keys as list
     bands = ee.Dictionary(harmonicsOptions).keys()
