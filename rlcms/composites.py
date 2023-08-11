@@ -13,7 +13,7 @@ def composite_aoi(dataset,
                     aoi:ee.FeatureCollection,
                     start_date,
                     end_date,
-                    settings):
+                    **kwargs):
     
     """Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon
 
@@ -24,31 +24,22 @@ def composite_aoi(dataset,
         aoi (ee.Geometry): aoi geometry
         start_year (int): start year
         end_year (int): end year
-        model_inputs (dict|str):
-            
-            {'indices': list[str],
-            'addTasselCap':bool,
-            'addJRCWater': bool,
-            'addTopography':bool,
-            'percentileOptions': list[int],
-            'addHarmonics':bool,
-            'harmonicsOptions': 
-                     {'band(str)':
-                       {'start':1,  in Julian Days (Day of Year)
-                        'end':365}, 
-                      
-                       'blue':
-                       {'start':1,  in Julian Days (Day of Year)
-                       'end':365}, 
-                     }}
-            }
+    
+    how to best display this in doc string...
+    kwargs:
+        'indices': list[str],
+        'addTasselCap':bool,
+        'addJRCWater': bool,
+        'addTopography':bool,
+        'percentileOptions': list[int],
+        'addHarmonics':bool,
+        'harmonicsOptions': 
+                    {'red':
+                    {'start':int[1:365],'end':int[1:365]}}
+    
     returns:
         ee.Image: raster stack of S2 bands and covariates within AOI polygon
     """
-    
-    # parse settings dict from JSON-like file path or python dict
-    settings_dict = parse_settings(settings)
-    # print(settings_dict)
     
     # all hydrafloods.Dataset sub-classes
     ds_dict = {'Landsat5':hf.Landsat5(aoi,start_date,end_date),
@@ -66,71 +57,61 @@ def composite_aoi(dataset,
         raise RuntimeError("multiple datasets not yet supported")  
     else:
         ds = ds_dict[dataset]
-    # print('ds',ds)
+    print('ds',ds)
     
-    ds = ds.apply_func(returnCovariatesFromOptions,**settings_dict)
-    # print('addedIndices bandnames',addedIndices.collection.first().bandNames().getInfo())
+    ds = ds.apply_func(returnCovariatesFromOptions,**kwargs)
+    print('addedIndices bandnames',ds.collection.first().bandNames().getInfo())
     # print('addedIndices.n_images',addedIndices.n_images)
     
     # compute composite based on user-defined mode and method 
-    if 'composite_mode' in settings_dict.keys():
-        if settings_dict['composite_mode'] == 'annual':
+    if 'composite_mode' in kwargs.keys():
+        if kwargs['composite_mode'] == 'annual':
             period_unit = 'year'
             period = 1 # if wanted to composite all of it..ds.dates then strip each element to the year, get distinct() and count unique years 
-        elif settings_dict['composite_mode'] == 'seasonal':
-            if 'months' not in settings_dict['months']:
+        elif kwargs['composite_mode'] == 'seasonal':
+            if 'months' not in kwargs['months']:
                 raise ValueError(f"'composite_mode': 'seasonal' cannot run, 'months' not defined.")
             else:
                 period_unit = 'month'
-                period = len(settings_dict['months']) # figure out how to construct a seasonal composite from aggregate_time()
+                period = len(kwargs['months']) # figure out how to construct a seasonal composite from aggregate_time()
         
         else:
-            raise ValueError(f"{settings_dict['composite_mode']} is not a supported 'composite_mode'. Supported: 'annual', 'seasonal'")
+            raise ValueError(f"{kwargs['composite_mode']} is not a supported 'composite_mode'. Supported: 'annual', 'seasonal'")
         
         # is it even worth allowing the user to specify their percentiles?
-        if 'percentileOptions' in settings_dict.keys() and settings_dict['composite_method'] != 'percentile':
-            percentile_options = settings_dict['percentileOptions'] # returns a list of percentile integers
+        if 'percentileOptions' in kwargs.keys() and kwargs['composite_method'] != 'percentile':
+            percentile_options = kwargs['percentileOptions'] # returns a list of percentile integers
             reducer = ee.Reducer.percentile(percentile_options)
             
     else:
         # default is yearly composite of whatever ds's time range is 
-        composite = (ds.aggregate_time(reducer=ee.Reducer.mean,
+        # how to only have to call ds.aggregate_time() once outside of if-elses 
+        composite = (ds.aggregate_time(reducer='mean',
                                       rename=True,
                                       period_unit='year',
                                       dates=[start_date])
                                       .collection.first())
-    composite = (ds.aggregate_time(reducer=ee.Reducer.percentile(percentile_options),
-                                rename=False,
-                                period_unit='year', # annual composite, period default =1 
-                                dates=[start_date])
-                                .collection.first()) # extract hf.Dataset to ee.Image or ee.ImageCollection    
-        
-    # print('composite.n_images',percentiles.n_images)
-    # print('composite.collection.first().bandNames()',composite.collection.first().bandNames().getInfo())
+    
+    print('composite.collection.first().bandNames()',composite.bandNames().getInfo())
     
     # compute harmonics if desired (set in settings settings) 
     # TODO: consider using hf.timeseries module,
         #  but doesn't look like the methods are exact same as in rlcms.harmonics 
-    if 'addHarmonics' in settings_dict:
-        if settings_dict['addHarmonics']:
-            harmonics_features = doHarmonicsFromOptions(ds.collection,settings_dict) # returns an ee.Image, not a hf.Dataset
-            ds = composite.addBands(harmonics_features)
-            # print('harmonics_features.collection.first().bandNames()',harmonics_features.bandNames().getInfo())
-
-    # how to add hf.Datasets together that are images 
-    # stack = ee.Image.cat([ee.Image(ds.collection.first()),
-    #                       harmonics_features])
-    # print('stack.bandNames()',stack.bandNames().getInfo())
+        # ht.timeseries functions don't return phase and amplitude..
+    if 'addHarmonics' in kwargs:
+        if kwargs['addHarmonics']:
+            harmonics_features = doHarmonicsFromOptions(ds.collection,**kwargs) # returns an ee.Image, not a hf.Dataset
+            composite = composite.addBands(harmonics_features)
     
     # add JRC variables if desired (set in settings settings) 
-    if 'addJRCWater' in settings_dict.keys():
-        if settings_dict['addJRCWater']:
-            ds = idx.addJRC(ds).unmask(0)
+    if 'addJRCWater' in kwargs.keys():
+        if kwargs['addJRCWater']:
+            composite = idx.addJRC(composite).unmask(0)
     
     # add topography variables if desired (set in settings settings)     
-    if 'addTopography' in settings_dict.keys():
-        if settings_dict['addTopography']:
-            ds = idx.addTopography(ds).unmask(0)
+    if 'addTopography' in kwargs.keys():
+        if kwargs['addTopography']:
+            composite = idx.addTopography(composite).unmask(0)
     
-    print('final ds.bandNames()\n',ds.bandNames().getInfo())
-    return ee.Image(ds)
+    print('final composite.bandNames()\n',composite.bandNames().getInfo())
+    return ee.Image(composite)

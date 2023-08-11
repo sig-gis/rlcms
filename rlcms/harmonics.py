@@ -75,7 +75,7 @@ def addTimeConstant(imageCollection: ee.ImageCollection, timeField: str):
 
     return imageCollection.map(lambda i: _(i, timeField))
 
-def doHarmonicsFromOptions(imgColl:ee.ImageCollection,settings_dict=None):
+def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
     """
     calculateHarmonic function but using user inputs defined in src.utils.model_inputs 
         to compute harmonics for each band specified
@@ -85,30 +85,32 @@ def doHarmonicsFromOptions(imgColl:ee.ImageCollection,settings_dict=None):
     imgColl = ee.ImageCollection(imgColl)
     
     # get harmonicsOptions dictionary
-    if 'harmonicsOptions' in settings_dict.keys():
-        harmonicsOptions = settings_dict['harmonicsOptions']
+    if 'harmonicsOptions' in kwargs.keys():
+        harmonicsOptions = kwargs['harmonicsOptions']
     
-    # get band keys as list
-    bands = ee.Dictionary(harmonicsOptions).keys()
-    
-    def harmonicByBand(band):
-        band = ee.String(band)
-        # get the params for that band
-        bandwiseParams = ee.Dictionary(harmonicsOptions).get(band)
+        # get band keys as list
+        bands = ee.Dictionary(harmonicsOptions).keys()
         
-        # get the start and end DOY parameters
-        start = ee.Dictionary(bandwiseParams).get('start')
-        end = ee.Dictionary(bandwiseParams).get('end')
+        def harmonicByBand(band):
+            band = ee.String(band)
+            # get the params for that band
+            bandwiseParams = ee.Dictionary(harmonicsOptions).get(band)
+            
+            # get the start and end DOY parameters
+            start = ee.Dictionary(bandwiseParams).get('start')
+            end = ee.Dictionary(bandwiseParams).get('end')
+            
+            # create temporal filtered imgColl for that band
+            imgCollByBand = (ee.ImageCollection(imgColl)
+                                .select(band)
+                                .filter(ee.Filter.dayOfYear(start,end)))
+            # add time bands
+            timeField = "system:time_start"
+            timeCollection = addTimeConstant(imgCollByBand, timeField)
         
-        # create temporal filtered imgColl for that band
-        imgCollByBand = (ee.ImageCollection(imgColl)
-                            .select(band)
-                            .filter(ee.Filter.dayOfYear(start,end)))
-        # add time bands
-        timeField = "system:time_start"
-        timeCollection = addTimeConstant(imgCollByBand, timeField)
-        
-        return ee.Image(calculateHarmonic(timeCollection,band))
+            return ee.Image(calculateHarmonic(timeCollection,band))
+    else:
+        raise ValueError("'harmonicsOptions' kwarg required but not provided.")
     
     # do harmonics by band key in model_inputs dictionary
     listOfImages = ee.Image.cat(ee.List(bands).map(harmonicByBand))
