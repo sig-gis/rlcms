@@ -38,7 +38,7 @@ def composite_aoi(dataset,
                     {'start':int[1:365],'end':int[1:365]}}
     
     returns:
-        ee.Image: raster stack of S2 bands and covariates within AOI polygon
+        ee.Image: composited dataset within AOI polygon
     """
     
     # all hydrafloods.Dataset sub-classes
@@ -60,7 +60,7 @@ def composite_aoi(dataset,
     print('ds',ds)
     
     ds = ds.apply_func(returnCovariatesFromOptions,**kwargs)
-    print('addedIndices bandnames',ds.collection.first().bandNames().getInfo())
+    # print('addedIndices bandnames',ds.collection.first().bandNames().getInfo())
     # print('addedIndices.n_images',addedIndices.n_images)
     
     # compute composite based on user-defined mode and method 
@@ -85,6 +85,7 @@ def composite_aoi(dataset,
             
     else:
         # default is yearly composite of whatever ds's time range is 
+        print('Running Default mean yearly composite')
         # how to only have to call ds.aggregate_time() once outside of if-elses 
         composite = (ds.aggregate_time(reducer='mean',
                                       rename=True,
@@ -92,7 +93,7 @@ def composite_aoi(dataset,
                                       dates=[start_date])
                                       .collection.first())
     
-    print('composite.collection.first().bandNames()',composite.bandNames().getInfo())
+    # print('composite.collection.first().bandNames()',composite.bandNames().getInfo())
     
     # compute harmonics if desired (set in settings settings) 
     # TODO: consider using hf.timeseries module,
