@@ -13,12 +13,8 @@ def parse_settings(settings):
             settings = json.loads(data)
         except:
             raise RuntimeError(f'Could not parse file path: {settings}')  
-    elif isinstance(settings,dict):
-        # print('is a dict provided to func')
-        # print(settings)
-        pass
     else: 
-        raise TypeError(f'expects a str or dict, got: {type(settings)}')
+        raise TypeError(f'expects a str, got: {type(settings)}')
     
     return settings
 
