@@ -1,15 +1,53 @@
 import ee
-import json
 import hydrafloods as hf
 from rlcms.harmonics import doHarmonicsFromOptions
 from rlcms.covariates import indices
 from rlcms.covariates import returnCovariatesFromOptions
-from rlcms.utils import parse_settings
 ee.Initialize()
 
 idx = indices()
 
-def composite_aoi(dataset,
+def get_timing(collection:hf.Dataset,**kwargs):
+    """utility function for hf.Dataset.aggregate_time(). Formats `period`, `period_unit`, and `dates` args
+        to create certain types of composites (defined by `composite_mode`)
+    args:
+        collection (hf.Dataset): Hydrafloods Dataset
+    kwargs:
+        composite_mode (str): one of 'annual' or 'seasonal', Default = 'annual'
+        season (list[str|int]): consecutive list of months (e.g. ['01','02','03']) comprising the season.
+            A required arg if composite_mode == 'seasonal'
+    Returns:
+        tuple(period(int),period_unit(str),dates(list[str]))
+            
+    """
+    if 'composite_mode' not in kwargs:
+        composite_mode = 'annual'
+    else:
+        composite_mode = kwargs['composite_mode']
+    
+    # get unique yyyy strings
+    years = list(set([d.split(' ')[0].split('-')[0] for d in collection.dates])) 
+    years.sort()
+    
+    if composite_mode == 'seasonal':
+        if 'season' not in kwargs:
+            raise ValueError("season arg required if composite_mode == 'seasonal'")
+        else:
+            season = kwargs['season'] # must be consecutive 
+            period = len(season)
+            period_unit = 'month'
+            dates = [f"{y}-{str(season[0])}-01" for y in years]
+    elif composite_mode == 'annual':
+        period = 1
+        period_unit = 'year'
+        dates = [y+'-01-01' for y in years]
+    
+    else:
+        raise ValueError(f"{composite_mode} not a valid 'composite_mode'. Choose one of 'annual' or 'seasonal'")
+    
+    return period,period_unit,dates
+
+def composite(dataset,
                     aoi:ee.FeatureCollection,
                     start_date,
                     end_date,
@@ -17,84 +55,97 @@ def composite_aoi(dataset,
     
     """Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon
 
-        Uses `settings` .txt file at path provided or a dictionary provided to the function
-
     args:
-        dataset (str|list[str]): one or multiple of: 'Landsat5','Landsat7','Landsat8','Sentinel1Asc','Sentinel1Desc','Sentinel2','Modis','Viirs')
-        aoi (ee.Geometry): aoi geometry
-        start_year (int): start year
-        end_year (int): end year
+        dataset (str|list[str]): one of: 'Landsat5','Landsat7','Landsat8','Sentinel1Asc','Sentinel1Desc','Sentinel2','Modis','Viirs')
+        aoi (ee.FeatureCollection): area of interest
+        start_date (str): start date
+        end_date (str): end date
     
-    how to best display this in doc string...
     kwargs:
-        'indices': list[str],
-        'addTasselCap':bool,
-        'addJRCWater': bool,
-        'addTopography':bool,
-        'percentileOptions': list[int],
-        'addHarmonics':bool,
-        'harmonicsOptions': 
-                    {'red':
-                    {'start':int[1:365],'end':int[1:365]}}
+        indices:list[str]
+        composite_mode:str One of ['seasonal','annual'] Default = 'annual' 
+        season:list[str|int]
+        reducer:str|ee.Reducer
+        addTopography:bool
+        addJRC:bool
+        addHarmonics:bool
+        addTasselCap:bool
+        harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
     
     returns:
         ee.Image: composited dataset within AOI polygon
     """
     
+    if isinstance(aoi,ee.FeatureCollection):
+        region = aoi.geometry()
+    elif isinstance(aoi,ee.Geometry):
+        region = aoi
+    else:
+        raise TypeError(f"{aoi} must be of type ee.FeatureCollection or ee.Geometry, got {type(aoi)}")
+    
     # all hydrafloods.Dataset sub-classes
-    ds_dict = {'Landsat5':hf.Landsat5(aoi,start_date,end_date),
-               'Landsat7':hf.Landsat7(aoi,start_date,end_date),
-               'Landsat8':hf.Landsat8(aoi,start_date,end_date),
-               'Sentinel1':hf.Sentinel1(aoi,start_date,end_date),
-               'Sentinel1Asc':hf.Sentinel1Asc(aoi,start_date,end_date),
-               'Sentinel1Desc':hf.Sentinel1Desc(aoi,start_date,end_date),
-               'Sentinel2':hf.Sentinel2(aoi,start_date,end_date),
-               'MODIS':hf.Modis(aoi,start_date,end_date),
-               'VIIRS':hf.Viirs(aoi,start_date,end_date)}
+    ds_dict = {'Landsat5':hf.Landsat5(region,start_date,end_date),
+               'Landsat7':hf.Landsat7(region,start_date,end_date),
+               'Landsat8':hf.Landsat8(region,start_date,end_date),
+               'Sentinel1':hf.Sentinel1(region,start_date,end_date),
+               'Sentinel1Asc':hf.Sentinel1Asc(region,start_date,end_date),
+               'Sentinel1Desc':hf.Sentinel1Desc(region,start_date,end_date),
+               'Sentinel2':hf.Sentinel2(region,start_date,end_date),
+               'MODIS':hf.Modis(region,start_date,end_date),
+               'VIIRS':hf.Viirs(region,start_date,end_date)}
     
     if isinstance(dataset,list):
         # will need to iteratively construct each hf.Dataset and merge them together
         raise RuntimeError("multiple datasets not yet supported")  
     else:
         ds = ds_dict[dataset]
-    print('ds',ds)
+    # print('ds',ds)
+    
+    # mask imgs to geometries in multi_poly mode
+    if 'multi_poly' in kwargs:
+        if kwargs['multi_poly'] == True:
+            def update_mask(img):
+                ref_poly_img = ee.Image(1).paint(aoi).Not().selfMask() # aoi can be ee.Geometry or ee.FeatureCollection for this
+                return ee.Image(img).updateMask(ref_poly_img)
+            ds = ds.apply_func(update_mask)
     
     ds = ds.apply_func(returnCovariatesFromOptions,**kwargs)
     # print('addedIndices bandnames',ds.collection.first().bandNames().getInfo())
     # print('addedIndices.n_images',addedIndices.n_images)
     
-    # compute composite based on user-defined mode and method 
-    if 'composite_mode' in kwargs.keys():
-        if kwargs['composite_mode'] == 'annual':
-            period_unit = 'year'
-            period = 1 # if wanted to composite all of it..ds.dates then strip each element to the year, get distinct() and count unique years 
-        elif kwargs['composite_mode'] == 'seasonal':
-            if 'months' not in kwargs['months']:
-                raise ValueError(f"'composite_mode': 'seasonal' cannot run, 'months' not defined.")
-            else:
-                period_unit = 'month'
-                period = len(kwargs['months']) # figure out how to construct a seasonal composite from aggregate_time()
-        
-        else:
-            raise ValueError(f"{kwargs['composite_mode']} is not a supported 'composite_mode'. Supported: 'annual', 'seasonal'")
-        
-        # is it even worth allowing the user to specify their percentiles?
-        if 'percentileOptions' in kwargs.keys() and kwargs['composite_method'] != 'percentile':
-            percentile_options = kwargs['percentileOptions'] # returns a list of percentile integers
-            reducer = ee.Reducer.percentile(percentile_options)
-            
+    # set reducer passed to aggregate_time(), default mean
+    if 'reducer' in kwargs:
+        reducer=kwargs['reducer']
     else:
-        # default is yearly composite of whatever ds's time range is 
-        print('Running Default mean yearly composite')
-        # how to only have to call ds.aggregate_time() once outside of if-elses 
-        composite = (ds.aggregate_time(reducer='mean',
-                                      rename=True,
-                                      period_unit='year',
-                                      dates=[start_date])
-                                      .collection.first())
+        reducer = 'mean'
     
-    # print('composite.collection.first().bandNames()',composite.bandNames().getInfo())
+    period,period_unit,dates = get_timing(ds,**kwargs)
     
+    # print('reducer',reducer)
+    # print('period',period)
+    # print('period_unit',period_unit)
+    # print('dates',dates)
+    # print('ds.n_images before aggregate_time()',ds.n_images)
+    
+    agg_time_result = (ds.aggregate_time(reducer=reducer,
+                                    rename=False,
+                                    period_unit=period_unit,
+                                    period = period,
+                                    dates=dates)
+                                    )
+    # print('n_images of aggregate_time() result',agg_time_result.n_images)
+    # print('dates of aggregate_time() result',agg_time_result.dates)
+    # print('band names of agg_time_result.first()',agg_time_result.collection.first().bandNames().getInfo())
+    
+    composite = ee.ImageCollection(agg_time_result.collection).toBands()
+    # rename bands depending on number of resulting images
+    if agg_time_result.n_images > 1:
+        bnames = composite.bandNames().map(lambda b: ee.String('t').cat(b))
+    else:
+        bnames = composite.bandNames().map(lambda b: ee.String(b).slice(2))
+    
+    composite = composite.rename(bnames)
+        
     # compute harmonics if desired (set in settings settings) 
     # TODO: consider using hf.timeseries module,
         #  but doesn't look like the methods are exact same as in rlcms.harmonics 
@@ -104,15 +155,14 @@ def composite_aoi(dataset,
             harmonics_features = doHarmonicsFromOptions(ds.collection,**kwargs) # returns an ee.Image, not a hf.Dataset
             composite = composite.addBands(harmonics_features)
     
-    # add JRC variables if desired (set in settings settings) 
-    if 'addJRCWater' in kwargs.keys():
+    # add JRC variables if desired
+    if 'addJRCWater' in kwargs:
         if kwargs['addJRCWater']:
             composite = idx.addJRC(composite).unmask(0)
     
-    # add topography variables if desired (set in settings settings)     
-    if 'addTopography' in kwargs.keys():
+    # add topography variables if desired     
+    if 'addTopography' in kwargs:
         if kwargs['addTopography']:
             composite = idx.addTopography(composite).unmask(0)
     
-    print('final composite.bandNames()\n',composite.bandNames().getInfo())
-    return ee.Image(composite)
+    return ee.Image(composite).clip(aoi)

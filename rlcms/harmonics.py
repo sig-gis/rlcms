@@ -77,10 +77,19 @@ def addTimeConstant(imageCollection: ee.ImageCollection, timeField: str):
 
 def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
     """
-    calculateHarmonic function but using user inputs defined in src.utils.model_inputs 
-        to compute harmonics for each band specified
+    calculateHarmonic function band-wise
     
-    model_inputs is a user settings dictionary that is imported at top of this file. 
+    args:
+        imgColl (ee.ImageCollection)
+    kwargs:
+        harmonicsOptions (dict): which band(s) and the DOY start and end date to compute harmonics on
+            formatted like: 
+            {
+                'red':{'start':1,'end':365},
+                'blue':{'start':1,'end':365}
+                }
+    returns:
+        ee.Image containing bands [band_phase, band_amplitude]
     """
     imgColl = ee.ImageCollection(imgColl)
     
