@@ -49,17 +49,17 @@ def get_agg_timing(collection:hf.Dataset,**kwargs):
     
     return period,period_unit,dates
 
-def composite(dataset,
+def composite(dataset:str,
                     region:ee.FeatureCollection,
-                    start_date,
-                    end_date,
+                    start_date:str,
+                    end_date:str,
                     **kwargs):
     
     """Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon
 
     args:
-        dataset (str|list[str]): one of: 'Landsat5','Landsat7','Landsat8','Sentinel1Asc','Sentinel1Desc','Sentinel2','Modis','Viirs')
-        aoi (ee.FeatureCollection): area of interest
+        dataset (str): one of: 'Landsat5','Landsat7','Landsat8','Sentinel1Asc','Sentinel1Desc','Sentinel2','Modis','Viirs')
+        region (ee.FeatureCollection): area of interest
         start_date (str): start date
         end_date (str): end date
     
@@ -76,13 +76,14 @@ def composite(dataset,
     returns:
         ee.Image: multi-band image composite within region
     """
+    # testing whether need to go b/w FC and Geometry for multi_poly
     if isinstance(region,ee.FeatureCollection):
-        region = region.geometry()
-        region_fc = region
+         region = region.geometry()
+         region_fc = region
     elif isinstance(region,ee.Geometry):
         region = region
     else:
-        raise TypeError(f"{region} must be of type ee.FeatureCollection or ee.Geometry, got {type(aoi)}")
+        raise TypeError(f"{region} must be of type ee.FeatureCollection or ee.Geometry, got {type(region)}")
     # all hydrafloods.Dataset sub-classes
     ds_dict = {'Landsat5':hf.Landsat5(region,start_date,end_date),
                'Landsat7':hf.Landsat7(region,start_date,end_date),

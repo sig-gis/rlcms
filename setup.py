@@ -20,7 +20,8 @@ setup(
     entry_points={
         "console_scripts": [
             "sample_pts = rlcms.cli.sample_pts:main",
-            "composite_s2 = rlcms.cli.composite_s2:main",
+            "composite_s2 = rlcms.cli.composite_s2:main", # will be deprecated
+            "composite = rlcms.cli.composite:main",
             "train_test = rlcms.cli.train_test:main",
             "RFprimitives = rlcms.cli.RFprimitives:main",
             "generate_LC = rlcms.cli.generate_LC:main",
