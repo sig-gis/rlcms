@@ -3,11 +3,13 @@ import hydrafloods as hf
 from rlcms.harmonics import doHarmonicsFromOptions
 from rlcms.covariates import indices
 from rlcms.covariates import returnCovariatesFromOptions
+from ee.ee_exception import EEException
+
 ee.Initialize()
 
 idx = indices()
 
-def get_timing(collection:hf.Dataset,**kwargs):
+def get_agg_timing(collection:hf.Dataset,**kwargs):
     """utility function for hf.Dataset.aggregate_time(). Formats `period`, `period_unit`, and `dates` args
         to create certain types of composites (defined by `composite_mode`)
     args:
@@ -48,7 +50,7 @@ def get_timing(collection:hf.Dataset,**kwargs):
     return period,period_unit,dates
 
 def composite(dataset,
-                    aoi:ee.FeatureCollection,
+                    region:ee.FeatureCollection,
                     start_date,
                     end_date,
                     **kwargs):
@@ -66,23 +68,21 @@ def composite(dataset,
         composite_mode:str One of ['seasonal','annual'] Default = 'annual' 
         season:list[str|int]
         reducer:str|ee.Reducer
+        addTasselCap:bool
         addTopography:bool
         addJRC:bool
-        addHarmonics:bool
-        addTasselCap:bool
         harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
     
     returns:
-        ee.Image: composited dataset within AOI polygon
+        ee.Image: multi-band image composite within region
     """
-    
-    if isinstance(aoi,ee.FeatureCollection):
-        region = aoi.geometry()
-    elif isinstance(aoi,ee.Geometry):
-        region = aoi
+    if isinstance(region,ee.FeatureCollection):
+        region = region.geometry()
+        region_fc = region
+    elif isinstance(region,ee.Geometry):
+        region = region
     else:
-        raise TypeError(f"{aoi} must be of type ee.FeatureCollection or ee.Geometry, got {type(aoi)}")
-    
+        raise TypeError(f"{region} must be of type ee.FeatureCollection or ee.Geometry, got {type(aoi)}")
     # all hydrafloods.Dataset sub-classes
     ds_dict = {'Landsat5':hf.Landsat5(region,start_date,end_date),
                'Landsat7':hf.Landsat7(region,start_date,end_date),
@@ -94,24 +94,33 @@ def composite(dataset,
                'MODIS':hf.Modis(region,start_date,end_date),
                'VIIRS':hf.Viirs(region,start_date,end_date)}
     
-    if isinstance(dataset,list):
-        # will need to iteratively construct each hf.Dataset and merge them together
-        raise RuntimeError("multiple datasets not yet supported")  
+    # dataset can either be a named dataset string supported by a hf.Dataset sub-class 
+    # or a GEE Asset path
+    if isinstance(dataset,str):
+        if dataset in ds_dict.keys(): 
+            ds = ds_dict[dataset]
+        else:
+            if '/' in dataset: 
+                try:
+                    ds = hf.Dataset(asset_id=dataset,region=region,start_time=start_date,end_time=end_date)
+                except:
+                    raise EEException
+            else: 
+                raise ValueError(f"Could not construct a hf.Dataset from dataset name provided: {dataset}")
     else:
-        ds = ds_dict[dataset]
-    # print('ds',ds)
+        raise TypeError(f"dataset must be str type, got: {type(dataset)}")
     
     # mask imgs to geometries in multi_poly mode
     if 'multi_poly' in kwargs:
         if kwargs['multi_poly'] == True:
             def update_mask(img):
-                ref_poly_img = ee.Image(1).paint(aoi).Not().selfMask() # aoi can be ee.Geometry or ee.FeatureCollection for this
+                ref_poly_img = ee.Image(1).paint(region_fc).Not().selfMask() # aoi can be ee.Geometry or ee.FeatureCollection for this
                 return ee.Image(img).updateMask(ref_poly_img)
+            # do we want to warn user against using multi_poly unnecessarily if aoi is a single geometry?
+            # would require another synchronous request of aoi's type/element size
             ds = ds.apply_func(update_mask)
     
     ds = ds.apply_func(returnCovariatesFromOptions,**kwargs)
-    # print('addedIndices bandnames',ds.collection.first().bandNames().getInfo())
-    # print('addedIndices.n_images',addedIndices.n_images)
     
     # set reducer passed to aggregate_time(), default mean
     if 'reducer' in kwargs:
@@ -119,25 +128,18 @@ def composite(dataset,
     else:
         reducer = 'mean'
     
-    period,period_unit,dates = get_timing(ds,**kwargs)
+    period,period_unit,dates = get_agg_timing(ds,**kwargs)
     
-    # print('reducer',reducer)
-    # print('period',period)
-    # print('period_unit',period_unit)
-    # print('dates',dates)
-    # print('ds.n_images before aggregate_time()',ds.n_images)
-    
+    # aggregate hf.Dataset
     agg_time_result = (ds.aggregate_time(reducer=reducer,
                                     rename=False,
                                     period_unit=period_unit,
-                                    period = period,
+                                    period=period,
                                     dates=dates)
                                     )
-    # print('n_images of aggregate_time() result',agg_time_result.n_images)
-    # print('dates of aggregate_time() result',agg_time_result.dates)
-    # print('band names of agg_time_result.first()',agg_time_result.collection.first().bandNames().getInfo())
     
     composite = ee.ImageCollection(agg_time_result.collection).toBands()
+    
     # rename bands depending on number of resulting images
     if agg_time_result.n_images > 1:
         bnames = composite.bandNames().map(lambda b: ee.String('t').cat(b))
@@ -146,14 +148,10 @@ def composite(dataset,
     
     composite = composite.rename(bnames)
         
-    # compute harmonics if desired (set in settings settings) 
-    # TODO: consider using hf.timeseries module,
-        #  but doesn't look like the methods are exact same as in rlcms.harmonics 
-        # ht.timeseries functions don't return phase and amplitude..
-    if 'addHarmonics' in kwargs:
-        if kwargs['addHarmonics']:
-            harmonics_features = doHarmonicsFromOptions(ds.collection,**kwargs) # returns an ee.Image, not a hf.Dataset
-            composite = composite.addBands(harmonics_features)
+    # compute harmonics if desired
+    if 'harmonicsOptions' in kwargs:
+        harmonics_features = doHarmonicsFromOptions(ds.collection,**kwargs) # returns an ee.Image, not a hf.Dataset
+        composite = composite.addBands(harmonics_features)
     
     # add JRC variables if desired
     if 'addJRCWater' in kwargs:
@@ -165,4 +163,4 @@ def composite(dataset,
         if kwargs['addTopography']:
             composite = idx.addTopography(composite).unmask(0)
     
-    return ee.Image(composite).clip(aoi)
+    return ee.Image(composite).clip(region)

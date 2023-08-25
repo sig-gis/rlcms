@@ -241,7 +241,7 @@ class indices():
 
 	def getIndices(self,img,covariates):	
 		""" add indices to image"""
-		
+		# self = indices()
 		# no need to add indices that are already there
 		# see TODO below, can't use removeDuplicates in .map()
 		# indices = self.removeDuplicates(covariates,img.bandNames().getInfo())
@@ -320,9 +320,10 @@ def returnCovariates(img):
 	img = down.addBands(middle).addBands(up)
 	
 	return img
-# was 
-# def returnCovariatesFromOptions(img,**kwargs):
-# but we need to pack the dict so
+
+# TODO: can't figure out how to detangle getIndices() and addAllTasselCapIndices() 
+# so that they can be directly passed as func to hf.Dataset.apply_func()
+# so we have this function that takes unnamed kwargs, passed to apply_func()..
 def returnCovariatesFromOptions(img,**kwargs):
 	"""
 	Computes and adds image covariates according to user settings

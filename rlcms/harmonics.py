@@ -75,6 +75,9 @@ def addTimeConstant(imageCollection: ee.ImageCollection, timeField: str):
 
     return imageCollection.map(lambda i: _(i, timeField))
 
+# TODO: consider using hf.timeseries module instead,
+#  but doesn't look like the methods are exact same as defined here
+#   ht.timeseries functions don't return phase and amplitude..
 def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
     """
     calculateHarmonic function band-wise
@@ -92,10 +95,10 @@ def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
         ee.Image containing bands [band_phase, band_amplitude]
     """
     imgColl = ee.ImageCollection(imgColl)
-    
+    harmonicsOptions = kwargs['harmonicsOptions']
+
     # get harmonicsOptions dictionary
-    if 'harmonicsOptions' in kwargs.keys():
-        harmonicsOptions = kwargs['harmonicsOptions']
+    if isinstance(harmonicsOptions,dict):
     
         # get band keys as list
         bands = ee.Dictionary(harmonicsOptions).keys()
@@ -119,7 +122,7 @@ def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
         
             return ee.Image(calculateHarmonic(timeCollection,band))
     else:
-        raise ValueError("'harmonicsOptions' kwarg required but not provided.")
+        raise TypeError(f"harmonicsOptions expects dict type, got: {type(harmonicsOptions)}")
     
     # do harmonics by band key in model_inputs dictionary
     listOfImages = ee.Image.cat(ee.List(bands).map(harmonicByBand))
