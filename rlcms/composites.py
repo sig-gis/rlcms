@@ -178,7 +178,6 @@ class composite:
         
         self.bands = composite.bandNames().getInfo()
         self.composite = (composite.clip(region).set('dataset',dataset,
-                                                    #  'region',region.getInfo()['coordinates'],
                                                      'start',start_date,
                                                      'end',end_date)
                                                     .set(kwargs)
