@@ -1,5 +1,5 @@
 import ee, math
-from src.utils.model_inputs import model_inputs
+from rlcms.utils import parse_settings
 class indices():
 
 	def __init__(self):
@@ -241,7 +241,7 @@ class indices():
 
 	def getIndices(self,img,covariates):	
 		""" add indices to image"""
-		
+		# self = indices()
 		# no need to add indices that are already there
 		# see TODO below, can't use removeDuplicates in .map()
 		# indices = self.removeDuplicates(covariates,img.bandNames().getInfo())
@@ -321,19 +321,29 @@ def returnCovariates(img):
 	
 	return img
 
-def returnCovariatesFromOptions(img):
+# TODO: can't figure out how to detangle getIndices() and addAllTasselCapIndices() 
+# so that they can be directly passed as func to hf.Dataset.apply_func()
+# so we have this function that takes unnamed kwargs, passed to apply_func()..
+def returnCovariatesFromOptions(img,**kwargs):
 	"""
-	Workflow for computing image covariates according to user settings defined in src.utls.model_inputs.py
-	model_inputs is a settings dictionary that is imported at top of this file.
+	Computes and adds image covariates according to user settings
+	args:
+		img (ee.Image): image to compute covariates 
+		kwargs (dict): a settings dictionary 
+	returns:
+		img (ee.Image): multi-band image with all desired covariates
 	"""
-	covariates = model_inputs['indices']
+	settings = kwargs
+	if 'indices' in kwargs.keys():
+		if len(kwargs['indices']) > 0:
+			covariates = settings['indices']
+			index = indices()
 		
-	index = indices()
-		
-	img = ee.Image(img)
-	img = index.getIndices(img,covariates)
+		img = ee.Image(img)
+		img = index.getIndices(img,covariates)
 	
-	if model_inputs['addTasselCap']:
-		img = index.addAllTasselCapIndices(img)
+	if 'addTasselCap' in kwargs.keys():
+		if kwargs['addTasselCap']:
+			img = index.addAllTasselCapIndices(img)
 	
 	return img

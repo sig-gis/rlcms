@@ -1,6 +1,5 @@
 import ee
 import math
-from src.utils.model_inputs import model_inputs
 
 ee.Initialize()
 
@@ -76,42 +75,54 @@ def addTimeConstant(imageCollection: ee.ImageCollection, timeField: str):
 
     return imageCollection.map(lambda i: _(i, timeField))
 
-def doHarmonicsFromOptions(imgColl:ee.ImageCollection):
+# TODO: consider using hf.timeseries module instead,
+#  but doesn't look like the methods are exact same as defined here
+#   ht.timeseries functions don't return phase and amplitude..
+def doHarmonicsFromOptions(imgColl:ee.ImageCollection,**kwargs):
     """
-    calculateHarmonic function but using user inputs defined in src.utils.model_inputs 
-        to compute harmonics for each band specified
+    calculateHarmonic function band-wise
     
-    model_inputs is a user settings dictionary that is imported at top of this file. 
+    args:
+        imgColl (ee.ImageCollection)
+    kwargs:
+        harmonicsOptions (dict): which band(s) and the DOY start and end date to compute harmonics on
+            formatted like: 
+            {
+                'red':{'start':1,'end':365},
+                'blue':{'start':1,'end':365}
+                }
+    returns:
+        ee.Image containing bands [band_phase, band_amplitude]
     """
     imgColl = ee.ImageCollection(imgColl)
+    harmonicsOptions = kwargs['harmonicsOptions']
 
-    # construct EE dict from model_inputs python dict
-    eedict = ee.Dictionary(model_inputs)
-    
     # get harmonicsOptions dictionary
-    harmonicsOptions = eedict.get('harmonicsOptions')
+    if isinstance(harmonicsOptions,dict):
     
-    # get band keys as list
-    bands = ee.Dictionary(harmonicsOptions).keys()
-    
-    def harmonicByBand(band):
-        band = ee.String(band)
-        # get the params for that band
-        bandwiseParams = ee.Dictionary(harmonicsOptions).get(band)
+        # get band keys as list
+        bands = ee.Dictionary(harmonicsOptions).keys()
         
-        # get the start and end DOY parameters
-        start = ee.Dictionary(bandwiseParams).get('start')
-        end = ee.Dictionary(bandwiseParams).get('end')
+        def harmonicByBand(band):
+            band = ee.String(band)
+            # get the params for that band
+            bandwiseParams = ee.Dictionary(harmonicsOptions).get(band)
+            
+            # get the start and end DOY parameters
+            start = ee.Dictionary(bandwiseParams).get('start')
+            end = ee.Dictionary(bandwiseParams).get('end')
+            
+            # create temporal filtered imgColl for that band
+            imgCollByBand = (ee.ImageCollection(imgColl)
+                                .select(band)
+                                .filter(ee.Filter.dayOfYear(start,end)))
+            # add time bands
+            timeField = "system:time_start"
+            timeCollection = addTimeConstant(imgCollByBand, timeField)
         
-        # create temporal filtered imgColl for that band
-        imgCollByBand = (ee.ImageCollection(imgColl)
-                            .select(band)
-                            .filter(ee.Filter.dayOfYear(start,end)))
-        # add time bands
-        timeField = "system:time_start"
-        timeCollection = addTimeConstant(imgCollByBand, timeField)
-        
-        return ee.Image(calculateHarmonic(timeCollection,band))
+            return ee.Image(calculateHarmonic(timeCollection,band))
+    else:
+        raise TypeError(f"harmonicsOptions expects dict type, got: {type(harmonicsOptions)}")
     
     # do harmonics by band key in model_inputs dictionary
     listOfImages = ee.Image.cat(ee.List(bands).map(harmonicByBand))
