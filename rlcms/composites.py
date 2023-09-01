@@ -81,7 +81,7 @@ class composite:
                     **kwargs):
     
         self.dataset=dataset
-        self.region=region
+        self.region=region.geometry().getInfo()['coordinates']
         self.start_date=start_date
         self.end_date=end_date
         
@@ -178,7 +178,7 @@ class composite:
         
         self.bands = composite.bandNames().getInfo()
         self.composite = (composite.clip(region).set('dataset',dataset,
-                                                     'region',region.getInfo()['coordinates'],
+                                                    #  'region',region.getInfo()['coordinates'],
                                                      'start',start_date,
                                                      'end',end_date)
                                                     .set(kwargs)
