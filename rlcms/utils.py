@@ -25,16 +25,17 @@ def check_exists(ee_path:str):
     except ee.ee_exception.EEException:
         return 1 # doesn't exist returns 1/True
 
-def exportImgToAsset(img,desc,asset_id,region,*args):
+def exportImgToAsset(img,desc,asset_id,region,scale):
     """Export Image to GEE Asset"""
-    # export_region = region
+    
     task = ee.batch.Export.image.toAsset(
-        image=ee.Image(img),
-        description=desc,
-        assetId=asset_id,
-        region=region,#export_region.getInfo()['coordinates'],
-        maxPixels=1e13,
-        *args)
+            image=ee.Image(img),
+            description=desc,
+            assetId=asset_id,
+            region=region,
+            scale=scale,
+            maxPixels=1e13)
+    
     task.start()
     print(f"Export started (Asset): {asset_id}") 
     return
