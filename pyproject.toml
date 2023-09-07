@@ -1,0 +1,40 @@
+# pyproject.toml
+
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "rlcms"
+version = "2023.9.7"
+description = "workflows for regional land cover mapping, built in Google Earth Engine"
+readme = "README.md"
+authors = [{ name = "Kyle Woodward", email = "kw.geospatial@gmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: GNU GPL-3 License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["land cover", "mapping"]
+dependencies = [
+    "earthengine-api",
+    "hydrafloods"
+]
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+dev = ["geemap"]
+
+[project.urls]
+Homepage = "https://github.com/sig-gis/rlcms/"
+
+[project.scripts]
+composite = "rlcms.cli.composite:main"
+sample_pts = "rlcms.cli.sample_pts:main"
+train_test = "rlcms.cli.train_test:main"
+primitives = "rlcms.cli.RFprimitives:main"
+generate_LC = "rlcms.cli.generate_LC:main"
