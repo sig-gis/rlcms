@@ -81,7 +81,10 @@ class composite:
                     **kwargs):
     
         self.dataset=dataset
-        self.region=region.geometry().getInfo()['coordinates']
+        if isinstance(region, ee.Geometry):
+            self.region=region.getInfo()['coordinates']
+        elif isinstance(region, ee.FeatureCollection):
+            self.region = region.geometry().getInfo()['coordinates']
         self.start_date=start_date
         self.end_date=end_date
         
@@ -177,7 +180,7 @@ class composite:
                 composite = idx.addTopography(composite).unmask(0)
         
         self.bands = composite.bandNames().getInfo()
-        self.composite = (composite.clip(region).set('dataset',dataset,
+        self.image = (composite.clip(region).set('dataset',dataset,
                                                      'start',start_date,
                                                      'end',end_date)
                                                     .set(kwargs)
@@ -195,19 +198,19 @@ class composite:
         """
         
         # prefix dataset name to every band, if data is an asset path we swap / for _
-        self_renamed = self.composite.regexpRename('^', f"{self.dataset.replace('/','_')}_")
-        other_renamed = other.composite.regexpRename('^', f"{other.dataset.replace('/','_')}_")
+        self_renamed = self.image.regexpRename('^', f"{self.dataset.replace('/','_')}_")
+        other_renamed = other.image.regexpRename('^', f"{other.dataset.replace('/','_')}_")
         
         # Traceback: 'ApiFunction' object has no attribute 'name' at line 209... 
-        # toDictionary() doesn't think it is a method of self.composite (ee.Image) but it is
+        # toDictionary() doesn't think it is a method of self.image (ee.Image) but it is
         # # prefix image property keys with dataset name and set all as new properties 
-        # self_props_names = (self.composite.propertyNames()
+        # self_props_names = (self.image.propertyNames()
         #               .map(lambda s: ee.String(s).replace('^', f"{self.dataset.replace('/','_')}_")))
-        # other_props_names = (other.composite.propertyNames()
+        # other_props_names = (other.image.propertyNames()
         #               .map(lambda s: ee.String(s).replace('^', f"{other.dataset.replace('/','_')}_")))
         
-        # self_props = ee.Image(self.composite).toDictionary().rename(self_props_names)
-        # other_props = ee.Image(other.composite).toDictionary().rename(other_props_names)
+        # self_props = ee.Image(self.image).toDictionary().rename(self_props_names)
+        # other_props = ee.Image(other.image).toDictionary().rename(other_props_names)
         
         # _dict = ee.Dictionary(self_props).combine(other_props)
         return ee.Image.cat([self_renamed,other_renamed])#.set(_dict)
