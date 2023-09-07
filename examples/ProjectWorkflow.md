@@ -74,20 +74,20 @@ GEE Asset Display:
 
 We need to composite information from Sentinel-2 and other geospatial data sources that the land cover model will be using to train and predict on land cover. To be most memory-efficient, we must export a given Sentinel-2 Input Stack to a GEE asset before using it in either the training data generation or model prediction steps. You can create S2 input stack for any year of interest to any AOI polygon or set of polygons. 
 
-I interpreted my Land Cover Reference Polygons for the year 2022 in Collect Earth Online, and I want to predict a 2022 land cover map, so I will create a 2022 Sentinel-2 input stack composite using the `composite_s2` tool. Since my reference polygons in this demo all fall within my desired project AOI and my training data and prediction year is the same, I can run this tool once for my project AOI, and use the result of that for both the training data creation and model prediction steps*. If I wanted to create training data from 2021 to train the model and predict 2022 land cover, I would need to run `composite_s2` tool twice - once for 2021 training data and once for 2022 prediction. 
+I interpreted my Land Cover Reference Polygons for the year 2022 in Collect Earth Online, and I want to predict a 2022 land cover map, so I will create a 2022 Sentinel-2 input stack composite using the `composite` tool. Since my reference polygons in this demo all fall within my desired project AOI and my training data and prediction year is the same, I can run this tool once for my project AOI, and use the result of that for both the training data creation and model prediction steps*. If I wanted to create training data from 2021 to train the model and predict 2022 land cover, I would need to run `composite` tool twice - once for 2021 training data and once for 2022 prediction. 
 
-* Run the `composite_s2` tool, specifying an AOI GEE asset path, the year to composite data for, and an output GEE asset path
+* Run the `composite` tool, specifying an AOI GEE asset path, the dataset type, the start and end dates to composite data for, an output GEE asset path, and the path to my setting .txt file that define more specific compositing settings. 
 
 CLI Input:
 ```
-composite_s2 -a projects/wwf-sig/assets/kaza-lc/aoi/testBingaPoly -y 2022 -o projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly
+composite -a projects/wwf-sig/assets/kaza-lc/aoi/testBingaPoly -d Sentinel2 -s 2022-01-01 -e 2022-12-31 -o projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPoly --settings ./my-settings-file.txt
 ```
 
 CLI Output:
 
 ![01composite_s2_CLI](docs/imgs/01composite_s2_CLI.PNG)
 
-**If my reference polygons overlap multiple project AOIs or fall outside of them (i.e. WWF's Zambia Field Data), then compositing S2 data with wall-to-wall coverage of the the reference polygons' bounding box (the default behavior) wastes compute resources - we won't use any of the composited data that is outside the reference polygon footprints and outside any of the AOIs. It is more efficient to composite S2 data just within the polygon footprints and use that data to extract training information within those footprints. In that instance, you would provide the reference polygons Asset path to the -a/--aoi flag and provide the -p/--polygons flag in this tool to composite data only within polygon footprints instead. Therefore, you would need to run the `composite_s2` tool twice - once to provide an input stack for the training data creation and again to provide an input stack within your project AOI for the land cover prediction.* 
+**If my reference polygons overlap multiple project AOIs or fall outside of them (i.e. WWF's Zambia Field Data), then compositing S2 data with wall-to-wall coverage of the the reference polygons' bounding box (the default behavior) wastes compute resources - we won't use any of the composited data that is outside the reference polygon footprints and outside any of the AOIs. It is more efficient to composite S2 data just within the polygon footprints and use that data to extract training information within those footprints. In that instance, you would specify `"multi_poly":true` in the settings.txt file to composite data only within polygon footprints instead. Therefore, you would need to run the `composite` tool twice - once to provide an input stack for the training data creation and again to provide an input stack within your project AOI for the land cover prediction.* 
 
 GEE Task Pane:
 
@@ -99,9 +99,9 @@ GEE Asset Display (visualization: red, green, and blue 50th percentile bands):
 
 __A Note for Continued Research & Development__
 
-All spectral bands and time series features are controlled by the user in the [`rlcms/model_inputs.py`](rlcms/model_inputs.py) file. 
+All spectral bands and time series features are controlled by the user in a settings .txt file. A template file is provided for you here: [template_settings.txt](/template_settings.txt)
 
-![model_inputs](docs/imgs/model_inputs.PNG)
+![settings_txt](docs/imgs/settings_txt.PNG)
 
 The settings in this file currently reflect those model covariates detailed in the WWF KAZA Land Cover Monitoring System methodology report, but we fully expect users to begin experimenting with feature engineering for model performance improvements. Computing harmonic trend coefficients on user-controlled spectral bands and indices is also now supported. Set `addHarmonics` to True to use them. In `harmonicsOptions`, the user specifies which band/spectral index and Day of Year range to compute the harmonic trend coefficients from.
 
@@ -111,7 +111,7 @@ Currently `addJRCWater` and `addTasselCap` are set to `False`. These covariates 
 
 [Tasseled Cap paper](https://doi.org/10.1109/JSTARS.2019.2938388)
 
-*Ensure that at the time of running all script tools, the settings in model_inputs.py were the same, otherwise you will get errors at the model training and/or prediction stage due to inconsistent list of inputs.* 
+*Ensure that at the time of running all script tools, the settings in settings .txt file.py were the same, otherwise you will get errors at the model training and/or prediction stage due to inconsistent list of inputs.* 
 
 ### Step 3. Extract Training and Testing Data from Reference Polygons
 
@@ -169,7 +169,7 @@ GEE Asset Display:
 
 __A Note for Continued Research & Development__
 
-The OOB and varImportance metrics exported by this tool can aid in assessing model improvement efforts through feature engineering. After changing the input features for your model (in the [model_inputs.py](src/utils/model_inputs.py) file, see Step 2), we would want to see lower OOB errors and your new input features showing up in the variable importance CSVs.
+The OOB and varImportance metrics exported by this tool can aid in assessing model improvement efforts through feature engineering. After changing the input features for your model (in a settings .txt file, see Step 2), we would want to see lower OOB errors and your new input features showing up in the variable importance CSVs.
 
 ### Step 5. Assemble Land Cover Map
 

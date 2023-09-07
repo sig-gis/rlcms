@@ -1,49 +1,9 @@
 # Running Regional Land Cover Monitoring System Toolset
-# Setup Instructions
-## Python Environment Setup
-1. Install Anaconda 
-* Go to the Anaconda distribution [page](https://www.anaconda.com/products/distribution), scroll to the bottom and find the Anaconda installer file for your Operating System. 
-* Run the installer .exe and follow all recommendations in the installer. This [installation docs page](https://docs.anaconda.com/anaconda/install/) provides step-by-step guidance depending on your OS and use-case.
-* When Anaconda asks you "Do you wish the installer to initialize Anaconda3?" Say Yes
-2. Test your Anaconda Installation
-* Open your command-prompt/shell/terminal and type `conda list`. You should see something like this.
-
-![kaza_readme_condalist](https://user-images.githubusercontent.com/51868526/184011797-51781e24-396c-42a8-8ee8-d516e92fbb64.JPG)
-
-* notice we're in the `base` environment by default, as indicated by the command-line. We want to operate from a custom python environment.
-3. Create a custom virtual environment
-Keep your shell open and paste each one of these commands.
-* Create a new conda env named 'gee'
+## Installation
+Install with pip: 
 ```
-conda create -n gee 
+pip install rlcms
 ```
-* Activate your new 'gee' env
-```
-conda activate gee
-```
-* Leave this environment activated, we will install necessary packages from the `rlcms` source code in the next section. 
-
-## Git Setup
-1. Download the Git installer for your OS from the Git downloads [page](https://git-scm.com/downloads). Run the installer following all recommended settings
-2. Once installation is complete, check your version: open your command prompt/shell/terminal and type 
-```
-git --version
-```
-3. Clone the repository to a local folder in your working directory 
-```
-git clone https://github.com/sig-gis/rlcms.git
-```
-4. Finally, `cd` into your new rlcms folder and `ls`(linux/MacOS) or `dir`(Windows) to see its contents
-
-## Install Source Code and Dependencies
-
-While still in your terminal, and in the `rlcms` parent directory, install the `rlcms` package from the source code with pip:
-
-```
-pip install -e .
-```
-
-pip will begin to install the `rlcms` source code and its required dependencies. We install the package in developer mode (`-e` flag) so that changes made to files will be reflected in the code compiled at run-time. If the python package dependencies are already installed in your conda `gee` virtual environment, your output will show 'requirement already satisfied' next to each package already installed. 
 
 ## GEE Python API Setup
 Earth Engine requires you to authenticate your account credentials to access the Earth Engine python API and your chosen Cloud Project. We do this with the `gcloud` python utility
@@ -81,23 +41,14 @@ earthengine set_project <project-name>
 earthengine ls projects/project-name/assets
 ```
 
-![kaza_earthenginels](docs/imgs/earthengine_ls.PNG)
-
 If you do not get an error and it returns a list of folders and assets similar to this then you are good to go! :tada:
 
 # Tool Documentation
 
-Before you run any scripts, ensure you've activated your anaconda environment with your required dependencies and have changed into the `rlcms` directory that contains the scripts.
-example:
-```
-conda activate gee
-cd C:\rlcms
-```
-
 Each Command Line Interface (CLI) script tool can be run in your command-line terminal of choice. The user must provide values for each required command-line argument to control the analysis.
 You can first run any script, only declaring the `-h` flag. This will bring up the help dialog with a usage example and a description of required command-line arguments. 
 
-## **00sample_pts**
+## **sample_pts**
 
 Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online
 
@@ -105,10 +56,10 @@ The points are pre-formatted for use in Collect Earth Online. You can choose to 
 
 example:
 ```
-00sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive
+sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive
 ```
 
-## **01composite_s2**
+## **composite**
 
 Creates a Sentinel-2 Composite for an AOI or reference polygons. 
 
@@ -116,12 +67,12 @@ The resulting band stack is needed for both extracting training data information
 
 example:
 ```
-01composite_s2 -a path/to/aoi/asset -y 2021 -o output/path
+composite -a aoi/fc/path -d Landsat8 -s 2020-01-01 -e 2020-12-31 -o output/path --settings path/to/settings/file.txt
 ```
 
-**NOTE: The user can control which spectral indices and time series features to generate in this tool by modifying this file in the repository : [`~/src/utils/model_inputs.py`](/src/utils/model_inputs.py). See [ProjectWorkflow.md](/ProjectWorkflow.md) for details.**
+**NOTE: The user can control which spectral indices and time series features to generate in this tool by providing a settings txt file, a template of which is located in the repository : [`/template_settings.txt`](/template_settings.txt). See [ProjectWorkflow.md](/ProjectWorkflow.md) for details.**
 
-## **02train_test**
+## **train_test**
 
 Extract Train and Test Point Data from an Input Image within Reference Polygon Areas.
 
@@ -129,10 +80,10 @@ Generates stratified random samples from reference polygons, splitting the sampl
 
 example:
 ```
-02train_test -rp path/to/reference_polygon_fc -im path/to/input/stack -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10
+train_test -rp path/to/reference_polygon_fc -im path/to/input/stack -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10
 ```
 
-## **03RFprimitives**
+## **primitives**
 
 Create Land Cover Primitives For All Classes in Provided Training Data. 
 
@@ -140,10 +91,10 @@ This script trains probability Random Forest models for each land cover class in
 
 example:
 ```
-03RFprimitives -i input/stack/path -t training/data/path -o output/primitives/imagecollection/path
+primitives -i input/stack/path -t training/data/path -o output/primitives/imagecollection/path
 ```
 
-## **04generate_LC**
+## **generate_LC**
 
 Generate Single Land Cover Image From Land Cover Primitives Image Collection
 
@@ -151,7 +102,7 @@ This script takes the RF primitives collection generated from the previous scrip
 
 example:
 ```
-04generate_LC -i input/primitives/imagecollection/path -o output/path
+generate_LC -i input/primitives/imagecollection/path -o output/path
 ```
 
 
