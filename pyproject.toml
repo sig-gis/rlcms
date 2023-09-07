@@ -15,7 +15,6 @@ readme = "README.md"
 authors = [{ name = "Kyle Woodward", email = "kw.geospatial@gmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
-    "License :: OSI Approved :: GNU GPL-3 License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
