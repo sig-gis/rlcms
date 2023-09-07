@@ -1,8 +1,7 @@
 import argparse
 import os
-from src.utils.check_exists import check_exists
-from src.utils.sampling import strat_sample_w_extraction, split_train_test
-from src.utils.exports import exportTableToAsset
+from rlcms.utils import check_exists, exportTableToAsset
+from rlcms.sampling import strat_sample_w_extraction, split_train_test
 import ee
 import numpy as np
 ee.Initialize()
@@ -10,7 +9,7 @@ ee.Initialize()
 def main():
     parser = argparse.ArgumentParser(
     description="Extract Train and Test Point Data from an Input Image within Reference Polygon Areas",
-    usage = """02train_test -rp path/to/reference_polygon_fc -im path/to/input/stack 
+    usage = """train_test -rp path/to/reference_polygon_fc -im path/to/input/stack 
                 -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10"""
     )
     

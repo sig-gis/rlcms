@@ -1,16 +1,15 @@
 import os
 import ee
 import argparse
-from src.utils.assemblage import maxProbClassifyFromImageCollection
-from src.utils.check_exists import check_exists
-from src.utils.exports import exportImgToAsset
+from rlcms.assemblage import maxProbClassifyFromImageCollection
+from rlcms.utils import check_exists, exportImgToAsset
     
 def main():
     ee.Initialize()
     
     parser = argparse.ArgumentParser(
     description="Generate Single Land Cover Image From Land Cover Primitives Image Collection",
-    usage = "04generate_LC -i path/to/input_primitive_collection -o output/path/to/landcover_image"
+    usage = "generate_LC -i path/to/input_primitive_collection -o output/path/to/landcover_image"
     )
     
     parser.add_argument(

@@ -4,3 +4,5 @@ __pycache__
 metrics/*
 
 *.egg-info
+
+dist/*
