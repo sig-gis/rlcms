@@ -97,7 +97,7 @@ cd C:\rlcms
 Each Command Line Interface (CLI) script tool can be run in your command-line terminal of choice. The user must provide values for each required command-line argument to control the analysis.
 You can first run any script, only declaring the `-h` flag. This will bring up the help dialog with a usage example and a description of required command-line arguments. 
 
-## **00sample_pts**
+## **sample_pts**
 
 Generate Random Sample Points From an ee.Image, Formatted for Collect Earth Online
 
@@ -105,10 +105,10 @@ The points are pre-formatted for use in Collect Earth Online. You can choose to 
 
 example:
 ```
-00sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive
+sample_pts -im input/path/to/image -band LANDCOVER -o output/path --n_points 100 --to_drive
 ```
 
-## **01composite_s2**
+## **composite**
 
 Creates a Sentinel-2 Composite for an AOI or reference polygons. 
 
@@ -116,12 +116,12 @@ The resulting band stack is needed for both extracting training data information
 
 example:
 ```
-01composite_s2 -a path/to/aoi/asset -y 2021 -o output/path
+composite -a aoi/fc/path -d Landsat8 -s 2020-01-01 -e 2020-12-31 -o output/path --settings path/to/settings/file.txt
 ```
 
-**NOTE: The user can control which spectral indices and time series features to generate in this tool by modifying this file in the repository : [`~/src/utils/model_inputs.py`](/src/utils/model_inputs.py). See [ProjectWorkflow.md](/ProjectWorkflow.md) for details.**
+**NOTE: The user can control which spectral indices and time series features to generate in this tool by providing a settings txt file, a template of which is located in the repository : [`/template_settings.txt`](/template_settings.txt). See [ProjectWorkflow.md](/ProjectWorkflow.md) for details.**
 
-## **02train_test**
+## **train_test**
 
 Extract Train and Test Point Data from an Input Image within Reference Polygon Areas.
 
@@ -129,10 +129,10 @@ Generates stratified random samples from reference polygons, splitting the sampl
 
 example:
 ```
-02train_test -rp path/to/reference_polygon_fc -im path/to/input/stack -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10
+train_test -rp path/to/reference_polygon_fc -im path/to/input/stack -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10
 ```
 
-## **03RFprimitives**
+## **primitives**
 
 Create Land Cover Primitives For All Classes in Provided Training Data. 
 
@@ -140,10 +140,10 @@ This script trains probability Random Forest models for each land cover class in
 
 example:
 ```
-03RFprimitives -i input/stack/path -t training/data/path -o output/primitives/imagecollection/path
+primitives -i input/stack/path -t training/data/path -o output/primitives/imagecollection/path
 ```
 
-## **04generate_LC**
+## **generate_LC**
 
 Generate Single Land Cover Image From Land Cover Primitives Image Collection
 
@@ -151,7 +151,7 @@ This script takes the RF primitives collection generated from the previous scrip
 
 example:
 ```
-04generate_LC -i input/primitives/imagecollection/path -o output/path
+generate_LC -i input/primitives/imagecollection/path -o output/path
 ```
 
 
