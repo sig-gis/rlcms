@@ -55,14 +55,14 @@ def exportTableToAsset(collection:ee.FeatureCollection,description:str,asset_id:
     
     return
 
-def exportTableToDrive(collection:ee.FeatureCollection,description:str,folder:str,selectors:str):
+def exportTableToDrive(collection:ee.FeatureCollection,description:str,folder:str,file_name_prefix:str,selectors:str):
     """export FeatureCollection to Google Drive"""
     task = ee.batch.Export.table.toDrive(
         collection=collection, 
         description=description, 
         folder=folder,
-        fileNamePrefix=description,
+        fileNamePrefix=file_name_prefix,
         selectors=selectors)
     task.start()
-    print(f'Export started (Drive): {folder}/{description}')
+    print(f'Export started (Drive): {folder}/{file_name_prefix}')
     return

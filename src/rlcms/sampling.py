@@ -156,7 +156,7 @@ def strat_sample_w_extraction(img:ee.Image,collection:ee.FeatureCollection,scale
   pts_by_class = ee.FeatureCollection(ee.List(zip_value_n).map(do_by_class)).flatten()
   return pts_by_class
 
-def strat_sample(img,class_band,region,scale,seed,n_points,class_values,class_points):
+def strat_sample(img,class_band,region,scale,seed,n_points,class_values,class_points,ceo_format=True):
     """
     A wrapper for ee.Image.stratifiedSample()
     Note: This function has been found to be less efficient on EECUs and Memory than those defined above.
@@ -174,8 +174,11 @@ def strat_sample(img,class_band,region,scale,seed,n_points,class_values,class_po
         dropNulls=True, 
         tileScale=16,  # increased from 4 to reduce computation time outs on generate_train_test().
         geometries=True)
-  
-    return stratSample
+    
+    if ceo_format:
+        return stratSample.map(ceoClean)
+    else:
+        return stratSample
 
 def split_train_test(pts,seed):
     """stratify 80/20 train and test points"""
@@ -187,4 +190,21 @@ def split_train_test(pts,seed):
     test = featColl.filter(filt.Not())
 
     return train, test
-      
+
+def ceoClean(f):
+        # LON,LAT,PLOTID,SAMPLEID.,
+        fid = f.id()
+        coords = f.geometry().coordinates()
+        return f.set('LON',coords.get(0),
+                    'LAT',coords.get(1),
+                    'PLOTID',fid,
+                    'SAMPLEID',fid)
+
+def plot_id_global(n,feat):
+    """takes an index number (n) and adds it to current PLOTID property of a feature 
+            to ensure PLOTID values are globally unique (necessary for multiple sets of AOI sampling)"""
+    aoi_id = ee.String(str(n))
+    f = ee.Feature(feat)
+    gid = aoi_id.cat('_').cat(ee.String(f.get('PLOTID')))
+    f = f.set('PLOTID',gid, 'SAMPLEID', gid)
+    return f
