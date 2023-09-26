@@ -6,9 +6,6 @@ import numpy as np
 import rlcms.sampling as sampling
 from rlcms.utils import check_exists, exportTableToAsset, exportTableToDrive
 
-## GLOBAL VARS
-scale = 10 # for Sentinel2
-
 def main():
     ee.Initialize()
 
@@ -35,6 +32,14 @@ def main():
     help="class band name to use for stratification"
     )
 
+    parser.add_argument(
+        "-s",
+        "--scale",
+        type=int,
+        required=True,
+        help="scale to conduct sampling (meters)"
+        )
+    
     parser.add_argument(
     "-oa",
     "--output_asset",
@@ -93,6 +98,7 @@ def main():
     
     input_path = args.input_image
     class_band = args.class_band
+    scale = args.scale
     output_asset = args.output_asset
     output_drive = args.output_drive
     n_points = args.n_points
