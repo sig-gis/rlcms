@@ -139,21 +139,19 @@ def main():
                         end_date=end,
                         **settings)
     
-    print(img.bandNames().getInfo())
-    
     if dry_run:
         print(f"would export: {output}")
     
     else:
         if crs == None:
-            task = ee.batch.Export.image.toAsset(image=img,
+            task = ee.batch.Export.image.toAsset(image=img.image,
                                         description=os.path.basename(output),
                                         assetId=output,
                                         region=aoi.geometry(),
                                         scale=scale,
                                         maxPixels=1e12)
         else:
-            task = ee.batch.Export.image.toAsset(image=img,
+            task = ee.batch.Export.image.toAsset(image=img.image,
                                         description=os.path.basename(output),
                                         assetId=output,
                                         region=aoi.geometry(),
