@@ -1,24 +1,24 @@
 import argparse
 import os
 from rlcms.utils import check_exists, exportTableToAsset
-from rlcms.sampling import strat_sample_w_extraction, split_train_test
+from rlcms.sampling import strat_sample_w_extraction, strat_sample_from_reference, split_train_test
 import ee
 import numpy as np
 ee.Initialize()
 
 def main():
     parser = argparse.ArgumentParser(
-    description="Extract Train and Test Point Data from an Input Image within Reference Polygon Areas",
-    usage = """train_test -rp path/to/reference_polygon_fc -im path/to/input/stack 
+    description="Extract Train and Test Point Data from an Input Image within Reference Data Locations",
+    usage = """train_test -ref path/to/reference_polygon_fc -im path/to/input/stack 
                 -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10"""
     )
     
     parser.add_argument(
-    "-rp",
-    "--reference_polygons",
+    "-ref",
+    "--reference_data",
     type=str,
     required=True,
-    help="The full asset path to the reference polygon ee.FeatureCollection"
+    help="The full GEE asset path to the reference data"
     )
     
     parser.add_argument(
@@ -29,6 +29,22 @@ def main():
     help="The full asset path to the input stack ee.Image"
     )
 
+    parser.add_argument(
+    "-band",
+    "--class_band",
+    type=str,
+    required=True,
+    help="class band name to use for stratification"
+        )
+    
+    parser.add_argument(
+    "-s",
+    "--scale",
+    type=int,
+    required=True,
+    help="scale to conduct sampling (meters)"
+    )
+    
     parser.add_argument(
     "-c",
     "--crs",
@@ -87,9 +103,11 @@ def main():
     
     args = parser.parse_args()
     
-    input_fc = args.reference_polygons
+    input_fc = args.reference_data
     input_img = args.input_img
+    class_band = args.class_band
     output = args.output
+    scale = args.scale
     crs = args.crs
     class_values = args.class_values
     class_points = args.class_points
@@ -130,11 +148,11 @@ def main():
         
         image = ee.Image(input_img)
         fc = ee.FeatureCollection(input_fc)
-        pts = strat_sample_w_extraction(img=image,
+        pts = strat_sample_from_reference(img=image,
                                          collection=fc,
-                                         class_band='LANDCOVER', # should this be a CLI arg or set in model_inputs.py? hardcoded for now..
-                                         scale=10, # should this be a CLI arg or set in model_inputs.py? hardcoded for now..
-                                         crs=crs, # this is now a CLI arg
+                                         class_band=class_band, 
+                                         scale=scale, 
+                                         crs=crs, 
                                          seed=seed,
                                          class_values=class_values,
                                          class_points=class_points)
