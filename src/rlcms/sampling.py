@@ -46,29 +46,6 @@ def distanceFilter(pts,distance):
     cleaned_pts = pts.filter(ee.Filter.inList('system:index', ids).Not())
     return cleaned_pts
 
-def pt_calc_prop(input_fc:ee.FeatureCollection,ref_label:str,multiplier:int):
-  # not being used.. automating different sampling allocation strategies is a little complex 
-  # using refernce polygons and may not be worthwhile ATM..
-  """
-  Proportional allocation; takes a static integer multiplier and applies to each n of polygons per class
-  args:
-    input_fc: input polygon FeatureClass
-    ref_label: Land cover reference property in the FC
-    multiplier: integer
-  returns:
-    class_values (list): list of reference label class values i.e. [1,2,3,4]
-    class_points (list) list of per-class n to be plugged into a stratified sampler i.e. [480,120,560,220]
-  """
-  dct = input_fc.aggregate_histogram(ref_label) # polygons per class
-  keys = dct.keys()
-  def ptCalc(key):
-    return ee.Number(dct.get(key)).multiply(multiplier)
-  
-  class_values = keys.map(lambda k: ee.Number.parse(k))
-  class_points = keys.map(ptCalc)
-  
-  return class_values,class_points
-
 # This func was developed with the idea that the user wants to extract 
 # training or validation sample pts from an underlying ee.Image 
 # using either a set of points or polygons as reference 
