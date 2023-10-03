@@ -1,6 +1,7 @@
 site_name: RLCMS Documentation
 nav:
   - Home: index.md
+  - About: about.md
   - Command Line Tools: cli.md
   - Colab Notebooks:
     - compositing: colab\compositing.md
