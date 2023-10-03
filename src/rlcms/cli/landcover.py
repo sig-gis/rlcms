@@ -1,7 +1,6 @@
 import os
 import ee
 import argparse
-from rlcms.assemblage import maxProbClassifyFromImageCollection
 from rlcms.primitives import Primitives
 from rlcms.utils import check_exists, export_img_to_asset
     
