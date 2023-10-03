@@ -10,7 +10,7 @@ def main():
 
     parser = argparse.ArgumentParser(
     description="Create Land Cover Primitives For All Classes in Provided Training Data",
-    usage = "RFprimitives -i path/to/input_stack -t path/to/training_data -o path/to/output"
+    usage = "primitives -i path/to/input_stack -t path/to/training_data -c LANDCOVER -o path/to/output --metrics_folder local/folder/path"
     )
     
     parser.add_argument(
