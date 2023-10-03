@@ -49,7 +49,7 @@ def get_agg_timing(collection:hf.Dataset,**kwargs):
     
     return period,period_unit,dates
 
-class composite:
+class Composite:
     """Initializes Composite class
     
         Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon

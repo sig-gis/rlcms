@@ -6,27 +6,6 @@ import numpy as np
 import rlcms.sampling as sampling
 from rlcms.utils import check_exists, exportTableToAsset, exportTableToDrive
 
-## GLOBAL VARS
-scale = 10 # for Sentinel2
-
-def ceoClean(f):
-        # LON,LAT,PLOTID,SAMPLEID.,
-        fid = f.id()
-        coords = f.geometry().coordinates()
-        return f.set('LON',coords.get(0),
-                    'LAT',coords.get(1),
-                    'PLOTID',fid,
-                    'SAMPLEID',fid)
-
-def plot_id_global(n,feat):
-    """takes an index number (n) and adds it to current PLOTID property of a feature 
-            to ensure PLOTID values are globally unique (necessary for multiple sets of AOI sampling)"""
-    aoi_id = ee.String(str(n))
-    f = ee.Feature(feat)
-    gid = aoi_id.cat('_').cat(ee.String(f.get('PLOTID')))
-    f = f.set('PLOTID',gid, 'SAMPLEID', gid)
-    return f
-
 def main():
     ee.Initialize()
 
@@ -54,13 +33,28 @@ def main():
     )
 
     parser.add_argument(
-    "-o",
-    "--output",
+        "-s",
+        "--scale",
+        type=int,
+        required=True,
+        help="scale to conduct sampling (meters)"
+        )
+    
+    parser.add_argument(
+    "-oa",
+    "--output_asset",
     type=str,
-    required=True,
-    help="The output asset path basename for export."
+    required=False,
+    help="The output GEE asset path for export."
     )
     
+    parser.add_argument(
+    "-od",
+    "--output_drive",
+    type=str,
+    required=False,
+    help="The output google drive path for export."
+    )
     parser.add_argument(
     "--n_points",
     type=int,
@@ -85,22 +79,6 @@ def main():
     )
     
     parser.add_argument(
-    "-ta",
-    "--to_asset",
-    dest="to_asset",
-    action="store_true",
-    help="exports to GEE Asset only",
-    )
-    
-    parser.add_argument(
-    "-td",
-    "--to_drive",
-    dest="to_drive",
-    action="store_true",
-    help="exports to Google Drive only",
-    )
-    
-    parser.add_argument(
     "-r",
     "--reshuffle",
     dest="reshuffle",
@@ -120,19 +98,21 @@ def main():
     
     input_path = args.input_image
     class_band = args.class_band
-    output = args.output
+    scale = args.scale
+    output_asset = args.output_asset
+    output_drive = args.output_drive
     n_points = args.n_points
     class_values = args.class_values
     class_points = args.class_points
-    to_asset = args.to_asset
-    to_drive = args.to_drive
     reshuffle = args.reshuffle
     dry_run = args.dry_run
 
     # perform checks
-    output_folder = os.path.dirname(output)
     assert check_exists(input_path) == 0, f"Check input FeatureCollection exists: {input_path}"
-    assert check_exists(output_folder) == 0, f"Check output folder exists: {output_folder}"
+    # GEE won't make parents for you
+    if output_asset:
+        output_asset_folder = os.path.dirname(output_asset)
+        assert check_exists(output_asset_folder) == 0, f"Check GEE output asset's folder exists: {output_asset_folder}"
     
     # value checks if class_values and class_points args are both provided
     if ((class_values != None) and (class_points != None)):
@@ -175,37 +155,47 @@ def main():
                                     seed=seed, 
                                     n_points=n_points,
                                     class_values=class_values,
-                                    class_points=class_points).map(ceoClean)
+                                    class_points=class_points)
 
-    # set up export info
-    description = os.path.basename(output)
-    drive_folder = 'kaza-lc'
-    drive_desc = description+'-Drive'
-    asset_desc = description+'-Asset'
+   
     selectors = 'LON,LAT,PLOTID,SAMPLEID,'+class_band
-    # will export to drive or asset if you specify one or the other
-    if to_asset==True and to_drive==False:
-        if dry_run:
-            print(f"would export (Asset): {output}")
-            exit()
-        else:
-            exportTableToAsset(samples,asset_desc,output)
     
-    elif to_drive==True and to_asset==False:
+    # to GEE Asset only
+    if output_asset!=None and output_drive==None:
+        desc = os.path.basename(output_asset)+'-Asset'
         if dry_run:
-            print(f"would export (Drive): {drive_folder}/{drive_desc}")
+            print(f"would export (Asset): {output_asset}")
             exit()
         else:
-            exportTableToDrive(samples,drive_desc,drive_folder,selectors)
+            exportTableToAsset(samples,desc,output_asset)
     
-    else: # export both ways if neither or both of the --to_drive and --to_asset flags are given
+    # to Google Drive only
+    elif output_asset==None and output_drive!=None:
+        # user might not provide a GEE asset conforming path as output if toAsset not their intent
+        drive_folder = os.path.dirname(output_drive)
+        drive_basename = os.path.basename(output_drive)
+        drive_desc = drive_basename+'-Drive'
         if dry_run:
-            print(f"would export (Asset): {output}")
-            print(f"would export (Drive): {drive_folder}/{drive_desc}")
+            print(f"would export (Drive): {output_drive}")
             exit()
         else:
-            exportTableToAsset(samples,asset_desc,output)
-            exportTableToDrive(samples,drive_desc,drive_folder,selectors)
-        
+            exportTableToDrive(samples,drive_desc,drive_folder,drive_basename,selectors)
+    
+    # export both to GEE Asset and Google Drive
+    elif output_asset!=None and output_drive!=None: 
+        asset_desc = os.path.basename(output_asset)+'-Asset'
+        drive_folder = os.path.dirname(output_drive)
+        drive_basename = os.path.basename(output_drive)
+        drive_desc = drive_basename+'-Drive'
+        if dry_run:
+            print(f"would export (Asset): {output_asset}")
+            print(f"would export (Drive): {output_drive}")
+            exit()
+        else:
+            exportTableToAsset(samples,asset_desc,output_asset)
+            exportTableToDrive(samples,drive_desc,drive_folder,drive_basename,selectors)
+    # neither output paths specified
+    else:
+        raise RuntimeError(f"No output paths provided, user must provide at least one of the following two arguments:\n -oa/--output_asset  -od/--output_drive")        
 if __name__ == "__main__":
     main()

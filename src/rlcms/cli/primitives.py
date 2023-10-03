@@ -3,14 +3,14 @@ import os
 from pathlib import Path
 import argparse
 from rlcms.utils import check_exists
-from rlcms.primitives import primitives_to_collection
+from rlcms.primitives import Primitives
 
 def main():
     ee.Initialize()
 
     parser = argparse.ArgumentParser(
     description="Create Land Cover Primitives For All Classes in Provided Training Data",
-    usage = "RFprimitives -i path/to/input_stack -t path/to/training_data -o path/to/output"
+    usage = "primitives -i path/to/input_stack -t path/to/training_data -c LANDCOVER -o path/to/output --metrics_folder local/folder/path"
     )
     
     parser.add_argument(
@@ -29,13 +29,13 @@ def main():
     required=True,
     help="full asset path(s) to training point dataset(s)"
     )
-    
+
     parser.add_argument(
     "-c",
-    "--crs",
-    type=str,
-    required=False,
-    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
+    "--class_name",
+    type=str, 
+    required=True,
+    help="model class label"
     )
     
     parser.add_argument(
@@ -45,7 +45,28 @@ def main():
         required=True,
         help="The output asset path of the primitives image collection."
     )
+    
+    parser.add_argument(
+    "-crs",
+    type=str,
+    required=False,
+    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
+    )
 
+    parser.add_argument(
+    "-scale",
+    type=int,
+    required=False,
+    help="output scale"
+    )
+
+    parser.add_argument(
+        "--metrics_folder",
+        type=str,
+        required=False,
+        help="The local folder to export metrics files."
+    )
+    
     parser.add_argument(
         "-d",
         "--dry_run",
@@ -58,8 +79,11 @@ def main():
 
     input_stack_path = args.input_stack
     train_paths = args.training_data
+    class_name =args.class_name
     output = args.output
     crs = args.crs
+    scale = args.scale
+    metrics_path = args.metrics_folder
     dry_run = args.dry_run
 
     # Run Checks
@@ -80,8 +104,8 @@ def main():
         raise AssertionError(f"Primitives ImageCollection already exists: {img_coll_path}")
 
     # Construct local 'metrics' folder path from -o output or a default name if not provided
-    cwd = os.getcwd()
-    metrics_path = os.path.join(cwd,"metrics",os.path.basename(img_coll_path))
+    # cwd = os.getcwd()
+    # metrics_path = os.path.join(cwd,"metrics",os.path.basename(img_coll_path))
 
     # print output locations and exit
     if dry_run: 
@@ -93,7 +117,7 @@ def main():
         # make local metrics folder
         if not os.path.exists(metrics_path):
             Path(metrics_path).mkdir(parents=True)
-        print(f"Metrics will be exported to: {metrics_path}\n")
+        print(f"Metrics will be exported to: {metrics_path}")
         
         input_stack = ee.Image(input_stack_path)
         
@@ -106,12 +130,16 @@ def main():
         else:
             training_data = ee.FeatureCollection(train_paths[0])
         
-        # run primitives models
-        primitives_to_collection(input_stack=input_stack,
-                                 training_pts=training_data,
-                                 output_ic=img_coll_path,
-                                 metrics_path=metrics_path,
-                                 crs=crs)
+        # Construct Primitives
+        prims = Primitives(inputs=input_stack,
+                           training=training_data,
+                           class_name=class_name)
+        # Export as GEE ImgColl asset
+        prims.export_to_asset(collection_assetId=img_coll_path,
+                              crs=crs,
+                              scale=scale)
+        # Export model metrics
+        prims.export_metrics(metrics_path=metrics_path)
 
 if __name__=="__main__":
     main()

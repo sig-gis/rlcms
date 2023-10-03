@@ -1,8 +1,8 @@
 import ee
 import os
 import re
-from rlcms.composites import composite
-from rlcms.utils import exportImgToAsset, check_exists
+from rlcms.composites import Composite
+from rlcms.utils import check_exists
 import argparse
 import json
 
@@ -120,7 +120,7 @@ def main():
     
     # multiple datasets requested, combining multiple composites
     if len(data) > 1: 
-        composite_list = ([composite(dataset=d,
+        composite_list = ([Composite(dataset=d,
                         region=aoi,
                         start_date=start,
                         end_date=end,
@@ -133,27 +133,25 @@ def main():
     
     # only one dataset requested
     else:
-        img = composite(dataset=data[0],
+        img = Composite(dataset=data[0],
                         region=aoi,
                         start_date=start,
                         end_date=end,
                         **settings)
-    
-    print(img.bandNames().getInfo())
     
     if dry_run:
         print(f"would export: {output}")
     
     else:
         if crs == None:
-            task = ee.batch.Export.image.toAsset(image=img,
+            task = ee.batch.Export.image.toAsset(image=img.image,
                                         description=os.path.basename(output),
                                         assetId=output,
                                         region=aoi.geometry(),
                                         scale=scale,
                                         maxPixels=1e12)
         else:
-            task = ee.batch.Export.image.toAsset(image=img,
+            task = ee.batch.Export.image.toAsset(image=img.image,
                                         description=os.path.basename(output),
                                         assetId=output,
                                         region=aoi.geometry(),

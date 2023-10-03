@@ -9,7 +9,7 @@ We execute these steps in order create a yearly land cover product for a given y
 5. Assemble Land Cover Map
 6. Area Estimation and Accuracy 
 
-For tool documentation, see the [REAMDE](README.md)
+For tool documentation, see the [README](/README.md)
 
 For code demo videos see this [Drive Folder](https://drive.google.com/drive/folders/1gUYxjBzq7FpZcZ7VGoORb8E-Uqf79CSO?usp=sharing). 
 
@@ -25,7 +25,7 @@ In order to create an independently-derived reference polygon dataset for land c
 
 Below is a Land Cover image for our area already existing in our GEE Assets at this file path: `projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaTestPoly_2020`.
 
-![intial_lc](docs/imgs/initial_landcover.PNG)
+![intial_lc](imgs/initial_landcover.PNG)
 
 * Run the sample_pts script, providing a reference land cover image, its land cover band name, and your desired sample stratification options. By default the tool will export the point dataset to Google Drive as a CSV and to GEE as a FeatureCollection Asset, but you can specify either the -td/--to_drive or -ta/--to_asset flag to specify only one of the export formats. 
 
@@ -37,15 +37,15 @@ sample_pts -im projects/wwf-sig/assets/kaza-lc/output_landcover/LandCover_BingaT
 
 CLI Output:
 
-![00sample_pts_output](docs/imgs/00sample_pts_output.PNG)
+![00sample_pts_output](imgs/00sample_pts_output.PNG)
 
 GEE Task Pane:
 
-![00sample_pts_task_output](docs/imgs/00sample_pts_task_output.PNG)
+![00sample_pts_task_output](imgs/00sample_pts_task_output.PNG)
 
 GEE Asset Display:
 
-![result_of_00sample_pts](docs/imgs/result_of_00sample_pts.PNG)
+![result_of_00sample_pts](imgs/result_of_00sample_pts.PNG)
 
 #### Step 1b. Collect Reference Polygons in CEO
 
@@ -68,7 +68,7 @@ Collect Land Cover Reference Polygons in CEO:
 
 GEE Asset Display:
 
-![dummyRefPolys](docs/imgs/dummyRefPolys.PNG)
+![dummyRefPolys](imgs/dummyRefPolys.PNG)
 
 ### Step 2. Create Sentinel-2 Input Stack
 
@@ -85,23 +85,23 @@ composite -a projects/wwf-sig/assets/kaza-lc/aoi/testBingaPoly -d Sentinel2 -s 2
 
 CLI Output:
 
-![01composite_s2_CLI](docs/imgs/01composite_s2_CLI.PNG)
+![01composite_s2_CLI](imgs/01composite_s2_CLI.PNG)
 
 **If my reference polygons overlap multiple project AOIs or fall outside of them (i.e. WWF's Zambia Field Data), then compositing S2 data with wall-to-wall coverage of the the reference polygons' bounding box (the default behavior) wastes compute resources - we won't use any of the composited data that is outside the reference polygon footprints and outside any of the AOIs. It is more efficient to composite S2 data just within the polygon footprints and use that data to extract training information within those footprints. In that instance, you would specify `"multi_poly":true` in the settings.txt file to composite data only within polygon footprints instead. Therefore, you would need to run the `composite` tool twice - once to provide an input stack for the training data creation and again to provide an input stack within your project AOI for the land cover prediction.* 
 
 GEE Task Pane:
 
-![01composite_gee_task](docs/imgs/01composite_gee_task.PNG)
+![01composite_gee_task](imgs/01composite_gee_task.PNG)
 
 GEE Asset Display (visualization: red, green, and blue 50th percentile bands):
 
-![result_of_01composite_s2](docs/imgs/result_of_01composite_s2.PNG)
+![result_of_01composite_s2](imgs/result_of_01composite_s2.PNG)
 
 __A Note for Continued Research & Development__
 
 All spectral bands and time series features are controlled by the user in a settings .txt file. A template file is provided for you here: [template_settings.txt](/template_settings.txt)
 
-![settings_txt](docs/imgs/settings_txt.PNG)
+![settings_txt](imgs/settings_txt.PNG)
 
 The settings in this file currently reflect those model covariates detailed in the WWF KAZA Land Cover Monitoring System methodology report, but we fully expect users to begin experimenting with feature engineering for model performance improvements. Computing harmonic trend coefficients on user-controlled spectral bands and indices is also now supported. Set `addHarmonics` to True to use them. In `harmonicsOptions`, the user specifies which band/spectral index and Day of Year range to compute the harmonic trend coefficients from.
 
@@ -126,15 +126,15 @@ train_test -rp projects/wwf-sig/assets/kaza-lc/reference_data/BingaDummyReferenc
 
 CLI Output:
 
-![02train_test_CLI](docs/imgs/02train_test_CLI.PNG)
+![02train_test_CLI](imgs/02train_test_CLI.PNG)
 
 GEE Task:
 
-![02train_test_gee_task](docs/imgs/02train_test_gee_task.PNG)
+![02train_test_gee_task](imgs/02train_test_gee_task.PNG)
 
 GEE Asset Display:
 
-![result_of_02train_test.PNG](docs/imgs/result_of_02train_test.PNG)
+![result_of_02train_test.PNG](imgs/result_of_02train_test.PNG)
 
 ### Step 4. Create Land Cover Primitives
 
@@ -153,19 +153,19 @@ RFprimitives -i projects/wwf-sig/assets/kaza-lc/input_stacks/S2_2022_testBingaPo
 
 CLI Output:
 
-![03RFprimitives_CLI](docs/imgs/03RFprimitives_CLI.PNG)
+![03RFprimitives_CLI](imgs/03RFprimitives_CLI.PNG)
 
 Metrics Outputs:
 
-![03RFprimitives_metrics_folder](docs/imgs/03RFprimitives_metrics_folder.PNG)
+![03RFprimitives_metrics_folder](imgs/03RFprimitives_metrics_folder.PNG)
 
 GEE Task:
 
-![03RFprimitives_gee_task](docs/imgs/03RFprimitives_gee_task.PNG)
+![03RFprimitives_gee_task](imgs/03RFprimitives_gee_task.PNG)
 
 GEE Asset Display:
 
-![03RFprimitives_asset](docs/imgs/03RFprimitives_asset.PNG)
+![03RFprimitives_asset](imgs/03RFprimitives_asset.PNG)
 
 __A Note for Continued Research & Development__
 
@@ -183,15 +183,15 @@ generate_LC -i projects/wwf-sig/assets/kaza-lc/output_landcover/Primitives_S2_20
 ```
 CLI Output:
 
-![04generate_LC_CLIoutputs](docs/imgs/04_generateLC_CLI.PNG)
+![04generate_LC_CLIoutputs](imgs/04_generateLC_CLI.PNG)
 
 GEE Task:
 
-![04generate_LC_gee_task](docs/imgs/04_generateLC_gee_task.PNG)
+![04generate_LC_gee_task](imgs/04_generateLC_gee_task.PNG)
 
 GEE Asset Display:
 
-![04generate_LC_asset](docs/imgs/04generate_LC_asset.PNG)
+![04generate_LC_asset](imgs/04generate_LC_asset.PNG)
 
 
 **Inspecting Outputs**
@@ -229,11 +229,11 @@ __click this link to add the AREA2 GEE script repository to your Reader repos: [
 
 We will be using the `Stratified Estimation` script tool. 
 
-![StratifiedEstimation](docs/imgs/AREA2_stratifiedEstimation.PNG)
+![StratifiedEstimation](imgs/AREA2_stratifiedEstimation.PNG)
 
 * Open the script and click `Run`. A User Interface will be generated.
 
-![RunStratifiedEstimation](docs/imgs/stratifiedEstimationUIOpen.PNG)
+![RunStratifiedEstimation](imgs/stratifiedEstimationUIOpen.PNG)
 
 * In the first dialog box, we will provide the full GEE asset path to our Land Cover `ee.Image`.
 * We leave the second dialog box, 'Specify Band' as default 1
@@ -242,13 +242,13 @@ We will be using the `Stratified Estimation` script tool.
 * Click 'Load data', then another button 'Apply stratified estimator' will appear. Click that as well. 
 * Testing points that were misclassified in our land cover image are added to the map, and Accuracy and Area metrics are printed to the Console. 
 
-![mapview](docs/imgs/stratifiedEstimationFillOutDialog.PNG)
+![mapview](imgs/stratifiedEstimationFillOutDialog.PNG)
 
-![consoleview](docs/imgs/stratifiedEstimationConsole.PNG)
+![consoleview](imgs/stratifiedEstimationConsole.PNG)
 
 * You can save or take a screenshot of the printed Accuracy and Area metrics. You can also retrieve the confusion/error matrices themselves as total counts or proportions by clicking the 'show error matrices' button in the UI. 
 
 *A good place to save these metrics is in the metrics subfolder generated during the RF Primitives analysis.*
 
-![showmatrices](docs/imgs/stratifiedEstimationErrorMatrices.PNG)
+![showmatrices](imgs/stratifiedEstimationErrorMatrices.PNG)
 
