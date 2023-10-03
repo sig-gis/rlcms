@@ -6,3 +6,5 @@ metrics/*
 *.egg-info
 
 dist/*
+
+site/*
