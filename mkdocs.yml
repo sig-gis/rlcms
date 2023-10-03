@@ -1,0 +1,23 @@
+site_name: RLCMS Documentation
+nav:
+  - Home: index.md
+  - About: about.md
+  - Command Line Tools: cli.md
+  - Colab Notebooks:
+    - compositing: colab\compositing.md
+    - primitives: colab\primitives.md
+    - sampling: colab\sampling.md
+  - API Reference:
+    - composites module: composites.md
+    - covariates module: covariates.md
+    - harmonics module: harmonics.md
+    - primitives module: primitives.md
+    - sampling module: sampling.md
+    - utils module: utils.md
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings
