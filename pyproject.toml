@@ -9,7 +9,7 @@ where = ["src"]
 
 [project]
 name = "rlcms"
-version = "2023.9.7"
+version = "2023.10.2"
 description = "workflows for regional land cover mapping, built in Google Earth Engine"
 readme = "README.md"
 authors = [{ name = "Kyle Woodward", email = "kw.geospatial@gmail.com" }]
@@ -36,5 +36,5 @@ Homepage = "https://github.com/sig-gis/rlcms/"
 composite = "rlcms.cli.composite:main"
 sample_pts = "rlcms.cli.sample_pts:main"
 train_test = "rlcms.cli.train_test:main"
-primitives = "rlcms.cli.RFprimitives:main"
-generate_LC = "rlcms.cli.generate_LC:main"
+primitives = "rlcms.cli.primitives:main"
+landcover = "rlcms.cli.landcover:main"

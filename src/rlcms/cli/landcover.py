@@ -1,8 +1,8 @@
 import os
 import ee
 import argparse
-from rlcms.assemblage import maxProbClassifyFromImageCollection
-from rlcms.utils import check_exists, exportImgToAsset
+from rlcms.primitives import Primitives
+from rlcms.utils import check_exists, export_img_to_asset
     
 def main():
     ee.Initialize()
@@ -18,14 +18,6 @@ def main():
     type=str,
     required=True,
     help="GEE asset path to input Primitives ImageCollection"
-    )
-
-    parser.add_argument(
-    "-c",
-    "--crs",
-    type=str,
-    required=False,
-    help="CRS string in format of EPSG:xxxxx. Defaults to EPSG:4326"
     )
     
     parser.add_argument(
@@ -47,7 +39,6 @@ def main():
 
     input_path = args.input
     output_path = args.output
-    crs = args.crs
     dry_run = args.dry_run
     
     # If output Image exists already, throw error
@@ -59,11 +50,14 @@ def main():
     if dry_run:
             print(f"would export: {output_path}")
     else:
-      prims = ee.ImageCollection(input_path)
-      max = maxProbClassifyFromImageCollection(prims)
-      aoi = prims.first().geometry().bounds()
+      prims = Primitives(asset_id=input_path)
+      max = prims.assemble_max_probability()
+      aoi = prims.collection.first().geometry().bounds()
       description = os.path.basename(output_path).replace('/','_')
-      exportImgToAsset(img=max,desc=description,asset_id=output_path,region=aoi,scale=10,crs=crs)
+      export_img_to_asset(image=max,
+                          description=description,
+                          assetId=output_path,
+                          region=aoi)
 
 if __name__ == "__main__":
    main()    

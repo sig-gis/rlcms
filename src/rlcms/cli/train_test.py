@@ -9,7 +9,7 @@ ee.Initialize()
 def main():
     parser = argparse.ArgumentParser(
     description="Extract Train and Test Point Data from an Input Image within Reference Data Locations",
-    usage = """train_test -ref path/to/reference_polygon_fc -im path/to/input/stack 
+    usage = """train_test -ref path/to/reference_fc -im path/to/input/stack -band LANDCOVER --scale 10
                 -o unique/output/path --class_values 1 2 3 4 5 6 7 8 --class_points 10 10 10 10 10 10 10"""
     )
     
