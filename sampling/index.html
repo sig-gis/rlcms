@@ -66,6 +66,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#rlcms.sampling" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -472,6 +477,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    sampling module
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -481,6 +497,79 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling" class="md-nav__link">
+    sampling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.distanceFilter" class="md-nav__link">
+    distanceFilter()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.plot_id_global" class="md-nav__link">
+    plot_id_global()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.split_train_test" class="md-nav__link">
+    split_train_test()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample" class="md-nav__link">
+    strat_sample()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_from_reference" class="md-nav__link">
+    strat_sample_from_reference()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_no_extraction" class="md-nav__link">
+    strat_sample_no_extraction()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_w_extraction" class="md-nav__link">
+    strat_sample_w_extraction()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -532,6 +621,70 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling" class="md-nav__link">
+    sampling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.distanceFilter" class="md-nav__link">
+    distanceFilter()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.plot_id_global" class="md-nav__link">
+    plot_id_global()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.split_train_test" class="md-nav__link">
+    split_train_test()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample" class="md-nav__link">
+    strat_sample()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_from_reference" class="md-nav__link">
+    strat_sample_from_reference()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_no_extraction" class="md-nav__link">
+    strat_sample_no_extraction()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.sampling.strat_sample_w_extraction" class="md-nav__link">
+    strat_sample_w_extraction()
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -547,7 +700,515 @@
 
   <h1>sampling module</h1>
 
-<p>Coming Soon</p>
+<div class="doc doc-object doc-module">
+
+
+
+<a id="rlcms.sampling"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.distanceFilter" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">distanceFilter</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filter Points within a FeatureCollection by a minimum distance threshold</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.plot_id_global" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">plot_id_global</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">feat</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>takes an index number (n) and adds it to current PLOTID property of a feature 
+to ensure PLOTID values are globally unique (necessary for multiple sets of AOI sampling)</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.split_train_test" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">split_train_test</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>stratify 80/20 train and test points</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.strat_sample" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">strat_sample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">class_band</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">class_values</span><span class="p">,</span> <span class="n">class_points</span><span class="p">,</span> <span class="n">ceo_format</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>A wrapper for ee.Image.stratifiedSample() with CEO schema formatting if desired
+Note: This function has been found to be less efficient on EECUs and Memory than those defined above.
+        Use the strat_sample_w_extraction for training data generation
+        strat_sample_no_extraction can be used for testing data generation (predictor bands not required)</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.strat_sample_from_reference" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">strat_sample_from_reference</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">class_band</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">class_values</span><span class="p">,</span> <span class="n">class_points</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates stratified random sample pts from reference polygons with all bands from input image extracted</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>img</code></td>
+          <td>
+                <code><span title="ee.Image">Image</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>image whose bands will be extracted to the sample points</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>collection</code></td>
+          <td>
+                <code><span title="ee.FeatureCollection">FeatureCollection</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>reference polygons FeatureCollection</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_band</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>property name of the reference (i.e. 'LANDCOVER')</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>resolution to sample the grid at</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>seed</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>random seed</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_values</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>unique reference labels (e.g. [1,2,3,4])</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_points</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of points to sample per label (e.g. [100,200,100,200])</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>returns:
+  ee.FeatureCollection of sample points 
+    They will contain the properties inherited from the reference polygons, 
+      a 'random' property, and all bands from the image as properties.</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.strat_sample_no_extraction" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">strat_sample_no_extraction</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">class_band</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">class_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_points</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates stratified random sample pts from reference polygons. Does not extract raster data to the points. </p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>collection</code></td>
+          <td>
+                <code><span title="ee.FeatureCollection">FeatureCollection</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>reference polygons FeatureCollection</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_band</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>property name of the reference (i.e. 'LANDCOVER')</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>resolution to sample the grid at</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>seed</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>random seed</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_values</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>unique reference labels (e.g. [1,2,3,4])</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_points</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of points to sample per label (e.g. [100,200,100,200])</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>returns:
+  ee.FeatureCollection of sample points 
+    They will contain the properties inherited from the reference polygons and a 'random' property</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.sampling.strat_sample_w_extraction" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">strat_sample_w_extraction</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="n">class_band</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">class_values</span><span class="p">,</span> <span class="n">class_points</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates stratified random sample pts from reference polygons with all bands from input image extracted</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>img</code></td>
+          <td>
+                <code><span title="ee.Image">Image</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>image whose bands will be extracted to the sample points</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>collection</code></td>
+          <td>
+                <code><span title="ee.FeatureCollection">FeatureCollection</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>reference polygons FeatureCollection</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_band</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>property name of the reference (i.e. 'LANDCOVER')</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>resolution to sample the grid at</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>seed</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>random seed</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_values</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>unique reference labels (e.g. [1,2,3,4])</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>class_points</code></td>
+          <td>
+                <code>list</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>number of points to sample per label (e.g. [100,200,100,200])</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>returns:
+  ee.FeatureCollection of sample points 
+    They will contain the properties inherited from the reference polygons, 
+      a 'random' property, and all bands from the image as properties.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

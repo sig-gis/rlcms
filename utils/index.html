@@ -64,6 +64,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#rlcms.utils" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -490,6 +495,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    utils module
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -499,6 +515,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils" class="md-nav__link">
+    utils
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.exportTableToAsset" class="md-nav__link">
+    exportTableToAsset()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.exportTableToDrive" class="md-nav__link">
+    exportTableToDrive()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.export_image_to_drive" class="md-nav__link">
+    export_image_to_drive()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.export_img_to_asset" class="md-nav__link">
+    export_img_to_asset()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -530,6 +598,49 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils" class="md-nav__link">
+    utils
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.exportTableToAsset" class="md-nav__link">
+    exportTableToAsset()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.exportTableToDrive" class="md-nav__link">
+    exportTableToDrive()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.export_image_to_drive" class="md-nav__link">
+    export_image_to_drive()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.utils.export_img_to_asset" class="md-nav__link">
+    export_img_to_asset()
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -545,7 +656,540 @@
 
   <h1>utils module</h1>
 
-<p>Coming Soon</p>
+<div class="doc doc-object doc-module">
+
+
+
+<a id="rlcms.utils"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.utils.exportTableToAsset" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">exportTableToAsset</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Export FeatureCollection to GEE Asset</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.utils.exportTableToDrive" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">exportTableToDrive</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">file_name_prefix</span><span class="p">,</span> <span class="n">selectors</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>export FeatureCollection to Google Drive</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.utils.export_image_to_drive" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">export_image_to_drive</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;myExportImageTask&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fileNamePrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shardSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fileDimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fileFormat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">formatOptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a batch task to export an Image as a raster to Google Drive.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>image</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The image to be exported.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>description</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Human-readable name of the task.</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;myExportImageTask&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>folder</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The name of a unique folder in your Drive account to
+export into. Defaults to the root of the drive.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fileNamePrefix</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The Google Drive filename for the export.
+Defaults to the name of the task.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dimensions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The dimensions of the exported image. Takes either a
+single positive integer as the maximum dimension or "WIDTHxHEIGHT"
+where WIDTH and HEIGHT are each positive integers.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>region</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The lon,lat coordinates for a LinearRing or Polygon
+specifying the region to export. Can be specified as a nested
+lists of numbers or a serialized string. Defaults to the image's
+region.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The resolution in meters per pixel. Defaults to the
+native resolution of the image assset unless a crsTransform
+is specified.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>crs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The coordinate reference system of the exported image's
+projection. Defaults to the image's default projection.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>crsTransform</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A comma-separated string of 6 numbers describing
+the affine transform of the coordinate reference system of the
+exported image's projection, in the order: xScale, xShearing,
+xTranslation, yShearing, yScale and yTranslation. Defaults to
+the image's native CRS transform.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>maxPixels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The maximum allowed number of pixels in the exported
+image. The task will fail if the exported region covers more
+pixels in the specified projection. Defaults to 100,000,000.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>shardSize</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Size in pixels of the tiles in which this image will be
+computed. Defaults to 256.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fileDimensions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The dimensions in pixels of each image file, if the
+image is too large to fit in a single file. May specify a
+single number to indicate a square shape, or a tuple of two
+dimensions to indicate (width,height). Note that the image will
+still be clipped to the overall image dimensions. Must be a
+multiple of shardSize.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>skipEmptyTiles</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If true, skip writing empty (i.e. fully-masked)
+image tiles. Defaults to false.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fileFormat</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The string file format to which the image is exported.
+Currently only 'GeoTIFF' and 'TFRecord' are supported, defaults to
+'GeoTIFF'.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>formatOptions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dictionary of string keys to format specific options.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>**kwargs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Holds other keyword arguments that may have been deprecated
+such as 'crs_transform', 'driveFolder', and 'driveFileNamePrefix'.</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.utils.export_img_to_asset" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">export_img_to_asset</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;myExportImageTask&#39;</span><span class="p">,</span> <span class="n">assetId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyramidingPolicy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a task to export an EE Image to an EE Asset.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>image</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The image to be exported.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>description</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Human-readable name of the task.</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;myExportImageTask&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>assetId</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The destination asset ID.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>pyramidingPolicy</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The pyramiding policy to apply to each band in the
+image, a dictionary keyed by band name. Values must be
+one of: "mean", "sample", "min", "max", or "mode".
+Defaults to "mean". A special key, ".default", may be used to
+change the default for all bands.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>dimensions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The dimensions of the exported image. Takes either a
+single positive integer as the maximum dimension or "WIDTHxHEIGHT"
+where WIDTH and HEIGHT are each positive integers.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>region</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The lon,lat coordinates for a LinearRing or Polygon
+specifying the region to export. Can be specified as a nested
+lists of numbers or a serialized string. Defaults to the image's
+region.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>scale</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The resolution in meters per pixel. Defaults to the
+native resolution of the image assset unless a crsTransform
+is specified.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>crs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The coordinate reference system of the exported image's
+projection. Defaults to the image's default projection.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>crsTransform</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A comma-separated string of 6 numbers describing
+the affine transform of the coordinate reference system of the
+exported image's projection, in the order: xScale, xShearing,
+xTranslation, yShearing, yScale and yTranslation. Defaults to
+the image's native CRS transform.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>maxPixels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The maximum allowed number of pixels in the exported
+image. The task will fail if the exported region covers more
+pixels in the specified projection. Defaults to 100,000,000.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>**kwargs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Holds other keyword arguments that may have been deprecated
+such as 'crs_transform'.</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

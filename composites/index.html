@@ -66,6 +66,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#rlcms.composites" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -392,6 +397,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    composites module
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -401,6 +417,57 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites" class="md-nav__link">
+    composites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.Composite" class="md-nav__link">
+    Composite
+  </a>
+  
+    <nav class="md-nav" aria-label="Composite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rlcms.composites.Composite.stack" class="md-nav__link">
+    stack()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.get_agg_timing" class="md-nav__link">
+    get_agg_timing()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -532,6 +599,48 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites" class="md-nav__link">
+    composites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.Composite" class="md-nav__link">
+    Composite
+  </a>
+  
+    <nav class="md-nav" aria-label="Composite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rlcms.composites.Composite.stack" class="md-nav__link">
+    stack()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.get_agg_timing" class="md-nav__link">
+    get_agg_timing()
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -547,7 +656,272 @@
 
   <h1>composites module</h1>
 
-<p>Coming Soon</p>
+<div class="doc doc-object doc-module">
+
+
+
+<a id="rlcms.composites"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="rlcms.composites.Composite" class="doc doc-heading">
+          <code>Composite</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Initializes Composite class</p>
+<p>Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>dataset</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>one of: 'Landsat5','Landsat7','Landsat8','Sentinel1Asc','Sentinel1Desc','Sentinel2','Modis','Viirs')</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>region</code></td>
+          <td>
+                <code><span title="ee.FeatureCollection">FeatureCollection</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>area of interest</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>start_date</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>start date</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>end_date</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>end date</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="kwargs" open>
+  <summary>kwargs</summary>
+  <p>indices:list[str]
+composite_mode:str One of ['seasonal','annual'] Default = 'annual' 
+season:list[str|int]
+reducer:str|ee.Reducer
+addTasselCap:bool
+addTopography:bool
+addJRC:bool
+harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}</p>
+</details>
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>ee.Image: multi-band image composite within region</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="rlcms.composites.Composite.stack" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">stack</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>stacks composites together, formatting bands and properties</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>self</code></td>
+          <td>
+                <code><span title="rlcms.composite">composite</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>RLCMS Composite</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>other</code></td>
+          <td>
+                <code><span title="rlcms.composite">composite</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>RLCMS Composite</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+      <p>returns:
+    ee.Image</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.composites.get_agg_timing" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_agg_timing</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>utility function for hf.Dataset.aggregate_time(). Formats <code>period</code>, <code>period_unit</code>, and <code>dates</code> args
+    to create certain types of composites (defined by <code>composite_mode</code>)
+args:
+    collection (hf.Dataset): Hydrafloods Dataset
+kwargs:
+    composite_mode (str): one of 'annual' or 'seasonal', Default = 'annual'
+    season (list[str|int]): consecutive list of months (e.g. ['01','02','03']) comprising the season.
+        A required arg if composite_mode == 'seasonal'
+Returns:
+    tuple(period(int),period_unit(str),dates(list[str]))</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

@@ -66,6 +66,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#rlcms.harmonics" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -432,6 +437,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    harmonics module
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -441,6 +457,65 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics" class="md-nav__link">
+    harmonics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.addHarmonicTerms" class="md-nav__link">
+    addHarmonicTerms()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.addTimeConstant" class="md-nav__link">
+    addTimeConstant()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.calculateHarmonic" class="md-nav__link">
+    calculateHarmonic()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.doHarmonicsFromOptions" class="md-nav__link">
+    doHarmonicsFromOptions()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.harmonicRGB" class="md-nav__link">
+    harmonicRGB()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -532,6 +607,56 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics" class="md-nav__link">
+    harmonics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.addHarmonicTerms" class="md-nav__link">
+    addHarmonicTerms()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.addTimeConstant" class="md-nav__link">
+    addTimeConstant()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.calculateHarmonic" class="md-nav__link">
+    calculateHarmonic()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.doHarmonicsFromOptions" class="md-nav__link">
+    doHarmonicsFromOptions()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.harmonics.harmonicRGB" class="md-nav__link">
+    harmonicRGB()
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -547,7 +672,143 @@
 
   <h1>harmonics module</h1>
 
-<p>Coming Soon</p>
+<div class="doc doc-object doc-module">
+
+
+
+<a id="rlcms.harmonics"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.harmonics.addHarmonicTerms" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">addHarmonicTerms</span><span class="p">(</span><span class="n">image</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add Time bands to image</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.harmonics.addTimeConstant" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">addTimeConstant</span><span class="p">(</span><span class="n">imageCollection</span><span class="p">,</span> <span class="n">timeField</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Add time constant to images in an ImageCollection
+timeField: time stamp property name (typically is the 'system:time_start' property of an image)</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.harmonics.calculateHarmonic" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">calculateHarmonic</span><span class="p">(</span><span class="n">imageCollection</span><span class="p">,</span> <span class="n">dependent</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Calculate harmonic coefficients (phase and amplitude) off of an ImageCollection
+dependent: band that you fit the harmonic model for, must be contained in ImageCollection</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.harmonics.doHarmonicsFromOptions" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">doHarmonicsFromOptions</span><span class="p">(</span><span class="n">imgColl</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>calculateHarmonic function band-wise</p>
+      <p>kwargs:
+    harmonicsOptions (dict): which band(s) and the DOY start and end date to compute harmonics on
+        formatted like: 
+        {
+            'red':{'start':1,'end':365},
+            'blue':{'start':1,'end':365}
+            }
+returns:
+    ee.Image containing bands [band_phase, band_amplitude]</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.harmonics.harmonicRGB" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">harmonicRGB</span><span class="p">(</span><span class="n">harmonics</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Use the HSV to RGB transform to display phase and amplitude</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 
