@@ -691,6 +691,37 @@
   
       <p>Export FeatureCollection to GEE Asset</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exportTableToAsset</span><span class="p">(</span><span class="n">collection</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">,</span><span class="n">description</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">asset_id</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export FeatureCollection to GEE Asset&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">check_exists</span><span class="p">(</span><span class="n">asset_id</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">Export</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">toAsset</span><span class="p">(</span>
+            <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">assetId</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Export started (Asset): </span><span class="si">{</span><span class="n">asset_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">asset_id</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -711,6 +742,31 @@
   
       <p>export FeatureCollection to Google Drive</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">exportTableToDrive</span><span class="p">(</span><span class="n">collection</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">,</span><span class="n">description</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">folder</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">file_name_prefix</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">selectors</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;export FeatureCollection to Google Drive&quot;&quot;&quot;</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">Export</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">toDrive</span><span class="p">(</span>
+        <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span> 
+        <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> 
+        <span class="n">folder</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+        <span class="n">fileNamePrefix</span><span class="o">=</span><span class="n">file_name_prefix</span><span class="p">,</span>
+        <span class="n">selectors</span><span class="o">=</span><span class="n">selectors</span><span class="p">)</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Export started (Drive): </span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_name_prefix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -981,6 +1037,185 @@ such as 'crs_transform', 'driveFolder', and 'driveFileNamePrefix'.</p>
     </tbody>
   </table>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_image_to_drive</span><span class="p">(</span>
+    <span class="n">image</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;myExportImageTask&quot;</span><span class="p">,</span>
+    <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fileNamePrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">shardSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fileDimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fileFormat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">formatOptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a batch task to export an Image as a raster to Google Drive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image: The image to be exported.</span>
+<span class="sd">        description: Human-readable name of the task.</span>
+<span class="sd">        folder: The name of a unique folder in your Drive account to</span>
+<span class="sd">            export into. Defaults to the root of the drive.</span>
+<span class="sd">        fileNamePrefix: The Google Drive filename for the export.</span>
+<span class="sd">            Defaults to the name of the task.</span>
+<span class="sd">        dimensions: The dimensions of the exported image. Takes either a</span>
+<span class="sd">            single positive integer as the maximum dimension or &quot;WIDTHxHEIGHT&quot;</span>
+<span class="sd">            where WIDTH and HEIGHT are each positive integers.</span>
+<span class="sd">        region: The lon,lat coordinates for a LinearRing or Polygon</span>
+<span class="sd">            specifying the region to export. Can be specified as a nested</span>
+<span class="sd">            lists of numbers or a serialized string. Defaults to the image&#39;s</span>
+<span class="sd">            region.</span>
+<span class="sd">        scale: The resolution in meters per pixel. Defaults to the</span>
+<span class="sd">            native resolution of the image assset unless a crsTransform</span>
+<span class="sd">            is specified.</span>
+<span class="sd">        crs: The coordinate reference system of the exported image&#39;s</span>
+<span class="sd">            projection. Defaults to the image&#39;s default projection.</span>
+<span class="sd">        crsTransform: A comma-separated string of 6 numbers describing</span>
+<span class="sd">            the affine transform of the coordinate reference system of the</span>
+<span class="sd">            exported image&#39;s projection, in the order: xScale, xShearing,</span>
+<span class="sd">            xTranslation, yShearing, yScale and yTranslation. Defaults to</span>
+<span class="sd">            the image&#39;s native CRS transform.</span>
+<span class="sd">        maxPixels: The maximum allowed number of pixels in the exported</span>
+<span class="sd">            image. The task will fail if the exported region covers more</span>
+<span class="sd">            pixels in the specified projection. Defaults to 100,000,000.</span>
+<span class="sd">        shardSize: Size in pixels of the tiles in which this image will be</span>
+<span class="sd">            computed. Defaults to 256.</span>
+<span class="sd">        fileDimensions: The dimensions in pixels of each image file, if the</span>
+<span class="sd">            image is too large to fit in a single file. May specify a</span>
+<span class="sd">            single number to indicate a square shape, or a tuple of two</span>
+<span class="sd">            dimensions to indicate (width,height). Note that the image will</span>
+<span class="sd">            still be clipped to the overall image dimensions. Must be a</span>
+<span class="sd">            multiple of shardSize.</span>
+<span class="sd">        skipEmptyTiles: If true, skip writing empty (i.e. fully-masked)</span>
+<span class="sd">            image tiles. Defaults to false.</span>
+<span class="sd">        fileFormat: The string file format to which the image is exported.</span>
+<span class="sd">            Currently only &#39;GeoTIFF&#39; and &#39;TFRecord&#39; are supported, defaults to</span>
+<span class="sd">            &#39;GeoTIFF&#39;.</span>
+<span class="sd">        formatOptions: A dictionary of string keys to format specific options.</span>
+<span class="sd">        **kwargs: Holds other keyword arguments that may have been deprecated</span>
+<span class="sd">            such as &#39;crs_transform&#39;, &#39;driveFolder&#39;, and &#39;driveFileNamePrefix&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input image must be an instance of ee.Image&quot;</span><span class="p">)</span>
+
+    <span class="n">task</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">Export</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">toDrive</span><span class="p">(</span>
+        <span class="n">image</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">folder</span><span class="p">,</span>
+        <span class="n">fileNamePrefix</span><span class="p">,</span>
+        <span class="n">dimensions</span><span class="p">,</span>
+        <span class="n">region</span><span class="p">,</span>
+        <span class="n">scale</span><span class="p">,</span>
+        <span class="n">crs</span><span class="p">,</span>
+        <span class="n">crsTransform</span><span class="p">,</span>
+        <span class="n">maxPixels</span><span class="p">,</span>
+        <span class="n">shardSize</span><span class="p">,</span>
+        <span class="n">fileDimensions</span><span class="p">,</span>
+        <span class="n">skipEmptyTiles</span><span class="p">,</span>
+        <span class="n">fileFormat</span><span class="p">,</span>
+        <span class="n">formatOptions</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export Started (Drive): </span><span class="si">{</span><span class="n">fileNamePrefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -1179,6 +1414,155 @@ such as 'crs_transform'.</p>
     </tbody>
   </table>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_img_to_asset</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;myExportImageTask&quot;</span><span class="p">,</span>
+    <span class="n">assetId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pyramidingPolicy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a task to export an EE Image to an EE Asset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image: The image to be exported.</span>
+<span class="sd">        description: Human-readable name of the task.</span>
+<span class="sd">        assetId: The destination asset ID.</span>
+<span class="sd">        pyramidingPolicy: The pyramiding policy to apply to each band in the</span>
+<span class="sd">            image, a dictionary keyed by band name. Values must be</span>
+<span class="sd">            one of: &quot;mean&quot;, &quot;sample&quot;, &quot;min&quot;, &quot;max&quot;, or &quot;mode&quot;.</span>
+<span class="sd">            Defaults to &quot;mean&quot;. A special key, &quot;.default&quot;, may be used to</span>
+<span class="sd">            change the default for all bands.</span>
+<span class="sd">        dimensions: The dimensions of the exported image. Takes either a</span>
+<span class="sd">            single positive integer as the maximum dimension or &quot;WIDTHxHEIGHT&quot;</span>
+<span class="sd">            where WIDTH and HEIGHT are each positive integers.</span>
+<span class="sd">        region: The lon,lat coordinates for a LinearRing or Polygon</span>
+<span class="sd">            specifying the region to export. Can be specified as a nested</span>
+<span class="sd">            lists of numbers or a serialized string. Defaults to the image&#39;s</span>
+<span class="sd">            region.</span>
+<span class="sd">        scale: The resolution in meters per pixel. Defaults to the</span>
+<span class="sd">            native resolution of the image assset unless a crsTransform</span>
+<span class="sd">            is specified.</span>
+<span class="sd">        crs: The coordinate reference system of the exported image&#39;s</span>
+<span class="sd">            projection. Defaults to the image&#39;s default projection.</span>
+<span class="sd">        crsTransform: A comma-separated string of 6 numbers describing</span>
+<span class="sd">            the affine transform of the coordinate reference system of the</span>
+<span class="sd">            exported image&#39;s projection, in the order: xScale, xShearing,</span>
+<span class="sd">            xTranslation, yShearing, yScale and yTranslation. Defaults to</span>
+<span class="sd">            the image&#39;s native CRS transform.</span>
+<span class="sd">        maxPixels: The maximum allowed number of pixels in the exported</span>
+<span class="sd">            image. The task will fail if the exported region covers more</span>
+<span class="sd">            pixels in the specified projection. Defaults to 100,000,000.</span>
+<span class="sd">        **kwargs: Holds other keyword arguments that may have been deprecated</span>
+<span class="sd">            such as &#39;crs_transform&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input image must be an instance of ee.Image&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">assetId</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">assetId</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;users/&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">assetId</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;projects/&quot;</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">check_exists</span><span class="p">(</span><span class="n">assetId</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assetId</span><span class="si">}</span><span class="s2"> not a valid asset path&quot;</span>
+            <span class="c1"># assetId = f&quot;{ee_user_id()}/{assetId}&quot;</span>
+
+    <span class="n">task</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">Export</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">toAsset</span><span class="p">(</span>
+        <span class="n">image</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">assetId</span><span class="p">,</span>
+        <span class="n">pyramidingPolicy</span><span class="p">,</span>
+        <span class="n">dimensions</span><span class="p">,</span>
+        <span class="n">region</span><span class="p">,</span>
+        <span class="n">scale</span><span class="p">,</span>
+        <span class="n">crs</span><span class="p">,</span>
+        <span class="n">crsTransform</span><span class="p">,</span>
+        <span class="n">maxPixels</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Export Started (Asset): </span><span class="si">{</span><span class="n">assetId</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>

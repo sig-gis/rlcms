@@ -731,6 +731,535 @@
   <div class="doc doc-contents ">
 
 
+            <details class="quote">
+              <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Primitives</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">asset_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">format_pts</span><span class="p">(</span><span class="n">pts</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Turn a FC of training points containing full LC typology into a list of primitive point FCs, </span>
+<span class="sd">                    one point FC for each LC primitive&quot;&quot;&quot;</span>
+            <span class="c1"># create sets of binary training pts for each class represented in the full training pts collection</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+            <span class="k">def</span> <span class="nf">binaryPts</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                <span class="c1"># create prim and non prim sets with filters, reset prim to 1, non-prim to 0</span>
+                <span class="n">prim</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">,</span><span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">non_prim</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">neq</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">,</span><span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">prim</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">non_prim</span><span class="p">)</span>
+            <span class="n">list_of_prim_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">binaryPts</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">list_of_prim_pts</span>
+
+        <span class="k">def</span> <span class="nf">gettop20</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+            <span class="nb">dict</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">kv_return</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">passedObj</span><span class="p">):</span>
+                <span class="n">passedObj</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">passedObj</span><span class="p">)</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="n">retObj</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">gte</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span><span class="n">passedObj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">passedObj</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">retObj</span>
+            <span class="n">newl</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">iterate</span><span class="p">(</span><span class="n">kv_return</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([]))</span>
+            <span class="k">return</span> <span class="n">newl</span>
+
+        <span class="k">def</span> <span class="nf">RFprim</span><span class="p">(</span><span class="n">training_pts</span><span class="p">,</span><span class="n">input_stack</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Train and apply RF Probability classifier on a Primitive&quot;&quot;&quot;</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">input_stack</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training_pts</span><span class="p">)</span>
+
+            <span class="n">class_value</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)))</span> <span class="c1">#get LC numeric value for the given primitive (i.e. &#39;PRIM&#39;:1, &#39;LANDCOVER&#39;:6) then map to its class label (i.e. 6: &#39;Water&#39;)</span>
+
+            <span class="c1"># can experiment with classifier params for model performance</span>
+            <span class="n">classifier</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Classifier</span><span class="o">.</span><span class="n">smileRandomForest</span><span class="p">(</span>
+            <span class="n">numberOfTrees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+            <span class="n">minLeafPopulation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+            <span class="n">bagFraction</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+            <span class="n">seed</span><span class="o">=</span><span class="mi">51515</span><span class="p">)</span><span class="o">.</span><span class="n">setOutputMode</span><span class="p">(</span><span class="s1">&#39;PROBABILITY&#39;</span><span class="p">)</span>
+
+            <span class="c1"># train model with all features</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span> 
+                                    <span class="n">classProperty</span><span class="o">=</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span> 
+                                    <span class="n">inputProperties</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span> 
+                                    <span class="p">)</span>
+
+            <span class="c1"># store for model performance exploration</span>
+            <span class="n">oob_all</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outOfBagErrorEstimate&#39;</span><span class="p">)</span>
+            <span class="n">importance_all</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+
+            <span class="c1"># retrieve top 20 most important features</span>
+            <span class="n">top20</span> <span class="o">=</span> <span class="n">gettop20</span><span class="p">(</span><span class="n">importance_all</span><span class="p">)</span>
+
+            <span class="c1"># re-train model with top20 important features</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span> 
+                                    <span class="n">classProperty</span><span class="o">=</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span> 
+                                    <span class="n">inputProperties</span><span class="o">=</span><span class="n">top20</span>
+                                    <span class="p">)</span>
+
+            <span class="n">oob_top20</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outOfBagErrorEstimate&#39;</span><span class="p">)</span>
+            <span class="n">importance_top20</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+            <span class="n">schema</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Classifier</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                      <span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="s1">&#39;Probability&#39;</span><span class="p">)</span>
+                      <span class="c1"># lists and dictionaries do not propagate thru as properties on Batch exported Images</span>
+                      <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">,</span><span class="n">class_value</span><span class="p">,</span>
+                           <span class="s1">&#39;importance&#39;</span><span class="p">,</span><span class="n">importance_top20</span><span class="p">,</span> 
+                           <span class="s1">&#39;schema&#39;</span><span class="p">,</span><span class="n">schema</span><span class="p">,</span> 
+                           <span class="s1">&#39;model&#39;</span><span class="p">,</span><span class="n">model</span><span class="p">,</span>
+                           <span class="s1">&#39;oobError&#39;</span><span class="p">,</span><span class="n">oob_top20</span><span class="p">,</span> 
+                           <span class="p">))</span>
+            <span class="k">return</span> <span class="n">output</span>
+
+        <span class="k">def</span> <span class="nf">primitives_to_collection</span><span class="p">(</span><span class="n">input_stack</span><span class="p">,</span>
+                                     <span class="n">training_pts</span><span class="p">,</span>
+                                     <span class="n">class_name</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create LC Primitive image for each LC class in training points</span>
+
+<span class="sd">            args:</span>
+<span class="sd">                input_stack (ee.Image): of all covariates and predictor</span>
+<span class="sd">                training_pts (ee.FeatureCollection): training pts containing full LC typology</span>
+<span class="sd">                class_name (str): property name in training points containing model classes</span>
+
+<span class="sd">            returns:</span>
+<span class="sd">                ee.ImageCollection of Primitive ee.Images</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="n">input_stack</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">input_stack</span><span class="p">)</span>
+            <span class="n">training_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training_pts</span><span class="p">)</span>
+
+            <span class="c1"># list of distinct LANDCOVER values</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">training_pts</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+
+            <span class="c1"># converting to index of the list of distinct LANDCOVER primtive FC&#39;s (prim_pts below)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span> <span class="c1"># handles dynamic land cover strata</span>
+
+            <span class="n">prim_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span> <span class="c1"># running one LC class at a time</span>
+                <span class="n">prim_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">format_pts</span><span class="p">(</span><span class="n">training_pts</span><span class="p">))</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="c1"># format training pts to 1/0 prim format</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">RFprim</span><span class="p">(</span><span class="n">prim_pts</span><span class="p">,</span><span class="n">input_stack</span><span class="p">)</span> <span class="c1"># run RF primitive model, get output image and metrics</span>
+                <span class="n">prim_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="o">.</span><span class="n">fromImages</span><span class="p">(</span><span class="n">prim_list</span><span class="p">)</span>
+
+        <span class="c1"># you can construct Primitives object from a pre-existing Primitives ImgColl</span>
+        <span class="k">if</span> <span class="n">asset_id</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">primitives</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">asset_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">primitives</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">primitives</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">training_data</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">except</span><span class="p">:</span> 
+                <span class="k">raise</span><span class="p">(</span><span class="n">EEException</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives_to_collection</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">training</span><span class="p">,</span><span class="n">class_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">primitives</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_data</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">assemble_max_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take Image Collection of RF Primitives, perform pixel-wise maximum of all Primitive probability images to return single-band LC image</span>
+<span class="sd">        Array computation returns img values from 0 to n-1 due to 0-base indexing, so we .add(1) to match LC strata</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image: multiband image of probabilities</span>
+<span class="sd">            remapNum: list, list of intergers 0-N matching the number of probability bands</span>
+<span class="sd">            originalNum: list, list of inergers n-N matching the number of probability bands</span>
+<span class="sd">                        that represent their desired map values</span>
+
+<span class="sd">        Returns: ee.Image of Land Cover                            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">max_prob</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+
+            <span class="n">maxProbClassification</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+                                    <span class="o">.</span><span class="n">arrayArgmax</span><span class="p">()</span>
+                                    <span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="s1">&#39;classification&#39;</span><span class="p">]])</span>
+                                    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="p">)</span>
+                                    <span class="p">)</span>
+            <span class="k">return</span> <span class="n">maxProbClassification</span>
+
+        <span class="n">image</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">toBands</span><span class="p">()</span>
+        <span class="n">max_probability</span> <span class="o">=</span> <span class="n">max_prob</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">max_probability</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span> <span class="nf">export_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">metrics_path</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Parse variable importance and OOB Error estimate from trained model, output to local files respectively</span>
+<span class="sd">            Currently only works for Primitives objects in memory (not loaded from pre-existing ImgColl)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Var Importance to csv file</span>
+            <span class="n">imgColl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span>
+            <span class="n">to_list</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">toList</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())):</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">to_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="n">prim_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())</span>
+
+                <span class="c1"># Variable Importance to .csv</span>
+                <span class="n">dct</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+                <span class="n">_list</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_list</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">idx</span><span class="p">)</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metrics_path</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;varImportancePrimitive</span><span class="si">{</span><span class="n">prim_value</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">))</span>
+
+                <span class="c1"># OOB error to .txt file</span>
+                <span class="n">oob</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oobError&#39;</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metrics_path</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;oobErrorPrimitive</span><span class="si">{</span><span class="n">prim_value</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">),</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">oob</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">())</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">export_to_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">collection_assetId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export Primitives to Asset as an ImageCollection</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            collection_assetId (str): output ImageCollection asset path </span>
+<span class="sd">            scale (int): export scale</span>
+<span class="sd">            crs (str): export CRS (&#39;EPSG:4326&#39;)</span>
+<span class="sd">            crsTransform (list): export CRS Transform</span>
+<span class="sd">            maxPixels (int): max Pixels</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            None, Submits all Export Image tasks for Primitive collection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># make the empty IC</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating empty Primitives ImageCollection: </span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;earthengine create collection </span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">prims_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+        <span class="n">prims_list</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">toList</span><span class="p">(</span><span class="n">prims_count</span><span class="p">)</span>
+        <span class="n">aoi</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prims_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">prims_count</span><span class="p">)):</span>
+            <span class="n">prim</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prims_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Primitive</span><span class="si">{</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prim</span><span class="p">)</span><span class="o">.</span><span class="n">getString</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="c1"># this would need to be defined in the Prims img for-loop</span>
+            <span class="n">asset_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">export_img_to_asset</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">prim</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span>
+                                <span class="n">assetId</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span>
+                                <span class="n">region</span><span class="o">=</span><span class="n">aoi</span><span class="p">,</span>
+                                <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                                <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span>
+                                <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">maxPixels</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">export_to_drive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">description</span><span class="p">,</span>
+                        <span class="n">folder</span><span class="p">,</span>
+                        <span class="n">fileNamePrefix</span><span class="p">,</span>
+                        <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">shardSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">fileDimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">fileFormat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">formatOptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">,):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export Primitives to Drive as a Multi-band GeoTiff</span>
+
+<span class="sd">        See rlcms.utils.export_img_to_drive() docs for Args</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            None, Submits all Export Image tasks for Primitive collection</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">prim_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">toBands</span><span class="p">()</span>
+        <span class="n">export_image_to_drive</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">prim_img</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+                                <span class="n">folder</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+                                <span class="n">fileNamePrefix</span><span class="o">=</span><span class="n">fileNamePrefix</span><span class="p">,</span>
+                                <span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
+                                <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+                                <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                                <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span>
+                                <span class="n">crsTransform</span><span class="o">=</span><span class="n">crsTransform</span><span class="p">,</span>
+                                <span class="n">maxPixels</span><span class="o">=</span><span class="n">maxPixels</span><span class="p">,</span>
+                                <span class="n">shardSize</span><span class="o">=</span><span class="n">shardSize</span><span class="p">,</span>
+                                <span class="n">fileDimensions</span><span class="o">=</span><span class="n">fileDimensions</span><span class="p">,</span>
+                                <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="n">skipEmptyTiles</span><span class="p">,</span>
+                                <span class="n">fileFormat</span><span class="o">=</span><span class="n">fileFormat</span><span class="p">,</span>
+                                <span class="n">formatOptions</span><span class="o">=</span><span class="n">formatOptions</span><span class="p">,</span>
+                                <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
+        <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+            </details>
 
   
 
@@ -758,6 +1287,257 @@
 
   <div class="doc doc-contents ">
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+             <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">asset_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">format_pts</span><span class="p">(</span><span class="n">pts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn a FC of training points containing full LC typology into a list of primitive point FCs, </span>
+<span class="sd">                one point FC for each LC primitive&quot;&quot;&quot;</span>
+        <span class="c1"># create sets of binary training pts for each class represented in the full training pts collection</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">binaryPts</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="c1"># create prim and non prim sets with filters, reset prim to 1, non-prim to 0</span>
+            <span class="n">prim</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">,</span><span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">non_prim</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">neq</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">,</span><span class="n">l</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">prim</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">non_prim</span><span class="p">)</span>
+        <span class="n">list_of_prim_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">binaryPts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">list_of_prim_pts</span>
+
+    <span class="k">def</span> <span class="nf">gettop20</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+        <span class="nb">dict</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">kv_return</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">passedObj</span><span class="p">):</span>
+            <span class="n">passedObj</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">passedObj</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">retObj</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">gte</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span><span class="n">passedObj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">passedObj</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">retObj</span>
+        <span class="n">newl</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">iterate</span><span class="p">(</span><span class="n">kv_return</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([]))</span>
+        <span class="k">return</span> <span class="n">newl</span>
+
+    <span class="k">def</span> <span class="nf">RFprim</span><span class="p">(</span><span class="n">training_pts</span><span class="p">,</span><span class="n">input_stack</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train and apply RF Probability classifier on a Primitive&quot;&quot;&quot;</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">input_stack</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training_pts</span><span class="p">)</span>
+
+        <span class="n">class_value</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">samples</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)))</span> <span class="c1">#get LC numeric value for the given primitive (i.e. &#39;PRIM&#39;:1, &#39;LANDCOVER&#39;:6) then map to its class label (i.e. 6: &#39;Water&#39;)</span>
+
+        <span class="c1"># can experiment with classifier params for model performance</span>
+        <span class="n">classifier</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Classifier</span><span class="o">.</span><span class="n">smileRandomForest</span><span class="p">(</span>
+        <span class="n">numberOfTrees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+        <span class="n">minLeafPopulation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+        <span class="n">bagFraction</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+        <span class="n">seed</span><span class="o">=</span><span class="mi">51515</span><span class="p">)</span><span class="o">.</span><span class="n">setOutputMode</span><span class="p">(</span><span class="s1">&#39;PROBABILITY&#39;</span><span class="p">)</span>
+
+        <span class="c1"># train model with all features</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span> 
+                                <span class="n">classProperty</span><span class="o">=</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span> 
+                                <span class="n">inputProperties</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span> 
+                                <span class="p">)</span>
+
+        <span class="c1"># store for model performance exploration</span>
+        <span class="n">oob_all</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outOfBagErrorEstimate&#39;</span><span class="p">)</span>
+        <span class="n">importance_all</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+
+        <span class="c1"># retrieve top 20 most important features</span>
+        <span class="n">top20</span> <span class="o">=</span> <span class="n">gettop20</span><span class="p">(</span><span class="n">importance_all</span><span class="p">)</span>
+
+        <span class="c1"># re-train model with top20 important features</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span> 
+                                <span class="n">classProperty</span><span class="o">=</span><span class="s1">&#39;PRIM&#39;</span><span class="p">,</span> 
+                                <span class="n">inputProperties</span><span class="o">=</span><span class="n">top20</span>
+                                <span class="p">)</span>
+
+        <span class="n">oob_top20</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outOfBagErrorEstimate&#39;</span><span class="p">)</span>
+        <span class="n">importance_top20</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">explain</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Classifier</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">schema</span><span class="p">())</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+                  <span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="s1">&#39;Probability&#39;</span><span class="p">)</span>
+                  <span class="c1"># lists and dictionaries do not propagate thru as properties on Batch exported Images</span>
+                  <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">,</span><span class="n">class_value</span><span class="p">,</span>
+                       <span class="s1">&#39;importance&#39;</span><span class="p">,</span><span class="n">importance_top20</span><span class="p">,</span> 
+                       <span class="s1">&#39;schema&#39;</span><span class="p">,</span><span class="n">schema</span><span class="p">,</span> 
+                       <span class="s1">&#39;model&#39;</span><span class="p">,</span><span class="n">model</span><span class="p">,</span>
+                       <span class="s1">&#39;oobError&#39;</span><span class="p">,</span><span class="n">oob_top20</span><span class="p">,</span> 
+                       <span class="p">))</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span> <span class="nf">primitives_to_collection</span><span class="p">(</span><span class="n">input_stack</span><span class="p">,</span>
+                                 <span class="n">training_pts</span><span class="p">,</span>
+                                 <span class="n">class_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create LC Primitive image for each LC class in training points</span>
+
+<span class="sd">        args:</span>
+<span class="sd">            input_stack (ee.Image): of all covariates and predictor</span>
+<span class="sd">            training_pts (ee.FeatureCollection): training pts containing full LC typology</span>
+<span class="sd">            class_name (str): property name in training points containing model classes</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">            ee.ImageCollection of Primitive ee.Images</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">input_stack</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">input_stack</span><span class="p">)</span>
+        <span class="n">training_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training_pts</span><span class="p">)</span>
+
+        <span class="c1"># list of distinct LANDCOVER values</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">training_pts</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+
+        <span class="c1"># converting to index of the list of distinct LANDCOVER primtive FC&#39;s (prim_pts below)</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span> <span class="c1"># handles dynamic land cover strata</span>
+
+        <span class="n">prim_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span> <span class="c1"># running one LC class at a time</span>
+            <span class="n">prim_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">format_pts</span><span class="p">(</span><span class="n">training_pts</span><span class="p">))</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="c1"># format training pts to 1/0 prim format</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">RFprim</span><span class="p">(</span><span class="n">prim_pts</span><span class="p">,</span><span class="n">input_stack</span><span class="p">)</span> <span class="c1"># run RF primitive model, get output image and metrics</span>
+            <span class="n">prim_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="o">.</span><span class="n">fromImages</span><span class="p">(</span><span class="n">prim_list</span><span class="p">)</span>
+
+    <span class="c1"># you can construct Primitives object from a pre-existing Primitives ImgColl</span>
+    <span class="k">if</span> <span class="n">asset_id</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">primitives</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">asset_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">primitives</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">primitives</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">except</span><span class="p">:</span> 
+            <span class="k">raise</span><span class="p">(</span><span class="n">EEException</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">primitives</span> <span class="o">=</span> <span class="n">primitives_to_collection</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="n">training</span><span class="p">,</span><span class="n">class_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="n">primitives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_data</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">training</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -836,6 +1616,61 @@ Array computation returns img values from 0 to n-1 due to 0-base indexing, so we
   </table>
       <p>Returns: ee.Image of Land Cover</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">assemble_max_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Take Image Collection of RF Primitives, perform pixel-wise maximum of all Primitive probability images to return single-band LC image</span>
+<span class="sd">    Array computation returns img values from 0 to n-1 due to 0-base indexing, so we .add(1) to match LC strata</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image: multiband image of probabilities</span>
+<span class="sd">        remapNum: list, list of intergers 0-N matching the number of probability bands</span>
+<span class="sd">        originalNum: list, list of inergers n-N matching the number of probability bands</span>
+<span class="sd">                    that represent their desired map values</span>
+
+<span class="sd">    Returns: ee.Image of Land Cover                            </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">max_prob</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+
+        <span class="n">maxProbClassification</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+                                <span class="o">.</span><span class="n">arrayArgmax</span><span class="p">()</span>
+                                <span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="s1">&#39;classification&#39;</span><span class="p">]])</span>
+                                <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;classification&#39;</span><span class="p">)</span>
+                                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">maxProbClassification</span>
+
+    <span class="n">image</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">toBands</span><span class="p">()</span>
+    <span class="n">max_probability</span> <span class="o">=</span> <span class="n">max_prob</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">max_probability</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;LANDCOVER&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -857,6 +1692,57 @@ Array computation returns img values from 0 to n-1 due to 0-base indexing, so we
       <p>Parse variable importance and OOB Error estimate from trained model, output to local files respectively
 Currently only works for Primitives objects in memory (not loaded from pre-existing ImgColl)</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">metrics_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse variable importance and OOB Error estimate from trained model, output to local files respectively</span>
+<span class="sd">        Currently only works for Primitives objects in memory (not loaded from pre-existing ImgColl)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Var Importance to csv file</span>
+        <span class="n">imgColl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span>
+        <span class="n">to_list</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">toList</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">imgColl</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">to_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">prim_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())</span>
+
+            <span class="c1"># Variable Importance to .csv</span>
+            <span class="n">dct</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+            <span class="n">_list</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_list</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">idx</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metrics_path</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;varImportancePrimitive</span><span class="si">{</span><span class="n">prim_value</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">))</span>
+
+            <span class="c1"># OOB error to .txt file</span>
+            <span class="n">oob</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;oobError&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metrics_path</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;oobErrorPrimitive</span><span class="si">{</span><span class="n">prim_value</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">),</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">oob</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">())</span><span class="o">.</span><span class="n">getInfo</span><span class="p">())</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -986,6 +1872,91 @@ Currently only works for Primitives objects in memory (not loaded from pre-exist
     </tbody>
   </table>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_to_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">collection_assetId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export Primitives to Asset as an ImageCollection</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        collection_assetId (str): output ImageCollection asset path </span>
+<span class="sd">        scale (int): export scale</span>
+<span class="sd">        crs (str): export CRS (&#39;EPSG:4326&#39;)</span>
+<span class="sd">        crsTransform (list): export CRS Transform</span>
+<span class="sd">        maxPixels (int): max Pixels</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        None, Submits all Export Image tasks for Primitive collection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># make the empty IC</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating empty Primitives ImageCollection: </span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;earthengine create collection </span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">prims_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
+    <span class="n">prims_list</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">toList</span><span class="p">(</span><span class="n">prims_count</span><span class="p">)</span>
+    <span class="n">aoi</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prims_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">prims_count</span><span class="p">)):</span>
+        <span class="n">prim</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prims_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Primitive</span><span class="si">{</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">prim</span><span class="p">)</span><span class="o">.</span><span class="n">getString</span><span class="p">(</span><span class="s1">&#39;Primitive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="c1"># this would need to be defined in the Prims img for-loop</span>
+        <span class="n">asset_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">collection_assetId</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">export_img_to_asset</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">prim</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span>
+                            <span class="n">assetId</span><span class="o">=</span><span class="n">asset_id</span><span class="p">,</span>
+                            <span class="n">region</span><span class="o">=</span><span class="n">aoi</span><span class="p">,</span>
+                            <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                            <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span>
+                            <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">maxPixels</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
+
+    <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -1030,6 +2001,95 @@ Currently only works for Primitives objects in memory (not loaded from pre-exist
     </tbody>
   </table>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\primitives.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">export_to_drive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">description</span><span class="p">,</span>
+                    <span class="n">folder</span><span class="p">,</span>
+                    <span class="n">fileNamePrefix</span><span class="p">,</span>
+                    <span class="n">dimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">crsTransform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">maxPixels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">shardSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">fileDimensions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">fileFormat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">formatOptions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">,):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Export Primitives to Drive as a Multi-band GeoTiff</span>
+
+<span class="sd">    See rlcms.utils.export_img_to_drive() docs for Args</span>
+
+<span class="sd">    Returns: </span>
+<span class="sd">        None, Submits all Export Image tasks for Primitive collection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">prim_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">toBands</span><span class="p">()</span>
+    <span class="n">export_image_to_drive</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">prim_img</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+                            <span class="n">folder</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+                            <span class="n">fileNamePrefix</span><span class="o">=</span><span class="n">fileNamePrefix</span><span class="p">,</span>
+                            <span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
+                            <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+                            <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                            <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span>
+                            <span class="n">crsTransform</span><span class="o">=</span><span class="n">crsTransform</span><span class="p">,</span>
+                            <span class="n">maxPixels</span><span class="o">=</span><span class="n">maxPixels</span><span class="p">,</span>
+                            <span class="n">shardSize</span><span class="o">=</span><span class="n">shardSize</span><span class="p">,</span>
+                            <span class="n">fileDimensions</span><span class="o">=</span><span class="n">fileDimensions</span><span class="p">,</span>
+                            <span class="n">skipEmptyTiles</span><span class="o">=</span><span class="n">skipEmptyTiles</span><span class="p">,</span>
+                            <span class="n">fileFormat</span><span class="o">=</span><span class="n">fileFormat</span><span class="p">,</span>
+                            <span class="n">formatOptions</span><span class="o">=</span><span class="n">formatOptions</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
+    <span class="k">return</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>

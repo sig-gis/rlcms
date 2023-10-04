@@ -707,6 +707,21 @@
   
       <p>add Time bands to image</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\harmonics.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">addHarmonicTerms</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;add Time bands to image&quot;&quot;&quot;</span>
+    <span class="n">timeRadians</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">timeRadians</span><span class="o">.</span><span class="n">cos</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;cos&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span>
+        <span class="n">timeRadians</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -728,6 +743,39 @@
       <p>Add time constant to images in an ImageCollection
 timeField: time stamp property name (typically is the 'system:time_start' property of an image)</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\harmonics.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">addTimeConstant</span><span class="p">(</span><span class="n">imageCollection</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">,</span> <span class="n">timeField</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add time constant to images in an ImageCollection</span>
+<span class="sd">    timeField: time stamp property name (typically is the &#39;system:time_start&#39; property of an image)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">timeField</span><span class="p">):</span>
+        <span class="c1"># // Compute time in fractional years since the epoch.</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeField</span><span class="p">))</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="s2">&quot;1970-01-01&quot;</span><span class="p">),</span> <span class="s2">&quot;year&quot;</span><span class="p">)</span>
+        <span class="c1"># // Return the image with the added bands.</span>
+        <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">years</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span>
+            <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">imageCollection</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">timeField</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -749,6 +797,75 @@ timeField: time stamp property name (typically is the 'system:time_start' proper
       <p>Calculate harmonic coefficients (phase and amplitude) off of an ImageCollection
 dependent: band that you fit the harmonic model for, must be contained in ImageCollection</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\harmonics.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">calculateHarmonic</span><span class="p">(</span><span class="n">imageCollection</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">,</span> <span class="n">dependent</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate harmonic coefficients (phase and amplitude) off of an ImageCollection</span>
+<span class="sd">    dependent: band that you fit the harmonic model for, must be contained in ImageCollection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">harmonicIndependents</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">])</span>
+    <span class="c1">#  Add harmonic terms as new image bands.</span>
+    <span class="n">harmonicLandsat</span> <span class="o">=</span> <span class="n">imageCollection</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">addHarmonicTerms</span><span class="p">)</span>
+    <span class="c1"># The output of the regression reduction is a 4x1 array image.</span>
+    <span class="n">harmonicTrend</span> <span class="o">=</span> <span class="n">harmonicLandsat</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">harmonicIndependents</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dependent</span><span class="p">))</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span>
+        <span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">linearRegression</span><span class="p">(</span><span class="n">harmonicIndependents</span><span class="o">.</span><span class="n">length</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Turn the array image into a multi-band image of coefficients.</span>
+    <span class="n">harmonicTrendCoefficients</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">harmonicTrend</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([</span><span class="n">harmonicIndependents</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="c1"># // Compute phase and amplitude.</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">harmonicTrendCoefficients</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;cos&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">harmonicTrendCoefficients</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">dependent</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s2">&quot;_phase&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="n">amplitude</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">harmonicTrendCoefficients</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;cos&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">harmonicTrendCoefficients</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">dependent</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s2">&quot;_amplitude&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -778,6 +895,119 @@ dependent: band that you fit the harmonic model for, must be contained in ImageC
 returns:
     ee.Image containing bands [band_phase, band_amplitude]</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\harmonics.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">doHarmonicsFromOptions</span><span class="p">(</span><span class="n">imgColl</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    calculateHarmonic function band-wise</span>
+
+<span class="sd">    args:</span>
+<span class="sd">        imgColl (ee.ImageCollection)</span>
+<span class="sd">    kwargs:</span>
+<span class="sd">        harmonicsOptions (dict): which band(s) and the DOY start and end date to compute harmonics on</span>
+<span class="sd">            formatted like: </span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;red&#39;:{&#39;start&#39;:1,&#39;end&#39;:365},</span>
+<span class="sd">                &#39;blue&#39;:{&#39;start&#39;:1,&#39;end&#39;:365}</span>
+<span class="sd">                }</span>
+<span class="sd">    returns:</span>
+<span class="sd">        ee.Image containing bands [band_phase, band_amplitude]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">imgColl</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">imgColl</span><span class="p">)</span>
+    <span class="n">harmonicsOptions</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;harmonicsOptions&#39;</span><span class="p">]</span>
+
+    <span class="c1"># get harmonicsOptions dictionary</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonicsOptions</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+
+        <span class="c1"># get band keys as list</span>
+        <span class="n">bands</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">harmonicsOptions</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">harmonicByBand</span><span class="p">(</span><span class="n">band</span><span class="p">):</span>
+            <span class="n">band</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+            <span class="c1"># get the params for that band</span>
+            <span class="n">bandwiseParams</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">harmonicsOptions</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+
+            <span class="c1"># get the start and end DOY parameters</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">bandwiseParams</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Dictionary</span><span class="p">(</span><span class="n">bandwiseParams</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">)</span>
+
+            <span class="c1"># create temporal filtered imgColl for that band</span>
+            <span class="n">imgCollByBand</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">imgColl</span><span class="p">)</span>
+                                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+                                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">dayOfYear</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">)))</span>
+            <span class="c1"># add time bands</span>
+            <span class="n">timeField</span> <span class="o">=</span> <span class="s2">&quot;system:time_start&quot;</span>
+            <span class="n">timeCollection</span> <span class="o">=</span> <span class="n">addTimeConstant</span><span class="p">(</span><span class="n">imgCollByBand</span><span class="p">,</span> <span class="n">timeField</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">calculateHarmonic</span><span class="p">(</span><span class="n">timeCollection</span><span class="p">,</span><span class="n">band</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;harmonicsOptions expects dict type, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">harmonicsOptions</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># do harmonics by band key in model_inputs dictionary</span>
+    <span class="n">listOfImages</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">harmonicByBand</span><span class="p">))</span>
+    <span class="n">bandStack</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="o">.</span><span class="n">fromImages</span><span class="p">(</span><span class="n">listOfImages</span><span class="p">)</span><span class="o">.</span><span class="n">toBands</span><span class="p">())</span>
+
+    <span class="c1"># to remove srcImg band name indexing resulting from .toBands() </span>
+    <span class="c1"># (i.e. [0_swir1_phase, 0_swir1_amplitude] -&gt; [swir1_phase, swir1_amplitude] )</span>
+    <span class="n">bandNames</span> <span class="o">=</span> <span class="n">bandStack</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span>
+    <span class="n">fixedBandNames</span> <span class="o">=</span> <span class="n">bandNames</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">bandStack</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">fixedBandNames</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -798,6 +1028,33 @@ returns:
   
       <p>Use the HSV to RGB transform to display phase and amplitude</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\harmonics.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">harmonicRGB</span><span class="p">(</span><span class="n">harmonics</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use the HSV to RGB transform to display phase and amplitude&quot;&quot;&quot;</span>
+    <span class="n">amplitude</span> <span class="o">=</span> <span class="n">harmonics</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;.*amplitude&quot;</span><span class="p">)</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">harmonics</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;.*phase&quot;</span><span class="p">)</span>
+
+    <span class="n">rgb</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">phase</span><span class="o">.</span><span class="n">unitScale</span><span class="p">(</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">amplitude</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">2.5</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">hsvToRgb</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">rgb</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>

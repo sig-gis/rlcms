@@ -735,6 +735,97 @@
   
       <p>Filter Points within a FeatureCollection by a minimum distance threshold</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">distanceFilter</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span><span class="n">distance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter Points within a FeatureCollection by a minimum distance threshold&quot;&quot;&quot;</span>
+    <span class="n">withinDistance</span> <span class="o">=</span> <span class="n">distance</span>
+
+    <span class="c1">## From the User Guide: https:#developers.google.com/earth-engine/joins_spatial</span>
+    <span class="c1">## add extra filter to eliminate self-matches</span>
+    <span class="n">distFilter</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">withinDistance</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+      <span class="s1">&#39;distance&#39;</span><span class="p">:</span> <span class="n">withinDistance</span><span class="p">,</span>
+      <span class="s1">&#39;leftField&#39;</span><span class="p">:</span> <span class="s1">&#39;.geo&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;rightField&#39;</span><span class="p">:</span> <span class="s1">&#39;.geo&#39;</span><span class="p">,</span> 
+      <span class="s1">&#39;maxError&#39;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}),</span> <span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">notEquals</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+      <span class="s1">&#39;leftField&#39;</span><span class="p">:</span> <span class="s1">&#39;system:index&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;rightField&#39;</span><span class="p">:</span> <span class="s1">&#39;system:index&#39;</span><span class="p">,</span>
+
+    <span class="p">}))</span>
+
+    <span class="n">distSaveAll</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Join</span><span class="o">.</span><span class="n">saveAll</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+                  <span class="s1">&#39;matchesKey&#39;</span><span class="p">:</span> <span class="s1">&#39;points&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;measureKey&#39;</span><span class="p">:</span> <span class="s1">&#39;distance&#39;</span>
+    <span class="p">})</span>
+    <span class="c1"># Apply the join.</span>
+    <span class="n">spatialJoined</span> <span class="o">=</span> <span class="n">distSaveAll</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">distFilter</span><span class="p">)</span>
+
+    <span class="c1"># Check the number of matches.</span>
+    <span class="c1"># We&#39;re only interested if nmatches &gt; 0.</span>
+    <span class="n">spatialJoined</span> <span class="o">=</span> <span class="n">spatialJoined</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;nmatches&#39;</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;points&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="p">())</span> <span class="p">)</span>
+    <span class="n">spatialJoined</span> <span class="o">=</span> <span class="n">spatialJoined</span><span class="o">.</span><span class="n">filterMetadata</span><span class="p">(</span><span class="s1">&#39;nmatches&#39;</span><span class="p">,</span> <span class="s1">&#39;greater_than&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># The real matches are only half the total, because if p1.withinDistance(p2) then p2.withinDistance(p1)</span>
+    <span class="c1"># Use some iterative logic to clean up</span>
+    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="n">l</span><span class="p">):</span> 
+        <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">iterator_f</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="nb">list</span><span class="p">,</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">unpack</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;points&#39;</span><span class="p">)))))</span>
+        <span class="k">return</span> <span class="nb">list</span>
+
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">spatialJoined</span><span class="o">.</span><span class="n">iterate</span><span class="p">(</span><span class="n">iterator_f</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([]))</span>
+
+    <span class="c1"># Clean up </span>
+    <span class="n">cleaned_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">inList</span><span class="p">(</span><span class="s1">&#39;system:index&#39;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">Not</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">cleaned_pts</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -756,6 +847,25 @@
       <p>takes an index number (n) and adds it to current PLOTID property of a feature 
 to ensure PLOTID values are globally unique (necessary for multiple sets of AOI sampling)</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">plot_id_global</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">feat</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;takes an index number (n) and adds it to current PLOTID property of a feature </span>
+<span class="sd">            to ensure PLOTID values are globally unique (necessary for multiple sets of AOI sampling)&quot;&quot;&quot;</span>
+    <span class="n">aoi_id</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span>
+    <span class="n">gid</span> <span class="o">=</span> <span class="n">aoi_id</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PLOTID&#39;</span><span class="p">)))</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;PLOTID&#39;</span><span class="p">,</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;SAMPLEID&#39;</span><span class="p">,</span> <span class="n">gid</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -776,6 +886,29 @@ to ensure PLOTID values are globally unique (necessary for multiple sets of AOI 
   
       <p>stratify 80/20 train and test points</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">split_train_test</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span><span class="n">seed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;stratify 80/20 train and test points&quot;&quot;&quot;</span>
+
+    <span class="n">featColl</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+    <span class="n">featColl</span> <span class="o">=</span> <span class="n">featColl</span><span class="o">.</span><span class="n">randomColumn</span><span class="p">(</span><span class="n">columnName</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">filt</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">lt</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">,</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">featColl</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filt</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">propertyNames</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">)))</span> <span class="c1"># remove &#39;random&#39; property</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">featColl</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filt</span><span class="o">.</span><span class="n">Not</span><span class="p">())</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">propertyNames</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -799,6 +932,55 @@ Note: This function has been found to be less efficient on EECUs and Memory than
         Use the strat_sample_w_extraction for training data generation
         strat_sample_no_extraction can be used for testing data generation (predictor bands not required)</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strat_sample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">class_band</span><span class="p">,</span><span class="n">region</span><span class="p">,</span><span class="n">scale</span><span class="p">,</span><span class="n">seed</span><span class="p">,</span><span class="n">n_points</span><span class="p">,</span><span class="n">class_values</span><span class="p">,</span><span class="n">class_points</span><span class="p">,</span><span class="n">ceo_format</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper for ee.Image.stratifiedSample() with CEO schema formatting if desired</span>
+<span class="sd">    Note: This function has been found to be less efficient on EECUs and Memory than those defined above.</span>
+<span class="sd">            Use the strat_sample_w_extraction for training data generation</span>
+<span class="sd">            strat_sample_no_extraction can be used for testing data generation (predictor bands not required)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stratSample</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">stratifiedSample</span><span class="p">(</span>
+        <span class="n">numPoints</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span>
+        <span class="n">classBand</span><span class="o">=</span><span class="n">class_band</span><span class="p">,</span>
+        <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> 
+        <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> 
+        <span class="n">classValues</span><span class="o">=</span><span class="n">class_values</span><span class="p">,</span>
+        <span class="n">classPoints</span><span class="o">=</span><span class="n">class_points</span><span class="p">,</span>
+        <span class="n">dropNulls</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+        <span class="n">tileScale</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="n">geometries</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ceo_format</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stratSample</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">ceoClean</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stratSample</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -937,6 +1119,139 @@ Note: This function has been found to be less efficient on EECUs and Memory than
     They will contain the properties inherited from the reference polygons, 
       a 'random' property, and all bands from the image as properties.</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strat_sample_from_reference</span><span class="p">(</span><span class="n">img</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span><span class="n">collection</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">,</span><span class="n">class_band</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">scale</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span><span class="n">crs</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">seed</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span>
+                              <span class="n">class_values</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span><span class="n">class_points</span><span class="p">:</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates stratified random sample pts from reference polygons with all bands from input image extracted</span>
+
+<span class="sd">    args:</span>
+<span class="sd">      img (ee.Image): image whose bands will be extracted to the sample points</span>
+<span class="sd">      collection (ee.FeatureCollection): reference polygons FeatureCollection</span>
+<span class="sd">      class_band (str): property name of the reference (i.e. &#39;LANDCOVER&#39;)</span>
+<span class="sd">      scale (int): resolution to sample the grid at</span>
+<span class="sd">      seed (int): random seed</span>
+<span class="sd">      class_values (list): unique reference labels (e.g. [1,2,3,4])</span>
+<span class="sd">      class_points (list): number of points to sample per label (e.g. [100,200,100,200])</span>
+<span class="sd">    returns:</span>
+<span class="sd">      ee.FeatureCollection of sample points </span>
+<span class="sd">        They will contain the properties inherited from the reference polygons, </span>
+<span class="sd">          a &#39;random&#39; property, and all bands from the image as properties.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># zip class_values and class_points together so they are easily accessible by map() index</span>
+    <span class="n">zip_value_n</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_values</span><span class="p">)</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_points</span><span class="p">))</span>
+
+    <span class="c1"># done for each [class_value,class_points] pair</span>
+    <span class="k">def</span> <span class="nf">do_by_class</span><span class="p">(</span><span class="n">value_n</span><span class="p">):</span>
+        <span class="n">class_value</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">n_points</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">filtered_poly_by_class</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">fromPolys</span><span class="p">(</span><span class="n">coll</span><span class="p">):</span>
+            <span class="n">geom</span> <span class="o">=</span> <span class="n">coll</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+            <span class="c1"># generate n random pts, n_points*multiplier</span>
+            <span class="n">multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">random_pts</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="o">.</span><span class="n">randomPoints</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">multiplier</span><span class="p">),</span><span class="n">seed</span><span class="p">,</span><span class="mf">0.001</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">)))</span> <span class="c1"># class_band value from underlying poly geo must copy over into each point set</span>
+            <span class="c1"># extract raster data to the points then limit to n_points requested</span>
+            <span class="n">rawSample_fromPts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">sampleRegions</span><span class="p">(</span>
+                <span class="n">collection</span><span class="o">=</span><span class="n">random_pts</span><span class="p">,</span> 
+                <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                <span class="n">projection</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span> 
+                <span class="n">tileScale</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> 
+                <span class="n">geometries</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">randomColumn</span><span class="p">()</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">rawSample_fromPts</span>
+        <span class="k">def</span> <span class="nf">fromPoints</span><span class="p">(</span><span class="n">coll</span><span class="p">):</span>
+            <span class="c1"># extract band info to every pt in coll, then limit to n_points requested</span>
+            <span class="n">rawSample_fromPts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">sampleRegions</span><span class="p">(</span>
+                <span class="n">collection</span><span class="o">=</span><span class="n">coll</span><span class="p">,</span> 
+                <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                <span class="n">projection</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span> 
+                <span class="n">tileScale</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> 
+                <span class="n">geometries</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">randomColumn</span><span class="p">()</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">rawSample_fromPts</span>
+
+        <span class="c1"># check if collection&#39;s geometry type is Polygon</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;Polygon&#39;</span><span class="p">),</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;MultiPolygon&#39;</span><span class="p">)])</span>
+        <span class="n">geom_type</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">type</span><span class="p">()</span>
+        <span class="c1"># conditional: 1 if geom_type==&#39;Polygon&#39; or &#39;MultiPolygon&#39;, else 0 - this is a little hacky not sure if there&#39;s a better way</span>
+        <span class="n">check_poly</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="nb">type</span><span class="p">:</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">geom_type</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gte</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">If</span><span class="p">(</span><span class="n">check_poly</span><span class="p">,</span><span class="n">fromPolys</span><span class="p">(</span><span class="n">filtered_poly_by_class</span><span class="p">),</span><span class="n">fromPoints</span><span class="p">(</span><span class="n">filtered_poly_by_class</span><span class="p">))</span>
+        <span class="c1"># output_properties = ee.List(img.bandNames()).add(ee.String(class_band))</span>
+
+        <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="c1">#.map(lambda f: f.select(output_properties))</span>
+
+    <span class="n">output_properties</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">bandNames</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">class_band</span><span class="p">))</span>
+    <span class="n">pts_by_class</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">zip_value_n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">do_by_class</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">output_properties</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pts_by_class</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -1060,6 +1375,85 @@ Note: This function has been found to be less efficient on EECUs and Memory than
   ee.FeatureCollection of sample points 
     They will contain the properties inherited from the reference polygons and a 'random' property</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strat_sample_no_extraction</span><span class="p">(</span><span class="n">collection</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">,</span><span class="n">class_band</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">scale</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span><span class="n">seed</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span>
+                               <span class="n">class_values</span><span class="p">:</span><span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">class_points</span><span class="p">:</span><span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates stratified random sample pts from reference polygons. Does not extract raster data to the points. </span>
+
+<span class="sd">    args:</span>
+<span class="sd">      collection (ee.FeatureCollection): reference polygons FeatureCollection</span>
+<span class="sd">      class_band (str): property name of the reference (i.e. &#39;LANDCOVER&#39;)</span>
+<span class="sd">      scale (int): resolution to sample the grid at</span>
+<span class="sd">      seed (int): random seed</span>
+<span class="sd">      class_values (list): unique reference labels (e.g. [1,2,3,4])</span>
+<span class="sd">      class_points (list): number of points to sample per label (e.g. [100,200,100,200])</span>
+<span class="sd">    returns:</span>
+<span class="sd">      ee.FeatureCollection of sample points </span>
+<span class="sd">        They will contain the properties inherited from the reference polygons and a &#39;random&#39; property</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># zip class_values and class_points together so they are easily accessible by map() index</span>
+    <span class="n">zip_value_n</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_values</span><span class="p">)</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_points</span><span class="p">))</span>
+
+    <span class="c1"># done for each class and its desired n_points</span>
+    <span class="k">def</span> <span class="nf">do_by_class</span><span class="p">(</span><span class="n">value_n</span><span class="p">):</span>
+        <span class="n">class_value</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">n_points</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># get polys by each class_band value at a time</span>
+        <span class="n">filtered_poly_by_class</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">))</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="n">filtered_poly_by_class</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+        <span class="c1"># generate random pts, more than user specified</span>
+        <span class="n">random_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="o">.</span><span class="n">randomPoints</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">seed</span><span class="p">)</span> 
+        <span class="c1"># filter out pts too close to each other at user specified scale</span>
+        <span class="n">random_pts</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">distanceFilter</span><span class="p">(</span><span class="n">random_pts</span><span class="p">,</span><span class="n">scale</span><span class="p">))</span>
+                      <span class="o">.</span><span class="n">randomColumn</span><span class="p">()</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span><span class="s1">&#39;random&#39;</span><span class="p">))</span> <span class="c1"># shuffle, then try to return exact # pts user specified</span>
+        <span class="c1"># set class_band as a property to the features</span>
+        <span class="n">random_pts</span> <span class="o">=</span> <span class="n">random_pts</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">random_pts</span><span class="p">)</span>
+
+    <span class="n">pts_by_class</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">zip_value_n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">do_by_class</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">pts_by_class</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -1198,6 +1592,99 @@ Note: This function has been found to be less efficient on EECUs and Memory than
     They will contain the properties inherited from the reference polygons, 
       a 'random' property, and all bands from the image as properties.</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\sampling.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">strat_sample_w_extraction</span><span class="p">(</span><span class="n">img</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span><span class="n">collection</span><span class="p">:</span><span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">,</span><span class="n">scale</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span><span class="n">crs</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">class_band</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span><span class="n">seed</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span>
+                              <span class="n">class_values</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span><span class="n">class_points</span><span class="p">:</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates stratified random sample pts from reference polygons with all bands from input image extracted</span>
+
+<span class="sd">    args:</span>
+<span class="sd">      img (ee.Image): image whose bands will be extracted to the sample points</span>
+<span class="sd">      collection (ee.FeatureCollection): reference polygons FeatureCollection</span>
+<span class="sd">      class_band (str): property name of the reference (i.e. &#39;LANDCOVER&#39;)</span>
+<span class="sd">      scale (int): resolution to sample the grid at</span>
+<span class="sd">      seed (int): random seed</span>
+<span class="sd">      class_values (list): unique reference labels (e.g. [1,2,3,4])</span>
+<span class="sd">      class_points (list): number of points to sample per label (e.g. [100,200,100,200])</span>
+<span class="sd">    returns:</span>
+<span class="sd">      ee.FeatureCollection of sample points </span>
+<span class="sd">        They will contain the properties inherited from the reference polygons, </span>
+<span class="sd">          a &#39;random&#39; property, and all bands from the image as properties.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+  <span class="c1"># zip class_values and class_points together so they are easily accessible by map() index</span>
+  <span class="n">zip_value_n</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_values</span><span class="p">)</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">class_points</span><span class="p">))</span>
+
+  <span class="c1"># done for each [class_value,class_points] pair</span>
+  <span class="k">def</span> <span class="nf">do_by_class</span><span class="p">(</span><span class="n">value_n</span><span class="p">):</span>
+    <span class="n">class_value</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">n_points</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">value_n</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">filtered_poly_by_class</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">))</span>
+    <span class="n">geom</span> <span class="o">=</span> <span class="n">filtered_poly_by_class</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
+    <span class="c1"># generate random pts, more than user specified</span>
+    <span class="n">random_pts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="o">.</span><span class="n">randomPoints</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span><span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">seed</span><span class="p">)</span> 
+    <span class="c1"># set class_band as property </span>
+    <span class="n">random_pts</span> <span class="o">=</span> <span class="n">random_pts</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">class_band</span><span class="p">,</span><span class="n">class_value</span><span class="p">))</span>
+    <span class="c1"># extract raster data to the points and try to take specific n_points specified</span>
+    <span class="n">rawSample_fromPts</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">sampleRegions</span><span class="p">(</span>
+          <span class="n">collection</span><span class="o">=</span><span class="n">random_pts</span><span class="p">,</span> 
+          <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+          <span class="n">projection</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span> 
+          <span class="n">tileScale</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> 
+          <span class="n">geometries</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">randomColumn</span><span class="p">()</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">rawSample_fromPts</span><span class="p">)</span>
+
+
+  <span class="n">pts_by_class</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">zip_value_n</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">do_by_class</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+  <span class="k">return</span> <span class="n">pts_by_class</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>

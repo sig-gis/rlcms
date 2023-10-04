@@ -773,6 +773,553 @@
   <div class="doc doc-contents ">
 
 
+            <details class="quote">
+              <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">indices</span><span class="p">():</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+
+
+		<span class="c1"># list with functions to call for each index</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">functionList</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ND_blue_green&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_blue_green</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_blue_red&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_blue_red</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_blue_nir&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_blue_nir</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_blue_swir1&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_blue_swir1</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_blue_swir2&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_blue_swir2</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_green_red&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_green_red</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_green_nir&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_green_nir</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_green_swir1&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_green_swir1</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_green_swir2&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_green_swir2</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_red_swir1&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_red_swir1</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_red_swir2&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_red_swir2</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_nir_red&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_nir_red</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_nir_swir1&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_nir_swir1</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_nir_swir2&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_nir_swir2</span><span class="p">,</span> \
+							 <span class="s2">&quot;ND_swir1_swir2&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ND_swir1_swir2</span><span class="p">,</span> \
+							 <span class="s2">&quot;R_swir1_nir&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_swir1_nir</span><span class="p">,</span> \
+							 <span class="s2">&quot;R_red_swir1&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_red_swir1</span><span class="p">,</span> \
+							 <span class="s2">&quot;EVI&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">EVI</span><span class="p">,</span> \
+							 <span class="s2">&quot;SAVI&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SAVI</span><span class="p">,</span> \
+							 <span class="s2">&quot;IBI&quot;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">IBI</span><span class="p">}</span>
+
+
+	<span class="k">def</span> <span class="nf">addAllTasselCapIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span> 
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Function to get all tasselCap indices &quot;&quot;&quot;</span>
+
+		<span class="k">def</span> <span class="nf">getTasseledCap</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">			</span><span class="sd">&quot;&quot;&quot;Function to compute the Tasseled Cap transformation and return an image&quot;&quot;&quot;</span>
+
+			<span class="n">coefficients</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Array</span><span class="p">([</span>
+				<span class="p">[</span><span class="mf">0.3037</span><span class="p">,</span> <span class="mf">0.2793</span><span class="p">,</span> <span class="mf">0.4743</span><span class="p">,</span> <span class="mf">0.5585</span><span class="p">,</span> <span class="mf">0.5082</span><span class="p">,</span> <span class="mf">0.1863</span><span class="p">],</span>
+				<span class="p">[</span><span class="o">-</span><span class="mf">0.2848</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2435</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5436</span><span class="p">,</span> <span class="mf">0.7243</span><span class="p">,</span> <span class="mf">0.0840</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1800</span><span class="p">],</span>
+				<span class="p">[</span><span class="mf">0.1509</span><span class="p">,</span> <span class="mf">0.1973</span><span class="p">,</span> <span class="mf">0.3279</span><span class="p">,</span> <span class="mf">0.3406</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7112</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4572</span><span class="p">],</span>
+				<span class="p">[</span><span class="o">-</span><span class="mf">0.8242</span><span class="p">,</span> <span class="mf">0.0849</span><span class="p">,</span> <span class="mf">0.4392</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0580</span><span class="p">,</span> <span class="mf">0.2012</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2768</span><span class="p">],</span>
+				<span class="p">[</span><span class="o">-</span><span class="mf">0.3280</span><span class="p">,</span> <span class="mf">0.0549</span><span class="p">,</span> <span class="mf">0.1075</span><span class="p">,</span> <span class="mf">0.1855</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4357</span><span class="p">,</span> <span class="mf">0.8085</span><span class="p">],</span>
+				<span class="p">[</span><span class="mf">0.1084</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9022</span><span class="p">,</span> <span class="mf">0.4120</span><span class="p">,</span> <span class="mf">0.0573</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0251</span><span class="p">,</span> <span class="mf">0.0238</span><span class="p">]</span>
+			<span class="p">])</span>
+
+			<span class="n">bands</span><span class="o">=</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span>
+
+			<span class="c1"># Make an Array Image, with a 1-D Array per pixel.</span>
+			<span class="n">arrayImage1D</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+
+			<span class="c1"># Make an Array Image with a 2-D Array per pixel, 6x1.</span>
+			<span class="n">arrayImage2D</span> <span class="o">=</span> <span class="n">arrayImage1D</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+			<span class="n">componentsImage</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span><span class="o">.</span><span class="n">matrixMultiply</span><span class="p">(</span><span class="n">arrayImage2D</span><span class="p">)</span><span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="s1">&#39;brightness&#39;</span><span class="p">,</span> <span class="s1">&#39;greenness&#39;</span><span class="p">,</span> <span class="s1">&#39;wetness&#39;</span><span class="p">,</span> <span class="s1">&#39;fourth&#39;</span><span class="p">,</span> <span class="s1">&#39;fifth&#39;</span><span class="p">,</span> <span class="s1">&#39;sixth&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+			<span class="c1"># Get a multi-band image with TC-named bands.</span>
+			<span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">componentsImage</span><span class="p">);</span>	
+
+
+		<span class="k">def</span> <span class="nf">addTCAngles</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+
+<span class="w">			</span><span class="sd">&quot;&quot;&quot; Function to add Tasseled Cap angles and distances to an image. Assumes image has bands: &#39;brightness&#39;, &#39;greenness&#39;, and &#39;wetness&#39;.&quot;&quot;&quot;</span>
+
+			<span class="c1"># Select brightness, greenness, and wetness bands	</span>
+			<span class="n">brightness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;brightness&#39;</span><span class="p">)</span>
+			<span class="n">greenness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;greenness&#39;</span><span class="p">)</span>
+			<span class="n">wetness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;wetness&#39;</span><span class="p">)</span>
+
+			<span class="c1"># Calculate Tasseled Cap angles and distances</span>
+			<span class="n">tcAngleBG</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">greenness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleBG&#39;</span><span class="p">])</span>
+			<span class="n">tcAngleGW</span> <span class="o">=</span> <span class="n">greenness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleGW&#39;</span><span class="p">])</span>
+			<span class="n">tcAngleBW</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleBW&#39;</span><span class="p">])</span>
+			<span class="n">tcDistBG</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">greenness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistBG&#39;</span><span class="p">])</span>
+			<span class="n">tcDistGW</span> <span class="o">=</span> <span class="n">greenness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistGW&#39;</span><span class="p">])</span>
+			<span class="n">tcDistBW</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistBW&#39;</span><span class="p">])</span>
+			<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleBG</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleGW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleBW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistBG</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistGW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistBW</span><span class="p">)</span>
+
+			<span class="k">return</span> <span class="n">img</span>
+
+		<span class="n">img</span> <span class="o">=</span> <span class="n">getTasseledCap</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">addTCAngles</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_blue_green</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_blue_green&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_blue_red</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_blue_red&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_blue_nir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;nir&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_blue_nir&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_blue_swir1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_blue_swir1&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_blue_swir2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_blue_swir2&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_green_red</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_green_red&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_green_nir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;nir&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_green_nir&#39;</span><span class="p">]))</span>  <span class="c1"># NDWBI</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_green_swir1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_green_swir1&#39;</span><span class="p">]))</span>  <span class="c1"># NDSI, MNDWI</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_green_swir2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_green_swir2&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_red_swir1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_red_swir1&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_red_swir2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_red_swir2&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_nir_red</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_nir_red&#39;</span><span class="p">]))</span>  <span class="c1"># NDVI</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_nir_swir1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_nir_swir1&#39;</span><span class="p">]))</span>  <span class="c1"># NDWI, LSWI, -NDBI</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_nir_swir2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_nir_swir2&#39;</span><span class="p">]))</span> <span class="c1"># NBR, MNDVI</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">ND_swir1_swir2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;swir1&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;ND_swir1_swir2&#39;</span><span class="p">]))</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">R_swir1_nir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="c1"># Add ratios</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;swir1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;nir&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;R_swir1_nir&#39;</span><span class="p">]));</span>  <span class="c1"># ratio 5/4</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">R_red_swir1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;swir1&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;R_red_swir1&#39;</span><span class="p">]));</span>  <span class="c1"># ratio 3/5</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">EVI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="c1">#Add Enhanced Vegetation Index (EVI)</span>
+		<span class="n">evi</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">expression</span><span class="p">(</span>
+			<span class="s1">&#39;2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))&#39;</span><span class="p">,</span> <span class="p">{</span>
+			  <span class="s1">&#39;NIR&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;nir&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;RED&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;BLUE&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+		  <span class="p">})</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">evi</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;EVI&#39;</span><span class="p">]))</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">SAVI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="c1"># Add Soil Adjust Vegetation Index (SAVI)</span>
+		<span class="c1"># using L = 0.5;</span>
+		<span class="n">savi</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">expression</span><span class="p">(</span>
+			<span class="s1">&#39;(NIR - RED) * (1 + 0.5)/(NIR + RED + 0.5)&#39;</span><span class="p">,</span> <span class="p">{</span>
+			  <span class="s1">&#39;NIR&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;nir&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;RED&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+		  <span class="p">})</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">savi</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;SAVI&#39;</span><span class="p">]))</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">IBI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+		<span class="c1"># Add Index-Based Built-Up Index (IBI)</span>
+		<span class="n">ibi_a</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">expression</span><span class="p">(</span>
+			<span class="s1">&#39;2*SWIR1/(SWIR1 + NIR)&#39;</span><span class="p">,</span> <span class="p">{</span>
+			  <span class="s1">&#39;SWIR1&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;swir1&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;NIR&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;nir&#39;</span><span class="p">)</span>
+			<span class="p">})</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;IBI_A&#39;</span><span class="p">])</span>
+
+
+		<span class="n">ibi_b</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">expression</span><span class="p">(</span>
+			<span class="s1">&#39;(NIR/(NIR + RED)) + (GREEN/(GREEN + SWIR1))&#39;</span><span class="p">,</span> <span class="p">{</span>
+			  <span class="s1">&#39;NIR&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;nir&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;RED&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;GREEN&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">),</span>
+			  <span class="s1">&#39;SWIR1&#39;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;swir1&#39;</span><span class="p">)</span>
+			<span class="p">})</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;IBI_B&#39;</span><span class="p">])</span>
+
+		<span class="n">ibi_a</span> <span class="o">=</span> <span class="n">ibi_a</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">ibi_b</span><span class="p">)</span>
+		<span class="n">ibi</span> <span class="o">=</span> <span class="n">ibi_a</span><span class="o">.</span><span class="n">normalizedDifference</span><span class="p">([</span><span class="s1">&#39;IBI_A&#39;</span><span class="p">,</span><span class="s1">&#39;IBI_B&#39;</span><span class="p">])</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">ibi</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;IBI&#39;</span><span class="p">]))</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">addTopography</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span> 
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;  Function to add 30m SRTM elevation and derived slope, aspect, eastness, and </span>
+<span class="sd">		northness to an image. Elevation is in meters, slope is between 0 and 90 deg,</span>
+<span class="sd">		aspect is between 0 and 359 deg. Eastness and northness are unitless and are</span>
+<span class="sd">		between -1 and 1. &quot;&quot;&quot;</span>
+
+		<span class="c1"># Import SRTM elevation data</span>
+		<span class="n">elevation</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;USGS/SRTMGL1_003&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Calculate slope, aspect, and hillshade</span>
+		<span class="n">topo</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">Terrain</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
+
+		<span class="c1"># From aspect (a), calculate eastness (sin a), northness (cos a)</span>
+		<span class="n">deg2rad</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">180</span><span class="p">)</span>
+		<span class="n">aspect</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;aspect&#39;</span><span class="p">])</span>
+		<span class="n">aspect_rad</span> <span class="o">=</span> <span class="n">aspect</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">deg2rad</span><span class="p">)</span>
+		<span class="n">eastness</span> <span class="o">=</span> <span class="n">aspect_rad</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;eastness&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+		<span class="n">northness</span> <span class="o">=</span> <span class="n">aspect_rad</span><span class="o">.</span><span class="n">cos</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;northness&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+		<span class="c1"># Add topography bands to image</span>
+		<span class="n">topo</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;elevation&#39;</span><span class="p">,</span><span class="s1">&#39;slope&#39;</span><span class="p">,</span><span class="s1">&#39;aspect&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">eastness</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">northness</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">topo</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">addJRC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Function to add JRC Water layers: &#39;occurrence&#39;, &#39;change_abs&#39;, </span>
+<span class="sd">			&#39;change_norm&#39;, &#39;seasonality&#39;,&#39;transition&#39;, &#39;max_extent&#39; &quot;&quot;&quot;</span>
+
+		<span class="n">jrcImage</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;JRC/GSW1_0/GlobalSurfaceWater&quot;</span><span class="p">)</span>
+
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;occurrence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;occurrence&#39;</span><span class="p">]))</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;change_abs&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;change_abs&#39;</span><span class="p">]))</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;change_norm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;change_norm&#39;</span><span class="p">]))</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;seasonality&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;seasonality&#39;</span><span class="p">]))</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;transition&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;transition&#39;</span><span class="p">]))</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;max_extent&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;max_extent&#39;</span><span class="p">]))</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+
+	<span class="k">def</span> <span class="nf">getIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">covariates</span><span class="p">):</span>	
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; add indices to image&quot;&quot;&quot;</span>
+		<span class="c1"># self = indices()</span>
+		<span class="c1"># no need to add indices that are already there</span>
+		<span class="c1"># see TODO below, can&#39;t use removeDuplicates in .map()</span>
+		<span class="c1"># indices = self.removeDuplicates(covariates,img.bandNames().getInfo())</span>
+		<span class="n">indices</span> <span class="o">=</span> <span class="n">covariates</span>
+
+		<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+			<span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">functionList</span><span class="p">[</span><span class="n">item</span><span class="p">](</span><span class="n">img</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="k">def</span> <span class="nf">removeDuplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">covariateList</span><span class="p">,</span><span class="n">bands</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; function to remove duplicates, i.e. existing bands do not need to be calculated &quot;&quot;&quot;</span>
+		<span class="c1"># TODO: this does not scale to being mappable server side (can&#39;t use getInfo in mapped functions)</span>
+		<span class="c1"># would need to EEify this logic to use with ee.List()&#39;s</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">elem</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">covariateList</span> <span class="k">if</span> <span class="n">elem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bands</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">renameBands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">,</span><span class="n">prefix</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; renames bands with prefix &quot;&quot;&quot;</span>
+
+		<span class="n">bandnames</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span>
+
+		<span class="k">def</span> <span class="nf">mapBands</span><span class="p">(</span><span class="n">band</span><span class="p">):</span>
+			<span class="n">band</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">band</span>
+
+		<span class="n">bandnames</span> <span class="o">=</span> <span class="n">bandnames</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapBands</span><span class="p">)</span>
+
+		<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">bandnames</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">image</span>
+</code></pre></div></td></tr></table></div>
+            </details>
 
   
 
@@ -802,6 +1349,113 @@
   
       <p>Function to get all tasselCap indices</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">addAllTasselCapIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span> 
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; Function to get all tasselCap indices &quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">getTasseledCap</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Function to compute the Tasseled Cap transformation and return an image&quot;&quot;&quot;</span>
+
+		<span class="n">coefficients</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Array</span><span class="p">([</span>
+			<span class="p">[</span><span class="mf">0.3037</span><span class="p">,</span> <span class="mf">0.2793</span><span class="p">,</span> <span class="mf">0.4743</span><span class="p">,</span> <span class="mf">0.5585</span><span class="p">,</span> <span class="mf">0.5082</span><span class="p">,</span> <span class="mf">0.1863</span><span class="p">],</span>
+			<span class="p">[</span><span class="o">-</span><span class="mf">0.2848</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2435</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5436</span><span class="p">,</span> <span class="mf">0.7243</span><span class="p">,</span> <span class="mf">0.0840</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1800</span><span class="p">],</span>
+			<span class="p">[</span><span class="mf">0.1509</span><span class="p">,</span> <span class="mf">0.1973</span><span class="p">,</span> <span class="mf">0.3279</span><span class="p">,</span> <span class="mf">0.3406</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7112</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4572</span><span class="p">],</span>
+			<span class="p">[</span><span class="o">-</span><span class="mf">0.8242</span><span class="p">,</span> <span class="mf">0.0849</span><span class="p">,</span> <span class="mf">0.4392</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0580</span><span class="p">,</span> <span class="mf">0.2012</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2768</span><span class="p">],</span>
+			<span class="p">[</span><span class="o">-</span><span class="mf">0.3280</span><span class="p">,</span> <span class="mf">0.0549</span><span class="p">,</span> <span class="mf">0.1075</span><span class="p">,</span> <span class="mf">0.1855</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4357</span><span class="p">,</span> <span class="mf">0.8085</span><span class="p">],</span>
+			<span class="p">[</span><span class="mf">0.1084</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9022</span><span class="p">,</span> <span class="mf">0.4120</span><span class="p">,</span> <span class="mf">0.0573</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0251</span><span class="p">,</span> <span class="mf">0.0238</span><span class="p">]</span>
+		<span class="p">])</span>
+
+		<span class="n">bands</span><span class="o">=</span><span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">,</span><span class="s1">&#39;swir2&#39;</span><span class="p">])</span>
+
+		<span class="c1"># Make an Array Image, with a 1-D Array per pixel.</span>
+		<span class="n">arrayImage1D</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+
+		<span class="c1"># Make an Array Image with a 2-D Array per pixel, 6x1.</span>
+		<span class="n">arrayImage2D</span> <span class="o">=</span> <span class="n">arrayImage1D</span><span class="o">.</span><span class="n">toArray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+		<span class="n">componentsImage</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span><span class="o">.</span><span class="n">matrixMultiply</span><span class="p">(</span><span class="n">arrayImage2D</span><span class="p">)</span><span class="o">.</span><span class="n">arrayProject</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">arrayFlatten</span><span class="p">([[</span><span class="s1">&#39;brightness&#39;</span><span class="p">,</span> <span class="s1">&#39;greenness&#39;</span><span class="p">,</span> <span class="s1">&#39;wetness&#39;</span><span class="p">,</span> <span class="s1">&#39;fourth&#39;</span><span class="p">,</span> <span class="s1">&#39;fifth&#39;</span><span class="p">,</span> <span class="s1">&#39;sixth&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+		<span class="c1"># Get a multi-band image with TC-named bands.</span>
+		<span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">componentsImage</span><span class="p">);</span>	
+
+
+	<span class="k">def</span> <span class="nf">addTCAngles</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Function to add Tasseled Cap angles and distances to an image. Assumes image has bands: &#39;brightness&#39;, &#39;greenness&#39;, and &#39;wetness&#39;.&quot;&quot;&quot;</span>
+
+		<span class="c1"># Select brightness, greenness, and wetness bands	</span>
+		<span class="n">brightness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;brightness&#39;</span><span class="p">)</span>
+		<span class="n">greenness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;greenness&#39;</span><span class="p">)</span>
+		<span class="n">wetness</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;wetness&#39;</span><span class="p">)</span>
+
+		<span class="c1"># Calculate Tasseled Cap angles and distances</span>
+		<span class="n">tcAngleBG</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">greenness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleBG&#39;</span><span class="p">])</span>
+		<span class="n">tcAngleGW</span> <span class="o">=</span> <span class="n">greenness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleGW&#39;</span><span class="p">])</span>
+		<span class="n">tcAngleBW</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcAngleBW&#39;</span><span class="p">])</span>
+		<span class="n">tcDistBG</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">greenness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistBG&#39;</span><span class="p">])</span>
+		<span class="n">tcDistGW</span> <span class="o">=</span> <span class="n">greenness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistGW&#39;</span><span class="p">])</span>
+		<span class="n">tcDistBW</span> <span class="o">=</span> <span class="n">brightness</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">wetness</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;tcDistBW&#39;</span><span class="p">])</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleBG</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleGW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcAngleBW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistBG</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistGW</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">tcDistBW</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">img</span>
+
+	<span class="n">img</span> <span class="o">=</span> <span class="n">getTasseledCap</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">addTCAngles</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -823,6 +1477,37 @@
       <p>Function to add JRC Water layers: 'occurrence', 'change_abs', 
 'change_norm', 'seasonality','transition', 'max_extent'</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">addJRC</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; Function to add JRC Water layers: &#39;occurrence&#39;, &#39;change_abs&#39;, </span>
+<span class="sd">		&#39;change_norm&#39;, &#39;seasonality&#39;,&#39;transition&#39;, &#39;max_extent&#39; &quot;&quot;&quot;</span>
+
+	<span class="n">jrcImage</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;JRC/GSW1_0/GlobalSurfaceWater&quot;</span><span class="p">)</span>
+
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;occurrence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;occurrence&#39;</span><span class="p">]))</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;change_abs&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;change_abs&#39;</span><span class="p">]))</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;change_norm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;change_norm&#39;</span><span class="p">]))</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;seasonality&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;seasonality&#39;</span><span class="p">]))</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;transition&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;transition&#39;</span><span class="p">]))</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">jrcImage</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;max_extent&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;max_extent&#39;</span><span class="p">]))</span>
+
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -846,6 +1531,55 @@ northness to an image. Elevation is in meters, slope is between 0 and 90 deg,
 aspect is between 0 and 359 deg. Eastness and northness are unitless and are
 between -1 and 1.</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">addTopography</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">):</span> 
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;  Function to add 30m SRTM elevation and derived slope, aspect, eastness, and </span>
+<span class="sd">	northness to an image. Elevation is in meters, slope is between 0 and 90 deg,</span>
+<span class="sd">	aspect is between 0 and 359 deg. Eastness and northness are unitless and are</span>
+<span class="sd">	between -1 and 1. &quot;&quot;&quot;</span>
+
+	<span class="c1"># Import SRTM elevation data</span>
+	<span class="n">elevation</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="s2">&quot;USGS/SRTMGL1_003&quot;</span><span class="p">)</span>
+
+	<span class="c1"># Calculate slope, aspect, and hillshade</span>
+	<span class="n">topo</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Algorithms</span><span class="o">.</span><span class="n">Terrain</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
+
+	<span class="c1"># From aspect (a), calculate eastness (sin a), northness (cos a)</span>
+	<span class="n">deg2rad</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">180</span><span class="p">)</span>
+	<span class="n">aspect</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;aspect&#39;</span><span class="p">])</span>
+	<span class="n">aspect_rad</span> <span class="o">=</span> <span class="n">aspect</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">deg2rad</span><span class="p">)</span>
+	<span class="n">eastness</span> <span class="o">=</span> <span class="n">aspect_rad</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;eastness&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+	<span class="n">northness</span> <span class="o">=</span> <span class="n">aspect_rad</span><span class="o">.</span><span class="n">cos</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">([</span><span class="s1">&#39;northness&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+	<span class="c1"># Add topography bands to image</span>
+	<span class="n">topo</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;elevation&#39;</span><span class="p">,</span><span class="s1">&#39;slope&#39;</span><span class="p">,</span><span class="s1">&#39;aspect&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">eastness</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">northness</span><span class="p">)</span>
+	<span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">topo</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -866,6 +1600,33 @@ between -1 and 1.</p>
   
       <p>add indices to image</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">getIndices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">covariates</span><span class="p">):</span>	
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; add indices to image&quot;&quot;&quot;</span>
+	<span class="c1"># self = indices()</span>
+	<span class="c1"># no need to add indices that are already there</span>
+	<span class="c1"># see TODO below, can&#39;t use removeDuplicates in .map()</span>
+	<span class="c1"># indices = self.removeDuplicates(covariates,img.bandNames().getInfo())</span>
+	<span class="n">indices</span> <span class="o">=</span> <span class="n">covariates</span>
+
+	<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">functionList</span><span class="p">[</span><span class="n">item</span><span class="p">](</span><span class="n">img</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -886,6 +1647,19 @@ between -1 and 1.</p>
   
       <p>function to remove duplicates, i.e. existing bands do not need to be calculated</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">removeDuplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">covariateList</span><span class="p">,</span><span class="n">bands</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; function to remove duplicates, i.e. existing bands do not need to be calculated &quot;&quot;&quot;</span>
+	<span class="c1"># TODO: this does not scale to being mappable server side (can&#39;t use getInfo in mapped functions)</span>
+	<span class="c1"># would need to EEify this logic to use with ee.List()&#39;s</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">elem</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">covariateList</span> <span class="k">if</span> <span class="n">elem</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bands</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -906,6 +1680,37 @@ between -1 and 1.</p>
   
       <p>renames bands with prefix</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">renameBands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">,</span><span class="n">prefix</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; renames bands with prefix &quot;&quot;&quot;</span>
+
+	<span class="n">bandnames</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">mapBands</span><span class="p">(</span><span class="n">band</span><span class="p">):</span>
+		<span class="n">band</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">band</span>
+
+	<span class="n">bandnames</span> <span class="o">=</span> <span class="n">bandnames</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapBands</span><span class="p">)</span>
+
+	<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">bandnames</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">image</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -935,6 +1740,101 @@ between -1 and 1.</p>
   
       <p>Workflow for computing Landsat and covariates. bands and covariates are hardcoded inside the function.</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">returnCovariates</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Workflow for computing Landsat and covariates. bands and covariates are hardcoded inside the function.&quot;&quot;&quot;</span>
+	<span class="c1"># hard coded for now</span>
+	<span class="n">bands</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;nir&#39;</span><span class="p">,</span><span class="s1">&#39;swir1&#39;</span><span class="p">,</span> <span class="s1">&#39;swir2&#39;</span><span class="p">]</span>	
+	<span class="n">bandLow</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;p20_blue&#39;</span><span class="p">,</span><span class="s1">&#39;p20_green&#39;</span><span class="p">,</span><span class="s1">&#39;p20_red&#39;</span><span class="p">,</span><span class="s1">&#39;p20_nir&#39;</span><span class="p">,</span><span class="s1">&#39;p20_swir1&#39;</span><span class="p">,</span> <span class="s1">&#39;p20_swir2&#39;</span><span class="p">]</span>
+	<span class="n">bandHigh</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;p80_blue&#39;</span><span class="p">,</span><span class="s1">&#39;p80_green&#39;</span><span class="p">,</span><span class="s1">&#39;p80_red&#39;</span><span class="p">,</span><span class="s1">&#39;p80_nir&#39;</span><span class="p">,</span><span class="s1">&#39;p80_swir1&#39;</span><span class="p">,</span> <span class="s1">&#39;p80_swir2&#39;</span><span class="p">]</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;Calculate the urban, builtup cropland rice and barren primitives &quot;&quot;&quot;</span>
+	<span class="n">covariates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ND_blue_green&quot;</span><span class="p">,</span><span class="s2">&quot;ND_blue_red&quot;</span><span class="p">,</span><span class="s2">&quot;ND_blue_nir&quot;</span><span class="p">,</span><span class="s2">&quot;ND_blue_swir1&quot;</span><span class="p">,</span><span class="s2">&quot;ND_blue_swir2&quot;</span><span class="p">,</span> \
+				  <span class="s2">&quot;ND_green_red&quot;</span><span class="p">,</span><span class="s2">&quot;ND_green_nir&quot;</span><span class="p">,</span><span class="s2">&quot;ND_green_swir1&quot;</span><span class="p">,</span><span class="s2">&quot;ND_green_swir2&quot;</span><span class="p">,</span><span class="s2">&quot;ND_red_swir1&quot;</span><span class="p">,</span>\
+				  <span class="s2">&quot;ND_red_swir2&quot;</span><span class="p">,</span><span class="s2">&quot;ND_nir_red&quot;</span><span class="p">,</span><span class="s2">&quot;ND_nir_swir1&quot;</span><span class="p">,</span><span class="s2">&quot;ND_nir_swir2&quot;</span><span class="p">,</span><span class="s2">&quot;ND_swir1_swir2&quot;</span><span class="p">,</span>\
+				  <span class="s2">&quot;R_swir1_nir&quot;</span><span class="p">,</span><span class="s2">&quot;R_red_swir1&quot;</span><span class="p">,</span><span class="s2">&quot;EVI&quot;</span><span class="p">,</span><span class="s2">&quot;SAVI&quot;</span><span class="p">,</span><span class="s2">&quot;IBI&quot;</span><span class="p">]</span>
+
+	<span class="n">index</span> <span class="o">=</span> <span class="n">indices</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">scaleLandsat</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Landast is scaled by factor 0.0001 &quot;&quot;&quot;</span>
+		<span class="n">thermalBand</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="s1">&#39;thermal&#39;</span><span class="p">])</span>
+		<span class="n">thermal</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">thermalBand</span><span class="p">)</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+		<span class="n">otherBands</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">bandNames</span><span class="p">()</span><span class="o">.</span><span class="n">removeAll</span><span class="p">(</span><span class="n">thermalBand</span><span class="p">)</span>
+
+		<span class="n">scaled</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">otherBands</span><span class="p">)</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">)</span>
+		<span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">scaled</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">thermal</span><span class="p">))</span>        
+
+		<span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">copyProperties</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+
+	<span class="n">img</span> <span class="o">=</span> <span class="n">scaleLandsat</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">addIndices</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">prefix</span><span class="p">):</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">addAllTasselCapIndices</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">getIndices</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">covariates</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">addJRC</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unmask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">addTopography</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">unmask</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>	
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>	
+			<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">renameBands</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">prefix</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">img</span>
+
+
+	<span class="n">down</span> <span class="o">=</span> <span class="n">addIndices</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">bandLow</span><span class="p">,</span><span class="n">bands</span><span class="p">),</span><span class="s2">&quot;p20&quot;</span><span class="p">)</span>
+	<span class="n">middle</span> <span class="o">=</span> <span class="n">addIndices</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">bands</span><span class="p">),</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+	<span class="n">up</span> <span class="o">=</span> <span class="n">addIndices</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">bandHigh</span><span class="p">,</span><span class="n">bands</span><span class="p">),</span><span class="s2">&quot;p80&quot;</span><span class="p">)</span>
+
+	<span class="n">img</span> <span class="o">=</span> <span class="n">down</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span><span class="o">.</span><span class="n">addBands</span><span class="p">(</span><span class="n">up</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
@@ -960,6 +1860,55 @@ args:
 returns:
         img (ee.Image): multi-band image with all desired covariates</p>
 
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\covariates.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">returnCovariatesFromOptions</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Computes and adds image covariates according to user settings</span>
+<span class="sd">	args:</span>
+<span class="sd">		img (ee.Image): image to compute covariates </span>
+<span class="sd">		kwargs (dict): a settings dictionary </span>
+<span class="sd">	returns:</span>
+<span class="sd">		img (ee.Image): multi-band image with all desired covariates</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">settings</span> <span class="o">=</span> <span class="n">kwargs</span>
+	<span class="k">if</span> <span class="s1">&#39;indices&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;indices&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">covariates</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;indices&#39;</span><span class="p">]</span>
+			<span class="n">index</span> <span class="o">=</span> <span class="n">indices</span><span class="p">()</span>
+
+		<span class="n">img</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+		<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">getIndices</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">covariates</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="s1">&#39;addTasselCap&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+		<span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;addTasselCap&#39;</span><span class="p">]:</span>
+			<span class="n">img</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">addAllTasselCapIndices</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">img</span>
+</code></pre></div></td></tr></table></div>
+          </details>
   </div>
 
 </div>
