@@ -17,6 +17,14 @@ nav:
 
 theme:
   name: material
+  favicon: img/rlcms_logo_darkblue_fill.png # thumbnail of broswer tab
+  logo: img/rlcms_logo.png # what appears in header of site
+  palette:
+    primary: custom
+
+extra_css:
+  - stylesheets/extra.css
+
 
 plugins:
 - search
