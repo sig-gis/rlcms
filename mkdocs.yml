@@ -21,10 +21,11 @@ theme:
   logo: img/rlcms_logo.png # what appears in header of site
   palette:
     primary: custom
+  features: 
+    - navigation.footer
 
 extra_css:
   - stylesheets/extra.css
-
 
 plugins:
 - search
@@ -36,3 +37,15 @@ plugins:
       python:
         options:
           show_source: false
+
+repo_url: https://github.com/sig-gis/rlcms
+repo_name: sig-gis/rlcms
+
+extra:
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/sig-gis/rlcms
+  # pypi 
+  # social: 
+  #   - icon: fontawesome/brands/pypi
+  #     link: https://pypi.org/project/rlcms/
