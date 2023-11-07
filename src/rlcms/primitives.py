@@ -25,9 +25,10 @@ class Primitives:
             return list_of_prim_pts
 
         def gettop20(dict):
+            # if total input features count < 20, take them all, otherwise take top 20 most important
             dict = ee.Dictionary(dict)
             values = dict.values().sort()
-            cutoff = values.get(-20)
+            cutoff = ee.Algorithms.If(values.size().gte(20),-20,values.size().multiply(-1))
             def kv_return(key,passedObj):
                 passedObj = ee.List(passedObj)
                 val = ee.Number(dict.get(key))
@@ -35,7 +36,7 @@ class Primitives:
                 return retObj
             newl = dict.keys().iterate(kv_return,ee.List([]))
             return newl
-
+        
         def RFprim(training_pts,input_stack):
             """Train and apply RF Probability classifier on a Primitive"""
             inputs = ee.Image(input_stack)
