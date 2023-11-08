@@ -10,12 +10,43 @@ class Primitives:
                  training=None,
                  class_name=None,
                  asset_id=None):
-
+        """
+        Construct a Primitives ensemble, provided an input ee.Image stack containing feature bands and a training point FeatureCollection
+        NOTE: land cover typology in your training dataset should be alpha-numerically sorted (Agriculture: 1, Bare Soil: 2, Built: 3) and should not skip label values (1,2,4,5). There may be unexpected results if this is not handled properly first by the user.
+        
+        Args:
+            inputs (str|ee.Image): input image stack
+            training (str|ee.FeatureCollection): training data
+            class_name (str): class property containing class labels (i.e. 1, 2, 3), currently only 'LANDCOVER' is supported
+            asset_id (str): Optional, GEE asset path to pre-existing Primitives ee.ImageCollection. Useful for exporting intermediary output approach
+        
+        Returns: 
+            Primitives object
+        """
+        
+        # TODO: perform some checks and error handling for training point label formatting 
+        def pre_format_pts(pts,class_name):
+            # two things: 
+            # 1. need to ensure that 'LANDCOVER' is the class_name, if not, set new property in each feature using that
+            if class_name != 'LANDCOVER':
+                # set user's class_name to 'LANDCOVER' so we don't need to pass custom class_name around to every function
+                pts = pts.map(lambda p: p.set('LANDCOVER',p.get(class_name)))
+            else:
+                # check 'LANDCOVER' is a property in collection
+                assert 'LANDCOVER' in pts.first().propertyNames().getInfo(), "'LANDCOVER' is not a property in the collection"
+            # 2. ensure that value of 'LANDCOVER' is integer before converting to string
+            def to_int(p):
+                val = p.get('LANDCOVER')
+                # is 'LANDCOVER' always going to be string? can we convert it to string without first knowing if its String or Number?
+                int_val = ee.Number(val).round()
+                return p.set('LANDCOVER',int_val)
+            return pts.map(to_int)
+        
         def format_pts(pts):
             """Turn a FC of training points containing full LC typology into a list of primitive point FCs, 
                     one point FC for each LC primitive"""
             # create sets of binary training pts for each class represented in the full training pts collection
-            labels = ee.FeatureCollection(pts).aggregate_array('LANDCOVER').distinct()
+            labels = ee.FeatureCollection(pts).aggregate_array('LANDCOVER').distinct().sort()
             def binaryPts(l):
                 # create prim and non prim sets with filters, reset prim to 1, non-prim to 0
                 prim = pts.filter(ee.Filter.eq('LANDCOVER',l)).map(lambda f: f.set('PRIM',1))
@@ -42,7 +73,7 @@ class Primitives:
             inputs = ee.Image(input_stack)
             samples = ee.FeatureCollection(training_pts)
             
-            class_value = ee.String(ee.Number.format(ee.Feature(samples.sort('PRIM',False).first()).get('LANDCOVER'))) #get LC numeric value for the given primitive (i.e. 'PRIM':1, 'LANDCOVER':6) then map to its class label (i.e. 6: 'Water')
+            class_value = ee.Number(ee.Feature(samples.sort('PRIM',False).first()).get('LANDCOVER')) #get LC numeric value for the given primitive (i.e. 'PRIM':1, 'LANDCOVER':6) then map to its class label (i.e. 6: 'Water')
             
             # can experiment with classifier params for model performance
             classifier = ee.Classifier.smileRandomForest(
@@ -103,11 +134,11 @@ class Primitives:
             training_pts = ee.FeatureCollection(training_pts)
             
             # list of distinct LANDCOVER values
-            labels = training_pts.aggregate_array(class_name).distinct().getInfo()
-            
+            labels = training_pts.aggregate_array(class_name).distinct().sort().getInfo() # .sort() should fix Prims exporting out of order (i.e. 2,3,4,7,6)
+
             # converting to index of the list of distinct LANDCOVER primtive FC's (prim_pts below)
             indices = list(range(len(labels))) # handles dynamic land cover strata
-            
+
             prim_list = []
             for i in indices: # running one LC class at a time
                 prim_pts = ee.FeatureCollection(ee.List(format_pts(training_pts)).get(i)) # format training pts to 1/0 prim format
@@ -212,7 +243,7 @@ class Primitives:
         aoi = ee.Image(prims_list.get(0)).geometry()
         for i in list(range(prims_count)):
             prim = ee.Image(prims_list.get(i))
-            desc = f"Primitive{ee.Image(prim).getString('Primitive').getInfo()}" # this would need to be defined in the Prims img for-loop
+            desc = f"Primitive{str(ee.Image(prim).get('Primitive').getInfo())}" # this would need to be defined in the Prims img for-loop
             asset_id = f'{collection_assetId}/{desc}'
             export_img_to_asset(image=prim,
                                 description=desc,
