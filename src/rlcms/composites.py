@@ -103,6 +103,7 @@ class Composite:
         ds_dict = {'Landsat5':hf.Landsat5(region,start_date,end_date),
                 'Landsat7':hf.Landsat7(region,start_date,end_date),
                 'Landsat8':hf.Landsat8(region,start_date,end_date),
+                'Landsat9':hf.Landsat9(region,start_date,end_date),
                 'Sentinel1':hf.Sentinel1(region,start_date,end_date),
                 'Sentinel1Asc':hf.Sentinel1Asc(region,start_date,end_date),
                 'Sentinel1Desc':hf.Sentinel1Desc(region,start_date,end_date),
@@ -187,30 +188,19 @@ class Composite:
                                                     )
         return
 
-    def stack(self,other) -> ee.Image:
-        """ stacks composites together, formatting bands and properties
-        
-        args:
-            self (rlcms.composite): RLCMS Composite
-            other (rlcms.composite): RLCMS Composite
-        returns:
-            ee.Image
-        """
-        
-        # prefix dataset name to every band, if data is an asset path we swap / for _
-        self_renamed = self.image.regexpRename('^', f"{self.dataset.replace('/','_')}_")
-        other_renamed = other.image.regexpRename('^', f"{other.dataset.replace('/','_')}_")
-        
-        # Traceback: 'ApiFunction' object has no attribute 'name' at line 209... 
-        # toDictionary() doesn't think it is a method of self.image (ee.Image) but it is
-        # # prefix image property keys with dataset name and set all as new properties 
-        # self_props_names = (self.image.propertyNames()
-        #               .map(lambda s: ee.String(s).replace('^', f"{self.dataset.replace('/','_')}_")))
-        # other_props_names = (other.image.propertyNames()
-        #               .map(lambda s: ee.String(s).replace('^', f"{other.dataset.replace('/','_')}_")))
-        
-        # self_props = ee.Image(self.image).toDictionary().rename(self_props_names)
-        # other_props = ee.Image(other.image).toDictionary().rename(other_props_names)
-        
-        # _dict = ee.Dictionary(self_props).combine(other_props)
-        return ee.Image.cat([self_renamed,other_renamed])#.set(_dict)
+def stack(composites:list):
+    """
+    stacks a list of rlcms.Composites together, prefixing each band with the Composite's dataset name
+    args:
+        composites: list[rlcms.Composite]
+    returns:
+        ee.Image
+    """
+    if len(composites) < 2 or not all(isinstance(c,Composite) for c in composites):
+        raise ValueError("composites must be a list of 2 or more rlcms.Composites")
+    else:
+        # returns list of ee.Images with renamed bands
+        renamed = [c.image.regexpRename('^', f"{c.dataset.replace('/','_')}_") for c in composites]
+        # stack renamed image list into one ee.Image
+        stacked = ee.Image.cat(renamed)
+        return stacked
