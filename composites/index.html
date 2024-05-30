@@ -475,24 +475,18 @@
     Composite
   </a>
   
-    <nav class="md-nav" aria-label="Composite">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rlcms.composites.Composite.stack" class="md-nav__link">
-    stack()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
   <a href="#rlcms.composites.get_agg_timing" class="md-nav__link">
     get_agg_timing()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.stack" class="md-nav__link">
+    stack()
   </a>
   
 </li>
@@ -649,24 +643,18 @@
     Composite
   </a>
   
-    <nav class="md-nav" aria-label="Composite">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rlcms.composites.Composite.stack" class="md-nav__link">
-    stack()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
   <a href="#rlcms.composites.get_agg_timing" class="md-nav__link">
     get_agg_timing()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rlcms.composites.stack" class="md-nav__link">
+    stack()
   </a>
   
 </li>
@@ -972,34 +960,7 @@ harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
 <span class="normal">186</span>
 <span class="normal">187</span>
 <span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Composite</span><span class="p">:</span>
+<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Composite</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initializes Composite class</span>
 
 <span class="sd">        Processes multi-band composite of your chosen dataset(s) within an AOI footprint polygon</span>
@@ -1053,6 +1014,7 @@ harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
         <span class="n">ds_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Landsat5&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Landsat5</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
                 <span class="s1">&#39;Landsat7&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Landsat7</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
                 <span class="s1">&#39;Landsat8&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Landsat8</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
+                <span class="s1">&#39;Landsat9&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Landsat9</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
                 <span class="s1">&#39;Sentinel1&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Sentinel1</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
                 <span class="s1">&#39;Sentinel1Asc&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Sentinel1Asc</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
                 <span class="s1">&#39;Sentinel1Desc&#39;</span><span class="p">:</span><span class="n">hf</span><span class="o">.</span><span class="n">Sentinel1Desc</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">start_date</span><span class="p">,</span><span class="n">end_date</span><span class="p">),</span>
@@ -1136,34 +1098,6 @@ harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
                                                     <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
                                                     <span class="p">)</span>
         <span class="k">return</span>
-
-    <span class="k">def</span> <span class="nf">stack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; stacks composites together, formatting bands and properties</span>
-
-<span class="sd">        args:</span>
-<span class="sd">            self (rlcms.composite): RLCMS Composite</span>
-<span class="sd">            other (rlcms.composite): RLCMS Composite</span>
-<span class="sd">        returns:</span>
-<span class="sd">            ee.Image</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># prefix dataset name to every band, if data is an asset path we swap / for _</span>
-        <span class="n">self_renamed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">regexpRename</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
-        <span class="n">other_renamed</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">regexpRename</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Traceback: &#39;ApiFunction&#39; object has no attribute &#39;name&#39; at line 209... </span>
-        <span class="c1"># toDictionary() doesn&#39;t think it is a method of self.image (ee.Image) but it is</span>
-        <span class="c1"># # prefix image property keys with dataset name and set all as new properties </span>
-        <span class="c1"># self_props_names = (self.image.propertyNames()</span>
-        <span class="c1">#               .map(lambda s: ee.String(s).replace(&#39;^&#39;, f&quot;{self.dataset.replace(&#39;/&#39;,&#39;_&#39;)}_&quot;)))</span>
-        <span class="c1"># other_props_names = (other.image.propertyNames()</span>
-        <span class="c1">#               .map(lambda s: ee.String(s).replace(&#39;^&#39;, f&quot;{other.dataset.replace(&#39;/&#39;,&#39;_&#39;)}_&quot;)))</span>
-
-        <span class="c1"># self_props = ee.Image(self.image).toDictionary().rename(self_props_names)</span>
-        <span class="c1"># other_props = ee.Image(other.image).toDictionary().rename(other_props_names)</span>
-
-        <span class="c1"># _dict = ee.Dictionary(self_props).combine(other_props)</span>
-        <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">self_renamed</span><span class="p">,</span><span class="n">other_renamed</span><span class="p">])</span><span class="c1">#.set(_dict)</span>
 </code></pre></div></td></tr></table></div>
             </details>
 
@@ -1178,129 +1112,6 @@ harmonicsOptions:dict in this format: {'nir':{'start':int[1:365],'end':[1:365]}}
 
 
 
-
-
-<div class="doc doc-object doc-function">
-
-
-
-
-<h3 id="rlcms.composites.Composite.stack" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">stack</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>stacks composites together, formatting bands and properties</p>
-
-
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>self</code></td>
-          <td>
-                <code><span title="rlcms.composite">composite</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>RLCMS Composite</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>other</code></td>
-          <td>
-                <code><span title="rlcms.composite">composite</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>RLCMS Composite</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-      <p>returns:
-    ee.Image</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src\rlcms\composites.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">stack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; stacks composites together, formatting bands and properties</span>
-
-<span class="sd">    args:</span>
-<span class="sd">        self (rlcms.composite): RLCMS Composite</span>
-<span class="sd">        other (rlcms.composite): RLCMS Composite</span>
-<span class="sd">    returns:</span>
-<span class="sd">        ee.Image</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># prefix dataset name to every band, if data is an asset path we swap / for _</span>
-    <span class="n">self_renamed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">regexpRename</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
-    <span class="n">other_renamed</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">regexpRename</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Traceback: &#39;ApiFunction&#39; object has no attribute &#39;name&#39; at line 209... </span>
-    <span class="c1"># toDictionary() doesn&#39;t think it is a method of self.image (ee.Image) but it is</span>
-    <span class="c1"># # prefix image property keys with dataset name and set all as new properties </span>
-    <span class="c1"># self_props_names = (self.image.propertyNames()</span>
-    <span class="c1">#               .map(lambda s: ee.String(s).replace(&#39;^&#39;, f&quot;{self.dataset.replace(&#39;/&#39;,&#39;_&#39;)}_&quot;)))</span>
-    <span class="c1"># other_props_names = (other.image.propertyNames()</span>
-    <span class="c1">#               .map(lambda s: ee.String(s).replace(&#39;^&#39;, f&quot;{other.dataset.replace(&#39;/&#39;,&#39;_&#39;)}_&quot;)))</span>
-
-    <span class="c1"># self_props = ee.Image(self.image).toDictionary().rename(self_props_names)</span>
-    <span class="c1"># other_props = ee.Image(other.image).toDictionary().rename(other_props_names)</span>
-
-    <span class="c1"># _dict = ee.Dictionary(self_props).combine(other_props)</span>
-    <span class="k">return</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">self_renamed</span><span class="p">,</span><span class="n">other_renamed</span><span class="p">])</span><span class="c1">#.set(_dict)</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
 
 
 
@@ -1415,6 +1226,65 @@ Returns:
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">composite_mode</span><span class="si">}</span><span class="s2"> not a valid &#39;composite_mode&#39;. Choose one of &#39;annual&#39; or &#39;seasonal&#39;&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">period</span><span class="p">,</span><span class="n">period_unit</span><span class="p">,</span><span class="n">dates</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h2 id="rlcms.composites.stack" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">stack</span><span class="p">(</span><span class="n">composites</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>stacks a list of rlcms.Composites together, prefixing each band with the Composite's dataset name
+args:
+    composites: list[rlcms.Composite]
+returns:
+    ee.Image</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src\rlcms\composites.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">stack</span><span class="p">(</span><span class="n">composites</span><span class="p">:</span><span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    stacks a list of rlcms.Composites together, prefixing each band with the Composite&#39;s dataset name</span>
+<span class="sd">    args:</span>
+<span class="sd">        composites: list[rlcms.Composite]</span>
+<span class="sd">    returns:</span>
+<span class="sd">        ee.Image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">composites</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">Composite</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">composites</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;composites must be a list of 2 or more rlcms.Composites&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># returns list of ee.Images with renamed bands</span>
+        <span class="n">renamed</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">regexpRename</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">composites</span><span class="p">]</span>
+        <span class="c1"># stack renamed image list into one ee.Image</span>
+        <span class="n">stacked</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">renamed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stacked</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
