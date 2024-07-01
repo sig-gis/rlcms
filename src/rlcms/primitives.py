@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from rlcms.utils import export_img_to_asset, export_image_to_drive
 from ee.ee_exception import EEException
+import subprocess
 
 class Primitives:
     def __init__(self,
@@ -12,7 +13,6 @@ class Primitives:
                  asset_id=None):
         """
         Construct a Primitives ensemble, provided an input ee.Image stack containing feature bands and a training point FeatureCollection
-        NOTE: land cover typology in your training dataset should be alpha-numerically sorted (Agriculture: 1, Bare Soil: 2, Built: 3) and should not skip label values (1,2,4,5). There may be unexpected results if this is not handled properly first by the user.
         
         Args:
             inputs (str|ee.Image): input image stack
@@ -161,19 +161,17 @@ class Primitives:
             self.collection = primitives
             self.region = ee.Image(inputs).geometry().getInfo()
             self.training_data = ee.FeatureCollection(training)
-
-    def assemble_max_probability(self):
+    
+    def assemble_max_probability(self, remap_to:list=None):
         """
-        Take Image Collection of RF Primitives, perform pixel-wise maximum of all Primitive probability images to return single-band LC image
-        Array computation returns img values from 0 to n-1 due to 0-base indexing, so we .add(1) to match LC strata
-            
+        Perform pixel-wise max probability assemblage method. At each pixel, the primitive with highest probability is returned in the assemblage image.
+        If your desired land cover typology does not start with 1 and/or skips values, you must specify a remap_to list that matches the desired output land cover typology.
+        e.g. remap_to=[1,2,3,6,11,12,13]            
+        
         Args:
-            image: multiband image of probabilities
-            remapNum: list, list of intergers 0-N matching the number of probability bands
-            originalNum: list, list of inergers n-N matching the number of probability bands
-                        that represent their desired map values
+            remap_to: list, default=None, list of integers matching the desired output land cover typology
 
-        Returns: ee.Image of Land Cover                            
+        Returns: ee.Image                            
         """
         def max_prob(image):
             
@@ -186,8 +184,18 @@ class Primitives:
         
         image  = self.collection.toBands()
         max_probability = max_prob(image)
-        output = max_probability.add(1).rename('LANDCOVER')
-        return output
+        output = max_probability.add(1) # shift values from 0-n to 1-n, where n = bands
+        
+        if remap_to != None:
+            prims_count = self.collection.size().getInfo()
+            remap_from = list(range(1,prims_count+1)) # values without a remap are 1 to n
+            if len(remap_from) != len(remap_to):
+                raise ValueError("remap_to must be the same length as the number of primitives in the collection", 
+                                 f"remap_from: {len(remap_from)}, remap_to: {len(remap_to)}") 
+            output = output.remap(remap_from, remap_to)
+        else:
+            pass
+        return output.rename('LANDCOVER')
         
     def export_metrics(self,metrics_path):
             """
@@ -236,8 +244,18 @@ class Primitives:
         """
         
         # make the empty IC
-        print(f"Creating empty Primitives ImageCollection: {collection_assetId}.\n")
-        os.popen(f"earthengine create collection {collection_assetId}").read()
+        command = f'earthengine create collection {collection_assetId}'
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        exit_code = process.returncode
+        if exit_code == 0:
+            print(f"Created empty Primitives ImageCollection: {collection_assetId}")
+
+        else:
+            raise RuntimeError(f"Process failed with exit code {exit_code}",
+                            f"Error message: {stdout.decode()}")
+        
+        # os.popen(f"earthengine create collection {collection_assetId}").read()
         prims_count = self.collection.size().getInfo()
         prims_list = ee.ImageCollection(self.collection).toList(prims_count)
         aoi = ee.Image(prims_list.get(0)).geometry()
