@@ -9,7 +9,7 @@ where = ["src"]
 
 [project]
 name = "rlcms"
-version = "2024.5.29"
+version = "2024.7.2"
 
 description = "workflows for regional land cover mapping, built in Google Earth Engine"
 readme = "README.md"
